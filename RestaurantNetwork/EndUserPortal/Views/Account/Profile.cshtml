@@ -1,0 +1,107 @@
+﻿@model EndUserPortal.Models.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+    @if (Model.Message != null && Model.Message != "")
+    {
+    if (Model.Message.Contains("Successfully"))
+    {
+        <div class="alert alert-success alert-dismissible shadow-inset fade show" role="alert">
+            <span class="alert-inner--icon"><span class="fas fa-check"></span></span>
+            <span class="alert-inner--text">
+                @Model.Message
+            </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger alert-dismissible shadow-inset fade show" role="alert">
+            <span class="alert-inner--icon"><span class="fas fa-fire"></span></span>
+            <span class="alert-inner--text">
+                @Model.Message
+            </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        }
+    }
+<div class="osahan-profile">
+    <div class="container position-relative">
+        <div class="py-5 osahan-profile row">
+            <div class="row">
+                <div class="col-md-8 offset-2">
+                    <form asp-action="Profile" asp-controller="Account" class="mt-2 mb-4 row" method="post" enctype="multipart/form-data">
+
+                        <div class="row col-12">
+
+                            <div class="form-group col-4">
+                                <img src="@Model.Avatar" width="200" height="200" id="imgAvatar"/>
+                            </div>
+                            <div class="col-8 row">
+                                <div class="form-group col-12">
+                                    <label asp-for="Name" class="text-dark">User Name</label>
+                                    <input asp-for="Name" class="form-control"/>
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-12">
+                                    <label class="text-dark">User Email</label>
+                                    <input asp-for="Email" class="form-control" type="text" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="text-dark">User Phone</label>
+                                    <input asp-for="Phone" class="form-control"  />
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                        </div>
+                        <br />
+                        <div class="col-4">
+                            <div class="custom-file mb-3 mr-3">
+                                <label class="custom-file-label" asp-for="UploadLogo">Avatar</label>
+                                <input 
+                                    type="file"
+                                    asp-for="UploadLogo" 
+                                    class="form-control" 
+                                    onchange="showAvatar(this)"
+                                    />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <br />
+                        </div>
+                        <input readonly asp-for="Id" type="hidden" />
+                        <input readonly asp-for="idUserId" type="hidden" />
+                        <br />
+                        <div class="col-4"></div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary px-5 form-control">Edit Profile</button>
+                        </div>
+                        <div class="col-4"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   function showAvatar(e){
+       var fileData = e.files[0];
+       var reader = new FileReader();
+       reader.readAsDataURL(fileData);
+       reader.onload = function(){
+            document.getElementById("imgAvatar").setAttribute("src",this.result );
+       }
+   }
+</script>
+

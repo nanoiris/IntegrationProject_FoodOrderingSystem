@@ -1,0 +1,42 @@
+﻿@model OSS.Models.Order.DetailViewModel
+<form asp-action="Detail" asp-controller="Order" class="mt-2 mb-4 row" method="post">
+    <!--<div asp-validation-summary="All" class="text-danger" role="alert"></div>-->
+    <div class="form-group col-4">
+        <label asp-for="Row.UserName" class="text-dark">User Name</label>
+        <input readonly asp-for="Row.UserName" class="form-control" />
+    </div>
+
+    <div class="form-group col-2">
+        <label class="text-dark">Order No.</label>
+        <input readonly asp-for="Row.Id" class="form-control" />
+    </div>
+    <div class="form-group col-3">
+        <label asp-for="Row.PayTime" class="text-dark">Create Time</label>
+        <input readonly asp-for="Row.CreateTime" class="form-control" />
+    </div>
+    <div class="form-group col-3">
+        <label asp-for="Row.Status" class="text-dark">Status</label>
+        <input readonly asp-for="Row.Status" class="form-control" />
+    </div>
+
+    <div class="col-12">
+        <label class="text-dark">Restaurant Name</label>
+        <input readonly asp-for="Row.Provider.Name" class="form-control" />
+    </div>
+    <div class="form-group col-3">
+        <label asp-for="Row.ItemTotal" class="text-dark">Sub Total</label>
+        <input readonly asp-for="Row.ItemTotal" class="form-control" />
+    </div>
+    <div class="form-group col-3">
+        <label asp-for="Row.GSTHST" class="text-dark">GST/HST</label>
+        <input readonly asp-for="Row.GSTHST" class="form-control" />
+    </div>
+    <div class="form-group col-3">
+        <label asp-for="Row.PSTQST" class="text-dark">PST/QST</label>
+        <input readonly asp-for="Row.PSTQST" class="form-control" />
+    </div>
+    <div class="form-group col-3">
+        <label asp-for="Row.OrderTotal" class="text-dark">Order Total</label>
+        <input readonly asp-for="Row.OrderTotal" class="form-control" />
+    </div>
+</form>

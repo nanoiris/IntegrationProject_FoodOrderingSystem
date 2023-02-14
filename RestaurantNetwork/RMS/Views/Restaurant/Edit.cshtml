@@ -1,0 +1,122 @@
+﻿@model RMS.Models.Restaurant.EditViewModel;
+
+<div class="section">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-gray">
+            @foreach (var path in Model.Paths)
+            {
+                <li class="breadcrumb-item"><a asp-controller="@path.ControllerName" asp-action="@path.ActionName">@path.Titile</a></li>
+            }
+        </ol>
+    </nav>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+        <script>
+            setTimeout(function() {
+            var flashMessage = document.querySelector('.alert-success');
+            flashMessage.style.display = 'none';
+            }, 10000);
+        </script>
+    }
+else if (TempData["FailureMessage"] != null)
+    {
+    <div class="alert alert-danger">
+        @TempData["FailureMessage"]
+    </div>
+    <script>
+        setTimeout(function() {
+        var flashMessage = document.querySelector('.alert-danger');
+        flashMessage.style.display = 'none';
+        }, 10000);
+    </script>
+    }
+
+
+<div class="row">
+        <div class="col-md-12">
+            <form asp-action="Edit" asp-controller="Restaurant" class="mt-2 mb-4 row" method="post" enctype="multipart/form-data">
+                
+                <div class="form-group col-6">
+                    <label asp-for="Name" class="text-dark"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6">
+                    <label class="text-dark">Category</label>
+                    <select asp-for="CategoryId" asp-items="@Model.Categories" class="form-control">
+                    </select>
+                </div>
+
+                <div class="form-group col-6">
+                    <label asp-for="Email" class="text-dark"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="PhoneNo" class="text-dark"></label>
+                    <input asp-for="PhoneNo" class="form-control" />
+                    <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="Street" class="text-dark"></label>
+                    <input asp-for="Street" class="form-control" />
+                    <span asp-validation-for="Street" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="City" class="text-dark"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="State" class="text-dark"></label>
+                    <input asp-for="State" class="form-control" />
+                    <span asp-validation-for="State" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group col-6">
+                    <label asp-for="Zip" class="text-dark"></label>
+                    <input asp-for="Zip" class="form-control" />
+                    <span asp-validation-for="Zip" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 form-group ">
+                    <label asp-for="Description" class="text-dark"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                </div>
+
+                <div class="col-12 row">
+                    <div class="col-6 text-center">
+                        <img src="@Model.FullLogoPath" width="50%" height="auto" style="display: inline-block; margin: 0 auto;" />
+                    </div>
+
+                    <div class="col-6">
+                        <div class="custom-file mb-3 mr-3">
+                            <label class="custom-file-label" asp-for="UploadLogo">Upload Restaurant Cover</label>
+                            <input asp-for="UploadLogo" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <br />
+                </div>
+                @* <div class="col-12 form-group ">
+                    <label asp-for="Description" class="text-dark"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                </div> *@
+
+                <div class="col-4">
+                </div>
+                <br />
+                <input readonly asp-for="Id" type="hidden" />
+                <input readonly asp-for="FullLogoPath" type="hidden" />
+                <div class="col-4">
+                    <button type="submit" class=" col-12 btn btn-primary btn-block">Update</button>
+                </div>
+
+            </form>
+        </div>
+    </div>

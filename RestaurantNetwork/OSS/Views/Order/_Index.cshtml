@@ -1,0 +1,52 @@
+﻿@model OSS.Models.Order.ListViewModel;
+
+<div class="row">
+    <form asp-controller="Order" asp-action="search" method="post" class="col-6 input-group mb-4">
+        <input type="text"
+               class="form-control form-control-lg input_search border-right-0"
+               asp-for="SearchKey">
+        <div class="input-group-prepend">
+            <Button type="submit" class="btn input-group-text bg-white border_search border-left-0 text-primary">
+                <i class="fa fa-search"></i>
+            </Button>
+        </div>
+    </form>
+</div>
+@if (Model.Rows != null && Model.Rows.Count > 0)
+{
+    <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
+        <thead class="text-danger font-weight-bold">
+            <tr>
+                @foreach (var tabHeader in Model.TabHeaders)
+                {
+                    <th class="border-0" scope="col" id="class">@tabHeader</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Rows)
+            {
+                <tr>
+                    <td>@item.Id</td>
+
+                    <td>@item.Provider.Name</td>
+                    <td>@item.UserName</td>
+                    <td>@item.OrderTotal</td>
+                    <td>@item.Status</td>
+                    <td>@item.DesiredTime</td>
+                    <td>@item.PayType</td>
+                    <td>
+                        <a asp-controller="Order" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-icon-only btn-pill btn-primary">
+                            Detail
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-controller="Order" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-icon-only btn-pill btn-primary">
+                            <i class="fa fa-minus"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

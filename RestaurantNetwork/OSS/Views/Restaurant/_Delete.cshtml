@@ -1,0 +1,75 @@
+﻿@model OSS.Models.Restaurant.DeleteViewModel
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Delete" asp-controller="Restaurant" class="mt-2 mb-4 row" method="post">
+            <!--<div asp-validation-summary="All" class="text-danger" role="alert"></div>-->
+            <div class="row col-12">
+                <div class="form-group col-4">
+                    <img src="@Model.DeleteRest.FullLogoPath" width="50%" height="auto" />
+                </div>
+                <div class="col-8 row">
+                    <div class="form-group col-12">
+                        <label asp-for="DeleteRest.Name" class="text-dark"></label>
+                        <input readonly asp-for="DeleteRest.Name" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label class="text-dark">Category</label>
+                        <input readonly asp-for="DeleteRest.Category.Name" class="form-control" />
+                    </div>
+
+                    <div class="col-6">
+                        <label class="text-dark">Featured</label>
+                        <input readonly asp-for="DeleteRest.Featured" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col-6">
+                <label asp-for="DeleteRest.Email" class="text-dark"></label>
+                <input readonly asp-for="DeleteRest.Email" class="form-control" />
+            </div>
+            <div class="form-group col-6">
+                <label asp-for="DeleteRest.PhoneNo" class="text-dark"></label>
+                <input readonly asp-for="DeleteRest.PhoneNo" class="form-control" />
+            </div>
+            <div class="form-group col-6">
+                <label asp-for="DeleteRest.Street" class="text-dark"></label>
+                <input readonly asp-for="DeleteRest.Street" class="form-control" />
+            </div>
+            <div class="form-group col-6">
+                <label asp-for="DeleteRest.City" class="text-dark"></label>
+                <input readonly asp-for="DeleteRest.City" class="form-control" />
+            </div>
+            <div class="form-group col-4">
+                <label asp-for="DeleteRest.State" class="text-dark"></label>
+                <input readonly asp-for="DeleteRest.State" class="form-control" />
+            </div>
+            <div class="form-group col-4">
+                <label asp-for="DeleteRest.Country" class="text-dark"></label>
+                <input readonly asp-for="DeleteRest.Country" class="form-control" />
+            </div>
+            <div class="form-group col-4">
+                <label asp-for="DeleteRest.Zip" class="text-dark"></label>
+                <input readonly asp-for="DeleteRest.Zip" class="form-control" />
+            </div>
+            <div class="col-12">
+                <br />
+            </div>
+            <div class="col-12 form-group ">
+                <label asp-for="DeleteRest.Description" class="text-dark"></label>
+                <textarea readonly asp-for="DeleteRest.Description" class="form-control"></textarea>
+            </div>
+
+            <div class="col-4">
+            </div>
+            <br />
+            <input readonly asp-for="DeleteRest.Id" type="hidden" />
+            <input readonly asp-for="DeleteRest.FullLogoPath" type="hidden" />
+            <div class="col-4">
+                <button readonly type="submit" class=" col-4 btn btn-primary btn-lg btn-block">Delete</button>
+            </div>
+
+        </form>
+    </div>
+</div>

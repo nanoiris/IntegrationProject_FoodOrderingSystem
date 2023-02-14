@@ -1,0 +1,30 @@
+﻿@model RMS.Models.Order.DetailViewModel
+@{
+    var items = Model.Row.OrderItems; 
+}
+@if (items != null && items.Count > 0)
+{
+    <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
+        <thead class="text-danger font-weight-bold">
+            <tr>
+                @foreach (var tabHeader in Model.TabHeaders)
+                {
+                    <th class="border-0" scope="col" id="class">@tabHeader</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td><img src="@item.Item.FullLogoPath" height="40" width="40"> </td>
+                    <td>@item.Item.Id</td>
+                    <td>@item.Item.Name</td>
+                    <td>@item.Item.PriceStr</td>
+                    <td>@item.Qty</td>
+                    <td>$@item.SubTotal</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

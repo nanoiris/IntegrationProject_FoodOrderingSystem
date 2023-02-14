@@ -1,0 +1,49 @@
+﻿@model OSS.Models.Order.DeleteViewModel
+
+<form asp-action="Delete" asp-controller="Order" class="mt-2 mb-4 row" method="post">
+    <!--<div asp-validation-summary="All" class="text-danger" role="alert"></div>-->
+    <div class="form-group col-6">
+        <label asp-for="DeleteRow.UserName" class="text-dark">User Name</label>
+        <input readonly asp-for="DeleteRow.UserName" class="form-control" />
+    </div>
+
+    <div class="form-group col-6">
+        <label class="text-dark">Order No.</label>
+        <input readonly asp-for="DeleteRow.Id" class="form-control" />
+    </div>
+
+    <div class="col-12">
+        <label class="text-dark">Restaurant Name</label>
+        <input readonly asp-for="DeleteRow.Provider.Name" class="form-control" />
+    </div>
+
+    <div class="form-group col-12">
+        <label asp-for="DeleteRow.OrderTotal" class="text-dark">OrderTotal</label>
+        <input readonly asp-for="DeleteRow.OrderTotal" class="form-control" />
+    </div>
+    <div class="form-group col-6">
+        <label asp-for="DeleteRow.Status" class="text-dark">Status</label>
+        <input readonly asp-for="DeleteRow.Status" class="form-control" />
+    </div>
+    <div class="form-group col-6">
+        <label asp-for="DeleteRow.PayType" class="text-dark">Pay Type</label>
+        <input readonly asp-for="DeleteRow.PayType" class="form-control" />
+    </div>
+    <div class="form-group col-6">
+        <label asp-for="DeleteRow.PayName" class="text-dark">Pay User Name</label>
+        <input readonly asp-for="DeleteRow.PayName" class="form-control" />
+    </div>
+    <div class="form-group col-6">
+        <label asp-for="DeleteRow.PayTime" class="text-dark">Pay User Name</label>
+        <input readonly asp-for="DeleteRow.PayTime" class="form-control" />
+    </div>
+
+    <div class="col-4">
+    </div>
+    <br />
+    <div class="col-4">
+        <button readonly type="submit" class="btn btn-primary btn-block">Delete</button>
+    </div>
+
+</form>
+       

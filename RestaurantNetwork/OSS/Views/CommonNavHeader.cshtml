@@ -1,0 +1,36 @@
+﻿<nav aria-label="breadcrumb">
+    <ol class="breadcrumb breadcrumb-gray">
+        @foreach (var path in Model.Paths)
+        {
+            <li class="breadcrumb-item"><a asp-controller="@path.ControllerName" asp-action="@path.ActionName">@path.Titile</a></li>
+        }
+    </ol>
+</nav>
+
+@if (Model.Message != null && Model.Message != "")
+{
+    if (Model.Message.Contains("successfully"))
+    {
+        <div class="alert alert-success alert-dismissible shadow-inset fade show" role="alert">
+            <span class="alert-inner--icon"><span class="fas fa-check"></span></span>
+            <span class="alert-inner--text">
+                @Model.Message
+            </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger alert-dismissible shadow-inset fade show" role="alert">
+            <span class="alert-inner--icon"><span class="fas fa-fire"></span></span>
+            <span class="alert-inner--text">
+                @Model.Message
+            </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+}

@@ -1,0 +1,160 @@
+﻿@model EndUserPortal.Models.ViewModels.RestaurantViewModel
+
+@{
+    ViewData["Title"] = "Restaurant";
+}
+
+<div class="offer-section pt-4 pb-5">
+    <div class="container position-relative d-flex align-items-center">
+        <img alt="#" src="@Model.Restaurant.FullLogoPath" class="restaurant-pic mx-auto mt-5">
+        <div class="pt-3 text-white">
+            <h2 class="font-weight-bold">@Model.Restaurant.Name</h2>
+            <p class="text-white m-0">
+                <i class="feather-map-pin "></i>
+                &nbsp @Model.Restaurant.Street, @Model.Restaurant.City, @Model.Restaurant.State, @Model.Restaurant.Zip
+            </p>
+            <p class="text-white m-0"><i class="feather-phone-call "></i> &nbsp {@Model.Restaurant.PhoneNo}</p>
+            @if (Model.Restaurant.Rating != null)
+            {
+                <div class="rating-wrap d-flex align-items-center mt-2">
+
+                    <ul class="rating-stars list-unstyled">
+
+                        <li>
+                            @for (int i = 0; i < Model.Restaurant.Rating; i++)
+                            {
+                                <i class="feather-star star_active"></i>
+                            }
+                            @for (int? i = Model.Restaurant.Rating; i < 5; i++)
+                            {
+                                <i class="feather-star"></i>
+                            }
+                        </li>
+                    </ul>
+                    <p class="label-rating text-white ml-2 small"> ({@Model.Restaurant.Ratings.Count} Reviews)</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <p class="font-weight-bold pt-2 m-0">FEATURED ITEMS</p>
+    <div class="trending-slider rounded">
+        @foreach (var featuredItem in Model.FeaturedMenus)
+        {
+            <div class="osahan-slider-item mx-1">
+                <div class="list-card bg-white h-50 rounded overflow-hidden position-relative shadow-sm">
+                    <div class="list-card-image">
+                        <img alt="#" src="@featuredItem.FullLogoPath" class="img-fluid item-img w-100">
+                    </div>
+                    <div class="p-3 position-relative">
+                        <div class="list-card-body">
+                            <h6 class="mb-1">
+                                <a href="checkout.html" class="text-black">@featuredItem.Name</a>
+                            </h6>
+                            <p class="text-gray mb-0 d-flex justify-content-between">
+                                @featuredItem.Description
+                                <span> $@featuredItem.PriceStr</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container position-relative">
+    <div class="row">
+
+        @* --- left column-----*@
+        <div class="col-md-8 pt-3">
+
+            @*  ----------- menu start -----------*@
+            <div class="shadow-sm rounded bg-white mb-3 overflow-hidden">
+                <div class="d-flex item-aligns-center">
+                    <p class="font-weight-bold h6 p-3 border-bottom mb-0 w-100">Menu</p>
+                </div>
+                @foreach (var menuCategory in Model.Restaurant.MenuCategories)
+                {
+                    <div class="row m-0 ">
+                        <h6 class="p-3 m-0 bg-light w-100">@menuCategory.Name <small class="text-black-50">@menuCategory.Menus.Count ITEMS</small></h6>
+                        <div class="col-md-12 px-0 border-top">
+                            @foreach (var menu in menuCategory.Menus)
+                            {
+                                <div class="my-1">
+                                    <span class="pt-2 pr-2 float-right">
+                                        <a onclick="Add(@Model.Restaurant.Id,@menu.Id)" class="btn btn-outline-secondary btn-sm">ADD</a>
+                                    </span>
+                                    <div class="media">
+                                        <div class="mr-3 font-weight-bold text-danger ml-1">
+                                            <img src="@menu.FullLogoPath" width="40px" height="40px">
+                                        </div>
+                                        <div class="ml-4 media-body">
+                                            <h6 class="mb-1">@menu.Name </h6>
+                                            <p class="text-muted mb-0">$@menu.PriceStr</p>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            @*  ----------- menu end ----------- *@
+
+            @*  ----------- rating start ----------- *@
+            <div id="RatingBox" class="mb-3">
+                <partial name="Rating" />
+            </div>
+        </div>
+        @* ------ right column------ *@
+        <div class="col-md-4 pt-3">
+            <div class="osahan-cart-item rounded rounded shadow-sm overflow-hidden bg-white sticky_sidebar">
+                <div class="d-flex border-bottom osahan-cart-item-profile bg-white p-3 ">
+                    <div class="d-flex flex-column">
+                        <h6 class="mb-1 font-weight-bold">@Model.Restaurant.Name</h6>
+                        <p class="mb-0 small text-muted"><i class="feather-map-pin"></i> @Model.Restaurant.Street, @Model.Restaurant.City </p>
+                        <p> @Model.Restaurant.State, @Model.Restaurant.Zip</p>
+                    </div>
+                </div>
+                <div id="RightCartItemBox">
+                    <partial name="Cart" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="p-3">
+    <script>
+        function Rating(score,restId){
+            let url ="/Rating/Rate?value=" + score + "&restId=" + restId;
+            send(url, "#RatingBox");
+        }
+        function Decrease(restaurantId, orderId,orderItemId) {
+            let url = "/Order/Decrease/" + restaurantId + "?orderId=" + orderId + "&orderItemId=" + orderItemId;
+            send(url, "#RightCartItemBox");
+        }
+        function Increase(restaurantId, orderId,orderItemId) {
+          let url = "/Order/Increase/" + restaurantId + "?orderId=" + orderId + "&orderItemId=" + orderItemId;
+            send(url, "#RightCartItemBox");
+        }
+
+        function Add(restaurantId, menuId) {
+            let url = "/Order/UpdateCart/" + menuId + "?restaurantId=" + restaurantId;
+            send(url, "#RightCartItemBox");
+        }
+        function send(url,parent) {
+            $.ajax(url, {
+                success: function (data, status, xhr) {
+                    $(parent).html(xhr.responseText);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    console.log('Error' + errorMessage);
+                }
+            })
+        }
+    </script>

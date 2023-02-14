@@ -1,0 +1,141 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> signInManager;
+@inject UserManager<IdentityUser> userManager;
+@{
+
+    var isSignedIn = signInManager.IsSignedIn(User);
+    var role = Context.Session.GetString("UserRole");
+    var avatar = Context.Session.GetString("Avatar");
+    var username = Context.Session.GetString("UserName");
+    if (isSignedIn == true &&( username == null||  username == ""))
+    {
+        signInManager.SignOutAsync().GetAwaiter().GetResult();
+        isSignedIn = false;
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Restaurant Network Enduser Portal</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="~/vendor/slick/slick.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/vendor/slick/slick-theme.min.css" />
+    <link href="~/vendor/icons/feather.css" rel="stylesheet" type="text/css" />
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body class="fixed-bottom-bar">
+    <header class="section-header">
+      <section class="header-main shadow-sm bg-white">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-1 ">
+              <a asp-action="Index" asp-controller="Home" class="brand-wrap mb-0">
+                <img alt="#" class="img-fluid" src="../../img/logo_web1.png" />
+              </a>
+            </div>
+
+                    <div class="col-6 d-flex align-items-center m-none text-primary" style="font-family: 'Monoton', cursive;"><h1>restaurant connection</h1> </div>
+
+            <div class="col-5">
+              <div class="d-flex align-items-center justify-content-end pr-6">
+                <a asp-controller="Home" asp-action="Restaurants" class="widget-header mr-4 text-dark">
+                  <div class="icon d-flex align-items-center"><i class="feather-search h6 mr-2 mb-0"></i> <span>Search</span></div>
+                </a>
+                @if (signInManager.IsSignedIn(User))
+                {
+                     <div class="dropdown mr-4 m-none">
+                        <a href="#" class="dropdown-toggle text-dark py-3 d-block" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           <img alt="#" src="@avatar" class="img-fluid rounded-circle header-user mr-2 header-user" /> Hi @username
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" asp-controller="Account" asp-action="Profile">My profile</a>
+                        <a class="dropdown-item" asp-controller="Order"  asp-action="MyOrder" asp-route-username = "@username">My orders</a>
+                        <a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a>
+                        </div>
+                    </div>           
+                }else{
+                    <a asp-controller="Account" asp-action="Login" class="widget-header mr-4 text-dark m-none">
+                      <div class="icon d-flex align-items-center"><i class="feather-user h6 mr-2 mb-0"></i> <span>Log in</span></div>
+                    </a>
+                    <a asp-controller="Account" asp-action="Signup" class="widget-header mr-4 text-dark m-none">
+                        <div class="icon d-flex align-items-center"><i class="feather-user h6 mr-2 mb-0"></i> <span>Sign up</span></div>
+                    </a>
+                }
+                            
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3" style="min-height: 1000px">
+            @RenderBody()
+        </main>
+    </div>
+
+
+      <footer class="section-footer border-top bg-dark" id="footer">
+      <div class="container">
+        <section class="footer-top padding-y py-5">
+          <div class="row">
+            <aside class="col-md-4 footer-about">
+              <article class="d-flex pb-3">
+                <div><img alt="#" src="~/img/logo_web1.png" class="logo-footer mr-3" /></div>
+                <div>
+                  <h6 class="title text-white">About Us</h6>
+                  <p class="text-muted">Restaurant Network</p>
+                  <p class="text-muted">© 2023 All rights reserved</p>
+                  <div class="d-flex align-items-center">
+                    <a class="btn btn-icon btn-outline-light mr-1 btn-sm" title="Facebook" target="_blank" href="#"><i class="feather-facebook"></i></a>
+                    <a class="btn btn-icon btn-outline-light mr-1 btn-sm" title="Instagram" target="_blank" href="#"><i class="feather-instagram"></i></a>
+                    <a class="btn btn-icon btn-outline-light mr-1 btn-sm" title="Youtube" target="_blank" href="#"><i class="feather-youtube"></i></a>
+                    <a class="btn btn-icon btn-outline-light mr-1 btn-sm" title="Twitter" target="_blank" href="#"><i class="feather-twitter"></i></a>
+                  </div>
+                </div>
+              </article>
+            </aside>
+
+            <aside class="col-sm-3 col-md-3 text-white">
+              <h6 class="title">Services</h6>
+              <ul class="list-unstyled hov_footer">
+                <li> Contact Us</li>
+              </ul>
+            </aside>
+            <aside class="col-sm-3 col-md-3 text-white">
+              <h6 class="title">For users</h6>
+              <ul class="list-unstyled hov_footer">
+                  <li><a class="text-muted"  asp-controller="Account" asp-action="Login">User Login</a></li>
+                  <li><a class="text-muted"  asp-controller="Account" asp-action="Signup">User Register</a></li>
+              </ul>
+            </aside>
+            <aside class="col-sm-3 col-md-2 text-white">
+              <h6 class="title">More Pages</h6>
+              <ul class="list-unstyled hov_footer">
+                <li><a class="text-muted" asp-area="Restaurants" asp-controller="Home" asp-action="Restaurants">Restaurants</a></li>
+              </ul>
+            </aside>
+          </div>
+
+        </section>
+      </div>     
+    </footer>
+    
+
+     <script  src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script  src="~/vendor/slick/slick.min.js"></script>
+    <script src="~/js/osahan.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

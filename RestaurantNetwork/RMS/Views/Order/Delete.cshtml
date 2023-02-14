@@ -1,0 +1,76 @@
+﻿@model RMS.Models.Order.DeleteViewModel
+
+<div class="section">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-gray">
+            @foreach (var path in Model.Paths)
+            {
+                <li class="breadcrumb-item"><a asp-controller="@path.ControllerName" asp-action="@path.ActionName">@path.Titile</a></li>
+            }
+        </ol>
+    </nav>
+    @if (Model.Message != null && Model.Message != "")
+    {
+        <div class="alert alert-danger alert-dismissible shadow-inset fade show" role="alert">
+            <span class="alert-inner--icon"><span class="fas fa-fire"></span></span>
+            <span class="alert-inner--text">
+                @Model.Message
+            </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Delete" asp-controller="Order" class="mt-2 mb-4 row" method="post">
+                <!--<div asp-validation-summary="All" class="text-danger" role="alert"></div>-->
+                <div class="form-group col-6">
+                    <label asp-for="DeleteRow.UserName" class="text-dark">User Name</label>
+                    <input readonly asp-for="DeleteRow.UserName" class="form-control" />
+                </div>
+
+                <div class="form-group col-6">
+                    <label class="text-dark">Order No.</label>
+                    <input readonly asp-for="DeleteRow.Id" class="form-control" />
+                </div>
+
+                <div class="col-12">
+                    <label class="text-dark">Restaurant Name</label>
+                    <input readonly asp-for="DeleteRow.Provider.Name" class="form-control" />
+                </div>
+
+                <div class="form-group col-12">
+                    <label asp-for="DeleteRow.SubTotal" class="text-dark">SubTotal</label>
+                    <input readonly asp-for="DeleteRow.SubTotal" class="form-control" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="DeleteRow.Status" class="text-dark">Status</label>
+                    <input readonly asp-for="DeleteRow.Status" class="form-control" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="DeleteRow.PayType" class="text-dark">Pay Type</label>
+                    <input readonly asp-for="DeleteRow.PayType" class="form-control" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="DeleteRow.PayName" class="text-dark">Pay User Name</label>
+                    <input readonly asp-for="DeleteRow.PayName" class="form-control" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="DeleteRow.PayTime" class="text-dark">Pay User Name</label>
+                    <input readonly asp-for="DeleteRow.PayTime" class="form-control" />
+                </div>
+
+                <div class="col-4">
+                </div>
+                <br />
+                <div class="col-4">
+                    <button readonly type="submit" class="btn btn-primary btn-block">Delete</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
