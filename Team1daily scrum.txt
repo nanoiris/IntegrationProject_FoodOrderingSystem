@@ -33,7 +33,7 @@ POC and test
 2023/02/14 Xiao Zhang 
 1. Done / not done since last scrum:
 2. To do until next Scrum:
-
+CI/DC research 
 3. Need assistance / figure things out
 
 2023/02/14 Qichen 
