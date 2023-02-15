@@ -85,20 +85,21 @@ Proposal
 
 2023/02/ Xiao Pei
 1. Done / not done since last scrum:
-- trello user story for Enduser, Oss
-- backup database to local 
 2. To do until next Scrum:
-- UI design, views 
 3. Need assistance / figure things out
 
 2023/02/ Wenzhe
-1. Done / not done since last scrum:
+1. Done / not done since last scrum
 2. To do until next Scrum:
 3. Need assistance / figure things out
 
-2023/02/ Xiao Zhang 
+2023/02/15 Xiao Zhang 
 1. Done / not done since last scrum:
+- study CI/CD
 2. To do until next Scrum:
+- discuss further database structure 
+- get familiar with previous codes
+- discuss and distribut tasks
 3. Need assistance / figure things out
 
 2023/02/ Qichen 
