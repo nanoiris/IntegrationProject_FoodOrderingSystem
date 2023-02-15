@@ -74,3 +74,36 @@ Proposal
 3. Need assistance / figure things out
 
 =============================================================
+2023/02/15 Yi 
+1. Done / not done since last scrum:
+- trello user stories for RMS, DMS
+- proposal text edit 
+2. To do until next Scrum:
+- add/edit user stories if necessary 
+- refine database structure 
+3. Need assistance / figure things out
+
+2023/02/ Xiao Pei
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/02/ Wenzhe
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/02/ Xiao Zhang 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/02/ Qichen 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/02/ Zibin 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
