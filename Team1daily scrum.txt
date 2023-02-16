@@ -122,29 +122,42 @@ discuss and distribut tasks
 =============================================================
 2023/02/16 Yi 
 1. Done / not done since last scrum:
+- proposal finalization and submission 
+- blazor MAUI research 
 2. To do until next Scrum:
+- web assembly study 
 3. Need assistance / figure things out
 
 2023/02/ Xiao Pei
 1. Done / not done since last scrum:
+- Try to build the first Maui Blazor App
+- Self learning Blazor & .net  Maui
 2. To do until next Scrum:
+- end user portal improvement with exsiting project
 3. Need assistance / figure things out
 
 2023/02/ Wenzhe
 1. Done / not done since last scrum:
+- -research .NET based microservice architecture
 2. To do until next Scrum:
+- Project Architecture plan & use of different database 
 3. Need assistance / figure things out
 
 2023/02/16 Xiao Zhang 
 1. Done / not done since last scrum:
 - learned Maui blazor 
 2. To do until next Scrum:
-- continue with Maui blazor
+-  MAUI study 
 3. Need assistance / figure things out
 
 2023/02/ Qichen 
 1. Done / not done since last scrum:
+- Go through old project codes
+- watch and try Blazor and MAUI tutorials
 2. To do until next Scrum:
+- continue go through old project codes
+- figure out the structure difference between original and Blazor
+- Todos after the distribute tasks by team
 3. Need assistance / figure things out
 
 2023/02/ Zibin 
