@@ -197,4 +197,34 @@ discuss and distribut tasks
 -watch and try Data modeling in Azure Cosmos DB
 -discuss how to optimize database structure
 3. Need assistance / figure things out
+=============================================================
+2023/02/19 Sunday Yi 
+1. Done / not done since last scrum:
+RMS UI migration to Blazor webassembly 
+POC of enduser demo on blazor MAUI 
+2. To do until next Scrum:
+continue UI migration 
+3. Need assistance / figure things out
+
+2023/02/ Xiao Pei
+1. Done / not done since last scrum:
+improvement on enduser project 
+enduser UI migration 
+2. To do until next Scrum:
+continue  UI migration on end user project 
+3. Need assistance / figure things out
+
+2023/02/ Wenzhe
+1. Done / not done since last scrum:
+project architecture setup 
+2. To do until next Scrum:
+finish project architecture set up and release 
+3. Need assistance / figure things out
+
+2023/02/ Zibin 
+1. Done / not done since last scrum:
+DMS UI research and POC 
+2. To do until next Scrum:
+start DMS UI with blazor MAUI 
+3. Need assistance / figure things out
 
