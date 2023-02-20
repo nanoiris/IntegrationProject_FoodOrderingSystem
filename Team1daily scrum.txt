@@ -206,7 +206,7 @@ POC of enduser demo on blazor MAUI
 continue UI migration 
 3. Need assistance / figure things out
 
-2023/02/ Xiao Pei
+2023/02/19 Sunday Xiao Pei
 1. Done / not done since last scrum:
 improvement on enduser project 
 enduser UI migration 
@@ -214,14 +214,14 @@ enduser UI migration
 continue  UI migration on end user project 
 3. Need assistance / figure things out
 
-2023/02/ Wenzhe
+2023/02/19 Sunday Wenzhe
 1. Done / not done since last scrum:
 project architecture setup 
 2. To do until next Scrum:
 finish project architecture set up and release 
 3. Need assistance / figure things out
 
-2023/02/ Zibin 
+2023/02/19 Sunday Zibin 
 1. Done / not done since last scrum:
 DMS UI research and POC 
 2. To do until next Scrum:
