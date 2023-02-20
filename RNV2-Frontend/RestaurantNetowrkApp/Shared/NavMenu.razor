@@ -18,7 +18,7 @@
     </ul>
     <ul class="bottom-nav">
         <li class="email">
-            <a class="text-danger" href="home.html">
+            <a class="text-danger" href="">
                 <p class="h5 m-0"><i class="feather-home text-danger"></i></p>
                 Home
             </a>
@@ -39,12 +39,5 @@
 </nav>
 
 @code {
-    private bool collapseNavMenu = true;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
 }
