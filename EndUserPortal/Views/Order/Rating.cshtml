@@ -1,0 +1,41 @@
+﻿@model EndUserPortal.Models.ViewModels.RestaurantViewModel
+
+<div class="bg-white rounded p-3 mb-3 clearfix graph-star-rating rounded shadow-sm">
+    <h6 class="mb-0 mb-1">Ratings and Reviews</h6>
+    @*  <p class="text-muted mb-4 mt-1 small">Rated @Model.Restaurant.Rating out of 5</p> *@
+    <div class="graph-star-rating-body">
+        @for (int i = 5; i > 0; i--)
+        {
+            <div class="rating-list">
+                <div class="rating-list-left font-weight-bold small">@i Star</div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div role="progressbar" class="progress-bar bg-info" style="width: @(Model.Ratings[i - 1]);"></div>
+                    </div>
+                </div>
+                <div class="rating-list-right font-weight-bold small">@(Model.Ratings[i - 1])</div>
+            </div>
+        }
+    </div>
+</div>
+<div id="ratings-and-reviews" class="bg-white shadow-sm d-flex align-items-center rounded p-3 mb-3 clearfix restaurant-detailed-star-rating">
+    <h6 class="mb-0 py-4">Rate this Place</h6><div class="star-rating ml-auto">
+        <div class="d-inline-block h6 m-0">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <a id="star-@i" onclick="ChangeStarColor(@i); Rating(@i,@Model.Restaurant.Id)"> <i class="feather-star"></i></a>
+            }
+        </div><b class="text-black ml-2">@Model.TotalRatings</b>
+    </div>
+</div>
+
+<script>
+    function ChangeStarColor(index) {
+        for (var i = 1; i <= index; i++) {
+            document.getElementById("star-" + i).innerHTML = '&nbsp<i class="feather-star text-warning" ></i>&nbsp';
+        }
+        for (var i = index+1; i<=5; i++){
+            document.getElementById("star-" + i).innerHTML = '&nbsp<i class="feather-star" ></i>&nbsp';
+        }
+    }
+</script>

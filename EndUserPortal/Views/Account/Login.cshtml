@@ -1,0 +1,68 @@
+﻿@model EndUserPortal.Models.ViewModels.LoginViewModel
+@{
+  ViewData["Title"] = "Login";
+}
+@{
+  Layout = "~/Views/Shared/_NoHeaderLayout.cshtml";
+}
+@if (Model.Message != null && Model.Message != "")
+{
+  if (Model.Message.Contains("successfully"))
+  {
+            <div class="alert alert-success alert-dismissible shadow-inset fade show" role="alert">
+                <span class="alert-inner--icon"><span class="fas fa-check"></span></span>
+                <span class="alert-inner--text">
+        @Model.Message
+                </span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+  }
+  else
+  {
+            <div class="alert alert-danger alert-dismissible shadow-inset fade show" role="alert">
+                <span class="alert-inner--icon"><span class="fas fa-fire"></span></span>
+                <span class="alert-inner--text">
+        @Model.Message
+                </span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+  }
+}
+
+ <div class="login-page vh-100">
+
+      <div class="d-flex align-items-center justify-content-center vh-100">
+        <div class="px-5 col-md-6 ">
+          <div class="px-5 col-10 mx-auto">
+            <h2 class="text-dark my-0">Welcome! </h2>
+            <p></p>
+            <p class="text-50">Sign in to continue</p>
+            <form class="mt-5 mb-4" method="post">
+              <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+              <div class="form-group">
+                <label asp-for="Email" class="text-dark">Email</label>
+                <input asp-for="Email" type="text" placeholder="" class="form-control" id="Email" />
+                 <span asp-validation-for="Email" class="text-danger"></span>
+              </div>
+              <div class="form-group">
+                <label asp-for="Password" class="text-dark">Password</label>
+                <input asp-for="Password" type="password" placeholder="" class="form-control" id="Password" />
+                 <span asp-validation-for="Password" class="text-danger"></span>
+              </div>
+              <button class="btn btn-primary btn-lg btn-block">SIGN IN</button>
+            </form>
+             <br>
+            <div class="d-flex align-items-center justify-content-center">
+              <a asp-action="Signup">
+                <p class="text-center m-0">Don't have an account? Sign up</p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+

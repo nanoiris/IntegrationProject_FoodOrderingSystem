@@ -1,0 +1,52 @@
+﻿@model EndUserPortal.Models.ViewModels.RestaurantViewModel
+
+@if (Model.Order != null)
+{
+    <div class="bg-white border-bottom py-2">
+        @foreach (var orderItem in Model.Order.OrderItems)
+        {
+            <div class="gold-members d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                <div class="media align-items-center">
+                    <div class="mr-2 text-danger">&middot;</div>
+                    <div class="media-body">
+                        <p class="m-0">@orderItem.Item.Name</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <span class="count-number float-right">
+                        <a onclick="Decrease(@Model.Restaurant.Id,@Model.Order.Id,@orderItem.Id)" class="btn-sm left dec btn btn-outline-secondary">
+                            <i class="feather-minus"></i>
+                        </a>
+                        <input class="count-number-input" type="text" readonly="" value="@orderItem.Qty">
+                        <a onclick="Increase(@Model.Restaurant.Id,@Model.Order.Id,@orderItem.Id)" class="btn-sm left dec btn btn-outline-secondary">
+                            <i class="feather-plus"></i>
+                        </a>
+                    </span>
+                    <p class="text-gray mb-0 float-right ml-2 text-muted small">$@orderItem.Item.PriceStr</p>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="bg-white p-3 clearfix border-bottom">
+        <p class="mb-1">Item Total <span class="float-right text-dark">@Model.Order.ItemTotal</span></p>
+        <p class="mb-1">GST/HST <span class="float-right text-dark">@Model.Order.GSTHST</span></p>
+        <p class="mb-1">PST/TST/QST <span class="float-right text-dark">@Model.Order.PSTQST</span></p>
+        <hr>
+        <h6 class="font-weight-bold mb-0 text-danger">ORDER TOTAL <span class="float-right">@Model.Order.OrderTotal</span></h6>
+
+    </div>
+    <div class="p-3">
+        <form action="/Order/CreateCheckOutSession" method="post">
+            <p class="mb-1">Pick up Time:</p>
+            <input type="datetime-local" class="form-control" id="pickupTime" name="pickupTime" asp-for="pickupTime" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")">
+
+            <p></p>
+            <input type="hidden" value="@Model.Order.PayTotal" asp-for="payTotal" />
+            <input type="hidden" value="@Model.Restaurant.Name" asp-for="restaurantName" />
+            <input type="hidden" value="@Model.Order.Id" asp-for="orderId" />
+            <button type="submit" class="btn btn-success  btn-block btn-lg border-0 " id="btnPay">
+                PAY $@(Model.Order.PayTotal?.ToString("0.00"))
+            </button>
+        </form>
+    </div>
+}
