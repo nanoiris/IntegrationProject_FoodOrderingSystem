@@ -150,7 +150,7 @@ discuss and distribut tasks
 - Todos after the distribute tasks by team
 3. Need assistance / figure things out
 
-2023/02/ Zibin 
+2023/02/16 Zibin 
 1. Done / not done since last scrum:
 -discuss database structure
 -watch and try Blazor and Maui tutorials
@@ -158,3 +158,73 @@ discuss and distribut tasks
 -continute Go through old project codes
 -discuss and distribut tasks
 3. Need assistance / figure things out
+=============================================================
+2023/02/17 Yi 
+1. Done / not done since last scrum:
+- self-learning on Blazor web assembly 
+- practice on blazor webassembly implementation
+2. To do until next Scrum:
+- confirm project architecture for blazor web assembly project 
+- start RMS/OSS if possible 
+3. Need assistance / figure things out
+- project architecture for blazor web assembly project 
+
+2023/02/17 Xiao Pei
+1. Done / not done since last scrum:
+- self learning : web API
+- self learning : Maui Blazor
+- optimize Enduser program
+2. To do until next Scrum:
+- end user portal improvement with exsiting project
+3. Need assistance / figure things out
+
+2023/02/17 Wenzhe
+1. Done / not done since last scrum:
+- POC-JWT, 
+- split the Identity related the function/ MAUI.
+
+2. To do until next Scrum:
+- CICD / microservice arthitecture
+
+3. Need assistance / figure things out
+
+2023/02/17 Zibin 
+1. Done / not done since last scrum:
+-continue Go through old project codes
+-Install and try use the Azure Cosmos DB emulator for local development
+2. To do until next Scrum:
+-continue Go through old project codes
+-watch and try Data modeling in Azure Cosmos DB
+-discuss how to optimize database structure
+3. Need assistance / figure things out
+=============================================================
+2023/02/19 Sunday Yi 
+1. Done / not done since last scrum:
+RMS UI migration to Blazor webassembly 
+POC of enduser demo on blazor MAUI 
+2. To do until next Scrum:
+continue UI migration 
+3. Need assistance / figure things out
+
+2023/02/19 Sunday Xiao Pei
+1. Done / not done since last scrum:
+- change half of EndUser project to single page 
+- add check-delivery page 
+2. To do until next Scrum:
+continue  UI migration on end user project 
+3. Need assistance / figure things out
+
+2023/02/19 Sunday Wenzhe
+1. Done / not done since last scrum:
+project architecture setup 
+2. To do until next Scrum:
+finish project architecture set up and release 
+3. Need assistance / figure things out
+
+2023/02/19 Sunday Zibin 
+1. Done / not done since last scrum:
+DMS UI research and POC 
+2. To do until next Scrum:
+start DMS UI with blazor MAUI 
+3. Need assistance / figure things out
+
