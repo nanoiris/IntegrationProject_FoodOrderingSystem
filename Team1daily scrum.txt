@@ -208,8 +208,8 @@ continue UI migration
 
 2023/02/19 Sunday Xiao Pei
 1. Done / not done since last scrum:
-improvement on enduser project 
-enduser UI migration 
+- change half of EndUser project to single page 
+- add check-delivery page 
 2. To do until next Scrum:
 continue  UI migration on end user project 
 3. Need assistance / figure things out
