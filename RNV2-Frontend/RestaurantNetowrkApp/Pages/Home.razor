@@ -1,16 +1,14 @@
 ﻿@page "/"
 @using RestaurantNetowrkApp.Componants
+@inject IJSRuntime JSRuntime
+
 
 <div class="osahan-home-page">
     <div class="shadow p-3 homepage-osahan-header bg-white">
         <div class="title d-flex align-items-center">
             <div class="mr-auto">
-                <a class="text-dark d-flex align-items-center" href="location.html">
-                    <i class="feather-map-pin fs-18 mr-2"></i>
-                    <h6 class="m-0 border-dashed-bottom">
-                        Restaurant Connection
-                    </h6>
-                </a>
+                <img src="img/logo.png" style="width:30px" />
+                <h5 class="text-primary d-inline"> Restaurant Connection</h5>
             </div>
             <div class="ml-auto d-flex align-items-center">
                 <a class="text-dark mx-2 fs-18 top-nav-btn-cart position-relative" data-toggle="modal"
@@ -39,9 +37,15 @@
             </a>
         </div>
 
-        <div class="trending-slider">
+        <div id="trending-slider">
             <div class="osahan-slider-item py-3 px-1">
                  <RestaurantCard />
+            </div>
+            <div class="osahan-slider-item py-3 px-1">
+                <RestaurantCard />
+            </div>
+            <div class="osahan-slider-item py-3 px-1">
+                <RestaurantCard />
             </div>
             <div class="osahan-slider-item py-3 px-1">
                 <RestaurantCard />
@@ -57,16 +61,16 @@
 
         <div class="most_popular px-3 pb-5">
             <div class="row">
-                <div class="col-6 pr-1">
+                <div class="col-6 col-sm-4 pr-1">
                     <RestaurantCard />
                 </div>
-                <div class="col-6 pl-1">
+                <div class="col-6 col-sm-4 pl-1">
                     <RestaurantCard />
                 </div>
-                <div class="col-6 pr-1">
+                <div class="col-6 col-sm-4 pr-1">
                     <RestaurantCard />
                 </div>
-                <div class="col-6 pl-1">
+                <div class="col-6 col-sm-4 pl-1">
                     <RestaurantCard />
                 </div>
             </div>
@@ -78,5 +82,14 @@
 <NavMenuFooter />
 
 @code {
-
+    bool firstRender = true;
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeAsync<object>("homeSlick");
+            firstRender = false;
+        }
+       
+    }
 }
