@@ -1,0 +1,65 @@
+﻿@page "/category/edit/{categoryId:int}"
+@using RmsApp.Services
+@using RmsApp.Dtos
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using Microsoft.Extensions.Logging
+@inject ILogger<CategoryService> logger
+
+
+
+<h1>Category Edit</h1>
+<ul class="breadcrumb breadcrumb-gray">
+    @foreach (var path in Paths)
+    {
+             <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
+    }
+</ul>
+
+<form>
+        <div class="form-group">
+            <label for="id">ID:</label>
+            <input type="text" id="id" class="form-control" value="@Category.Id" readonly />
+        </div>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" class="form-control" value="@Category.Name" @oninput="@(e => Category.Name = e.Value.ToString())" />
+
+        </div>
+        <button class="btn btn-primary" @onclick="SaveCategory">Save</button>
+    </form>
+
+@code {
+    public List<TabPath> Paths = new List<TabPath>
+        {
+        new TabPath { Title = "Home", Path = "/" },
+        new TabPath { Title = "Category", Path = "/categoryList" },
+        new TabPath { Title = "Edit", Path = "/categoryEdit" },
+        };
+   [Parameter]
+    public string categoryId { get; set; }
+
+    public CategoryDto Category { get; set; }
+
+    [Inject]
+    public ICategoryService CategoryService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        logger.LogInformation("OnInitializedAsync");
+
+        if (!int.TryParse(categoryId, out var id))
+        {
+            NavigationManager.NavigateTo("/category");
+        }
+
+        @* Category = await CategoryService.GetCategoryAsync(id); *@
+    }
+
+    private async Task SaveCategory()
+    {
+        @* await CategoryService.UpdateCategoryAsync(Category);
+        NavigationManager.NavigateTo("/category"); *@
+    }
+}
+

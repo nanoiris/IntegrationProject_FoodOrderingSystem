@@ -1,13 +1,15 @@
-﻿@using RmsApp.Services
+﻿@page "/category"
+
+@using RmsApp.Services
 @using RmsApp.Dtos
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 @using Microsoft.Extensions.Logging
 @inject ILogger<CategoryService> logger
 
-@page "/category"
 
-<h1>Category List</h1>
+
+@* <h1>Category List</h1> *@
 <ul class="breadcrumb breadcrumb-gray">
     @foreach (var path in Paths)
     {
@@ -16,15 +18,15 @@
 </ul>
 <div class="row pb-3">
             <div class="col-2">
-                <a class="btn btn-icon-only btn-pill btn-primary" ><i class="fa fa-plus"></i></a>
+                <a class="btn btn-icon-only btn-pill btn-primary" href="/category/Add"><i class="fa fa-plus"></i></a>
             </div>
 </div>
 <br>
 
 @if (Categories != null && Categories.Any())
 {
-    <table>
-        <thead>
+    <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
+        <thead class="text-danger font-weight-bold">
             <tr>
                 <th>ID</th>
                 <th>Name</th>
@@ -38,12 +40,8 @@
                 <tr>
                     <td>@category.Id</td>
                     <td>@category.Name</td>
-                    <td>
-                        <button>Edit</button>
-                    </td>
-                    <td>
-                        <button>Delete</button>
-                    </td>
+                    <td><a class="btn btn-icon-only btn-pill btn-primary" href="/category/edit/@category.Id"><i class="fa fa-pen"></i></a></td>
+                    <td><a class="btn btn-icon-only btn-pill btn-primary" href="/category/delete/@category.Id"><i class="fa fa-trash"></i></a></td>
                 </tr>
             }
         </tbody>
