@@ -1,19 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace IdentityServer.Models
 {
-    public class AppUser : IdentityUser
+    public class UpdateUserViewModel
     {
-        [MaxLength(30)]
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
         public string Name { get; set; }
-        [MaxLength(60)]
+        public string? PhoneNumber { get; set; }
+        public IFormFile? UploadImg { get; set; }
         public string? Logo { get; set; }
-        [MaxLength(40)]
         public string? RestaurantId { get; set; }
-        [MaxLength(40)]
         public string? RestaurantName { get; set; }
         [MaxLength(20)]
         public string? District { get; set; }
@@ -27,8 +25,6 @@ namespace IdentityServer.Models
         public string? Country { get; set; }
         [MaxLength(20)]
         public string? PostCode { get; set; }
-
-        [NotMapped]
         public string? Role { get; set; }
     }
 }

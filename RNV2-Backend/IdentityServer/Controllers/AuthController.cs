@@ -28,7 +28,6 @@ namespace IdentityServer.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginCookie([FromForm] LoginViewModel model)
         {
-            logger.LogInformation("Enter Login");
             IActionResult response = Unauthorized();
 
             if (ModelState.IsValid)
@@ -46,7 +45,6 @@ namespace IdentityServer.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
-            logger.LogInformation("Enter Login");
             IActionResult response = Unauthorized();
             if (ModelState.IsValid)
             {
@@ -62,7 +60,6 @@ namespace IdentityServer.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromForm]RegisterViewModel model)
         {
-            logger.LogInformation($"Register {model}");
             if (ModelState.IsValid)
             {
                 if(model.UploadImg != null)
@@ -76,8 +73,9 @@ namespace IdentityServer.Controllers
         }
         
         [HttpGet]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
+            await userService.Logout();
             return Ok();
         }
     }
