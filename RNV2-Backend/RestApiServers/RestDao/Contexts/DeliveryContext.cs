@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RestaurantDao.Models;
+using RestaurantDaoBase.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
