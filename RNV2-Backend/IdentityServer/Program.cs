@@ -74,6 +74,7 @@ namespace IdentityServer
             builder.Services.AddScoped<IUserService,UserService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IFileService, LocalFileService>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -1,5 +1,7 @@
-﻿using IdentityServer.Models;
+﻿using IdentityServer.Controllers;
+using IdentityServer.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using System.Drawing.Imaging;
 using System.IO;
 
@@ -9,15 +11,18 @@ namespace IdentityServer.Services
     {
         public AppResult DeleteFile(string fileName, IConfiguration Configuration)
         {
-            string dirPath = Configuration["LogoRoorPath"];
+            string dirPath = Configuration["LogoRootPath"];
             string fullFilePath = $"{dirPath}\\{fileName}";
 
-            File.Delete(fullFilePath);
-            return new AppResult
+            try
             {
-                Message = "File is deleted successfully",
-                IsSuccess = true,
-            };
+                File.Delete(fullFilePath);
+            }catch(System.IO.IOException ex)
+            {
+                return new AppResult(ex.Message,false);
+            }
+
+            return new AppResult("", true);
         }
         public string SaveFile(IFormFile formFile, IConfiguration Configuration)
         {
