@@ -23,7 +23,7 @@ namespace RmsApp.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("mock/weather.json");
         }
 
         public class WeatherForecast

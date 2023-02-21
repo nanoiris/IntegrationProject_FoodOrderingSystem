@@ -1,9 +1,55 @@
-﻿@page "/category"
+﻿@using RmsApp.Services
+@using RmsApp.Dtos
+@inject ICategoryService CategoryService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
-@inherits RmsApp.Pages.CategoryBase
+@page "/category"
 
-<PageTitle>Category</PageTitle>
-<h1>Category</h1>
+<h1>Category List</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+@if (Categories != null && Categories.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Categories)
+            {
+                <tr>
+                    <td>@category.Id</td>
+                    <td>@category.Name</td>
+                    <td>
+                        <button>Edit</button>
+                    </td>
+                    <td>
+                        <button>Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No categories found.</p>
+}
 
+<button>New Category</button>
+
+@code {
+    public List<CategoryDto> Categories { get; set; }
+    public async Task OnGetAsync()
+    {
+        Categories = await CategoryService.ListCategoryAsync(1);
+    }
+
+    
+    }
+}
