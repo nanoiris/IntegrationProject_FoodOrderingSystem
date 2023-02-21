@@ -9,7 +9,7 @@ namespace RestaurantDaoBase.IServices
 {
     public interface IRestaurantService
     {
-        public List<RestCategory> ListCategory();
+        public Task<List<RestCategory>> ListCategory();
         public List<Restaurant> ListWeeklyTrends();
         public List<Restaurant> ListWithLimit(int limit);
         public List<Restaurant> Search(string searchKey, string categoryName, string sortField);
@@ -22,7 +22,7 @@ namespace RestaurantDaoBase.IServices
 
         public Task<RestCategory?> FindCategory(string categoryId);
         public Task<bool> DeleteCategory(string categoryId);
-        public Task<bool> AddCategory(RestCategory category, Stream logo);
-        public Task<bool> UpdateCategory(RestCategory category, Stream logo);
+        public Task<bool> AddCategory(RestCategory category);
+        public Task<bool> UpdateCategory(RestCategory categor);
     }
 }

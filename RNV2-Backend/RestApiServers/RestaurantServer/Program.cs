@@ -1,4 +1,8 @@
 
+using RestaurantDao.Services;
+using RestaurantDaoBase.IServices;
+using RestaurantServer.Services;
+
 namespace RestaurantServer
 {
     public class Program
@@ -13,6 +17,11 @@ namespace RestaurantServer
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IFileService, LocalFileService>(
+                x => new LocalFileService(builder.Configuration["LogoRootPath"]));
+            builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+
 
             var app = builder.Build();
 

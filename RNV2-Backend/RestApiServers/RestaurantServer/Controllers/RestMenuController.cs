@@ -5,7 +5,7 @@ namespace RestaurantServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RestaurantMenuController : ControllerBase
+    public class RestMenuController : ControllerBase
     {
     }
 }

@@ -5,30 +5,43 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using RmsApp.Dtos;
 using RmsApp.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Components;
 
 namespace RmsApp.Services
 {
     public class CategoryService : ICategoryService
     {
         private readonly HttpClient _httpClient;
-
+      
         private readonly ILogger _logger;
+        /*
+        public CategoryService() 
+        {
 
+        }
         public CategoryService(HttpClient httpClient, ILogger _logger)
         {
             _httpClient = httpClient;
             this._logger = _logger; 
         }
-        public CategoryService( ILogger _logger)
+        public CategoryService(ILogger _logger)
         {
             this._logger = _logger;
         }
+        */
+
+        public CategoryService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+        
         public List<CategoryDto> Categories { get; set; }
         // public CategoryService()
         // {
@@ -63,13 +76,16 @@ namespace RmsApp.Services
         // }
         public async Task<List<CategoryDto>> ListCategoryAsync(int restaurantId)
         {
-            _logger.LogInformation("Enter service Log...");
+           Console.WriteLine("Enter service Log...");
             restaurantId = 1;
             Categories = new List<CategoryDto>();
 
+            return await _httpClient.GetFromJsonAsync<List<CategoryDto>>("http://localhost:5000/mock/mockCategory.json");
+
+            /*
             try
             {
-                var response = await _httpClient.GetAsync("http://localhost:5000/mock/mockCategory.json");
+                var response = await _httpClient.GetAsync("mock/mockCategory.json");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -89,7 +105,7 @@ namespace RmsApp.Services
             {
                 Debug.WriteLine(@"\tERROR {0}", ex.Message);
             }
-
+            */
             return Categories;
         }
 

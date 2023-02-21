@@ -2,13 +2,12 @@
 using RestaurantDao.Contexts;
 using RestaurantDaoBase.IServices;
 using RestaurantDaoBase.Models;
-using System;
 
 namespace RestaurantDao.Services
 {
     public partial class RestaurantService : IRestaurantService
     {
-        public async Task<bool> AddCategory(RestCategory category, Stream logo)
+        public async Task<bool> AddCategory(RestCategory category)
         {
             category.Id = Guid.NewGuid().ToString("N");
             category.PartionKey = "MenuCategory";
@@ -46,7 +45,6 @@ namespace RestaurantDao.Services
                 return ctx.RestCategories.FirstOrDefaultAsync(x => x.Id == categoryId);
             }
         }
-
         public Task<List<RestCategory>> ListCategory()
         {
             using (var ctx = new RestaurantContext())
