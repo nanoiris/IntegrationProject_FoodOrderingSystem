@@ -8,14 +8,13 @@
 @inject ILogger<CategoryService> logger
 
 
-
-@* <h1>Category List</h1> *@
 <ul class="breadcrumb breadcrumb-gray">
     @foreach (var path in Paths)
     {
              <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
     }
 </ul>
+
 <div class="row pb-3">
             <div class="col-2">
                 <a class="btn btn-icon-only btn-pill btn-primary" href="/category/Add"><i class="fa fa-plus"></i></a>
