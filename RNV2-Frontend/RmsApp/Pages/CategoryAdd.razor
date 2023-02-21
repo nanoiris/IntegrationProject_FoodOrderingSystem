@@ -1,0 +1,53 @@
+﻿@page "/category/add"
+
+@using RmsApp.Services
+@using RmsApp.Dtos
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using Microsoft.Extensions.Logging
+@inject ILogger<CategoryService> logger
+
+
+
+@* <h1>New Category</h1> *@
+<ul class="breadcrumb breadcrumb-gray">
+    @foreach (var path in Paths)
+    {
+             <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
+    }
+</ul>
+<div class="form-group col-4">
+    <form method="post">
+      
+         <div class="form-group mb-3">
+          <label >Category Name</label>
+          <input class="form-control" />
+        <span class="text-danger"></span>
+       </div>
+       <div class="text-center">
+         <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+   </form>
+</div>
+ 
+
+@code {
+    public List<TabPath> Paths = new List<TabPath>
+        {
+        new TabPath { Title = "Home", Path = "/" },
+        new TabPath { Title = "Category", Path = "/category" },
+        new TabPath { Title = "Add", Path = "/category/add" },
+        };
+    public List<CategoryDto> Categories { get; set; }
+
+    [Inject]
+    public ICategoryService CategoryService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        logger.LogInformation("OnInitializedAsync");
+        Categories = (await CategoryService.ListCategoryAsync(1)).ToList();
+
+    } 
+}
+

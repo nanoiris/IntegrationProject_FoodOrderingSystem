@@ -1,18 +1,17 @@
 ﻿@page "/fetchdata"
 @using RmsApp.Pages
-@inherits RmsApp.Pages.FetchDataBase
 @inject HttpClient Http
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>Example CRUD</PageTitle>
 
-<h1>Weather forecast</h1>
+<h1>Example CRUD</h1>
 
 <ul class="breadcrumb breadcrumb-gray">
     @foreach (var path in Paths)
     {
              <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
     }
-    </ul>
+</ul>
 
 @if (forecasts == null)
 {
@@ -20,6 +19,11 @@
 }
 else
 {
+    <div class="row pb-3">
+            <div class="col-2">
+                <a class="btn btn-icon-only btn-pill btn-primary" ><i class="fa fa-plus"></i></a>
+            </div>
+        </div>
     <table class="table">
         <thead>
             <tr>
@@ -27,6 +31,8 @@ else
                 <th>Temp. (C)</th>
                 <th>Temp. (F)</th>
                 <th>Summary</th>
+                <th>Edit</th>
+                 <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -37,34 +43,36 @@ else
                     <td>@forecast.TemperatureC</td>
                     <td>@forecast.TemperatureF</td>
                     <td>@forecast.Summary</td>
+                     <td><a class="btn btn-icon-only btn-pill btn-primary" ><i class="fa fa-pen"></i></a></td>
+                    <td><a class="btn btn-icon-only btn-pill btn-primary" ><i class="fa fa-trash"></i></a></td>
                 </tr>
             }
         </tbody>
     </table>
 }
 
-@* @code {
+@code {
     public List<TabPath> Paths = new List<TabPath>
-    {
-    new TabPath { Title = "Home", Path = "/" },
-    new TabPath { Title = "Weather Forcast", Path = "/fetchdata" },
-    };
+        {
+        new TabPath { Title = "Home", Path = "/" },
+        new TabPath { Title = "Example CRUD", Path = "/fetchdata" },
+        };
 
-    private WeatherForecast[]? forecasts;
+        public WeatherForecast[]? forecasts;
 
-    protected override async Task OnInitializedAsync()
-    {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
-    }
+        protected override async Task OnInitializedAsync()
+        {
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("mock/weather.json");
+        }
 
-    public class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
+        public class WeatherForecast
+        {
+            public DateOnly Date { get; set; }
 
-        public int TemperatureC { get; set; }
+            public int TemperatureC { get; set; }
 
-        public string? Summary { get; set; }
+            public string? Summary { get; set; }
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-} *@
+            public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        }
+}

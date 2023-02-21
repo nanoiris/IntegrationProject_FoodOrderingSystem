@@ -256,3 +256,36 @@ learn about blazor MAUI
 learn about how to connect to NoSql Cosmos DB 
 3. Need assistance / figure things out
 
+=============================================================
+2023/02/21 Tuesday Yi 
+1. Done / not done since last scrum:
+RMS implement category frontend with backend (mock data), in progress
+2. To do until next Scrum:
+finish category CRUD (frontend+backend)
+3. Need assistance / figure things out
+
+2023/02/21 Xiao Pei
+1. Done / not done since last scrum:
+UI for EndUser home, restaurants, trendings, restaurant menus, order details, checkout
+2. To do until next Scrum:
+continue
+3. Need assistance / figure things out
+
+2023/02/21 Wenzhe
+1. Done / not done since last scrum:
+finished identify server 
+finished rating server
+finished 30% restaurant 
+2. To do until next Scrum:
+finished all backend
+3. Need assistance / figure things out
+
+2023/02/21 Zibin 
+1. Done / not done since last scrum:
+design the login pages UI
+learn about how to CRUD data from NoSql Cosmos DB
+2. To do until next Scrum:
+continute learn about blazor MAUI 
+write the display order list UI 
+3. Need assistance / figure things out
+

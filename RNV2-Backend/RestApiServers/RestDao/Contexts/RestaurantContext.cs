@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RestaurantDao.Models;
+using RestaurantDaoBase.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,10 @@ namespace RestaurantDao.Contexts
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<RestCategory> RestCategories { get; set; }
         public DbSet<WeeklyTrend> weeklyTrends { get; set; }
-        
+
+        public RestaurantContext() : base() { }
+        public RestaurantContext(DbContextOptions options) : base(options) { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseCosmos(
             "https://localhost:8081",

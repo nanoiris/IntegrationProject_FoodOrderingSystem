@@ -1,4 +1,9 @@
 
+using Microsoft.EntityFrameworkCore;
+using RestaurantDao.Contexts;
+using RestaurantDao.Services;
+using RestaurantDaoBase.IServices;
+
 namespace RatingServer
 {
     public class Program
@@ -6,8 +11,22 @@ namespace RatingServer
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
 
-            // Add services to the container.
+            // Add cosmos 
+           /*
+            builder.Services.AddDbContext<RatingContext>(options =>
+            {
+                options.UseCosmos(
+                    builder.Configuration["Cosmos.EndPoint"],
+                    builder.Configuration["Cosmos.Key"],
+                    builder.Configuration["Cosmos.DatabasName"]
+                );
+            });
+            */
+
+            builder.Services.AddScoped<IRatingService, RatingService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

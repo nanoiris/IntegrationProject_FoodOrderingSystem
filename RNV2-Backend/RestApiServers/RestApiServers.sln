@@ -7,13 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RatingServer", "RatingServe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantDao", "RestDao\RestaurantDao.csproj", "{188B2451-C661-488B-B2D0-53896E75B095}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryServer", "DeliveryServer\DeliveryServer.csproj", "{C29499F3-C468-49EE-9763-6650913CBC1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeliveryServer", "DeliveryServer\DeliveryServer.csproj", "{C29499F3-C468-49EE-9763-6650913CBC1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderServer", "OrderServer\OrderServer.csproj", "{816E8435-F861-4D29-9885-936AE13EBF41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderServer", "OrderServer\OrderServer.csproj", "{816E8435-F861-4D29-9885-936AE13EBF41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantServer", "RestaurantServer\RestaurantServer.csproj", "{DE11DC9D-FCBD-4354-B8FF-EBAB68F32856}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantServer", "RestaurantServer\RestaurantServer.csproj", "{DE11DC9D-FCBD-4354-B8FF-EBAB68F32856}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenuServer", "MenuServer\MenuServer.csproj", "{2E10D059-3AC6-4FE4-8243-00E0D54DE05A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantDaoBase", "RestaurantDaoBase\RestaurantDaoBase.csproj", "{FF86037E-ACBC-4F2B-A475-63841CCD7105}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{DE11DC9D-FCBD-4354-B8FF-EBAB68F32856}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE11DC9D-FCBD-4354-B8FF-EBAB68F32856}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE11DC9D-FCBD-4354-B8FF-EBAB68F32856}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E10D059-3AC6-4FE4-8243-00E0D54DE05A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E10D059-3AC6-4FE4-8243-00E0D54DE05A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E10D059-3AC6-4FE4-8243-00E0D54DE05A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E10D059-3AC6-4FE4-8243-00E0D54DE05A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF86037E-ACBC-4F2B-A475-63841CCD7105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF86037E-ACBC-4F2B-A475-63841CCD7105}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF86037E-ACBC-4F2B-A475-63841CCD7105}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF86037E-ACBC-4F2B-A475-63841CCD7105}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

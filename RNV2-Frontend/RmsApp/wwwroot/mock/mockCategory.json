@@ -1,0 +1,27 @@
+﻿[
+  {
+    "restaurantId": 1,
+    "ID": "1",
+    "name": "Soups"
+  },
+  {
+    "restaurantId": 1,
+    "ID": "2",
+    "name": "Vegie"
+  },
+  {
+    "restaurantId": 1,
+    "ID": "3",
+    "name": "Drinks"
+  },
+  {
+    "restaurantId": 1,
+    "ID": "4",
+    "name": "Noondles"
+  },
+  {
+    "restaurantId": 2,
+    "ID": "5",
+    "name": "Rice"
+  }
+]
