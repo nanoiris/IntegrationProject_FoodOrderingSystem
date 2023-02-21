@@ -7,7 +7,17 @@
 @page "/category"
 
 <h1>Category List</h1>
-<button>New Category</button>
+<ul class="breadcrumb breadcrumb-gray">
+    @foreach (var path in Paths)
+    {
+             <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
+    }
+</ul>
+<div class="row pb-3">
+            <div class="col-2">
+                <a class="btn btn-icon-only btn-pill btn-primary" ><i class="fa fa-plus"></i></a>
+            </div>
+</div>
 <br>
 
 @if (Categories != null && Categories.Any())
@@ -44,10 +54,17 @@ else
 }
 
 @code {
+    public List<TabPath> Paths = new List<TabPath>
+        {
+        new TabPath { Title = "Home", Path = "/" },
+        new TabPath { Title = "Category", Path = "/category" },
+        };
     public List<CategoryDto> Categories { get; set; }
-    public async Task OnGetAsync()
+
+    public async Task OnInitializedAsync()
     {
         Categories = await CategoryService.ListCategoryAsync(1);
+
     } 
 }
 

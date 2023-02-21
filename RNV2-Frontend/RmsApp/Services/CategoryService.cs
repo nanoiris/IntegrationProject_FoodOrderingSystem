@@ -10,18 +10,31 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using RmsApp.Dtos;
 using RmsApp.Services;
+using Microsoft.Extensions.Logging;
 
 namespace RmsApp.Services
 {
     public class CategoryService : ICategoryService
     {
-        // private readonly HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
-        // public CategoryService(HttpClient httpClient)
-        // {
-        //     _httpClient = httpClient;
-        // }
+        private readonly ILogger _logger;
+
+        public CategoryService(HttpClient httpClient, ILogger _logger)
+        {
+            _httpClient = httpClient;
+            this._logger = _logger; 
+        }
+        public CategoryService( ILogger _logger)
+        {
+            this._logger = _logger;
+        }
         public List<CategoryDto> Categories { get; set; }
+        // public CategoryService()
+        // {
+        //     Categories = new List<CategoryDto>();
+        // }
+
 
         // public async Task<List<CategoryDto>> ListCategoryAsync(int restaurantId)
         // {
@@ -50,17 +63,27 @@ namespace RmsApp.Services
         // }
         public async Task<List<CategoryDto>> ListCategoryAsync(int restaurantId)
         {
+            _logger.LogInformation("Enter service Log...");
             restaurantId = 1;
             Categories = new List<CategoryDto>();
 
             try
             {
-                string content = await File.ReadAllTextAsync("wwwroot/mock/mockCategory");
-                Categories = JsonSerializer.Deserialize<List<CategoryDto>>(content,
-                    new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
+                var response = await _httpClient.GetAsync("http://localhost:5000/mock/mockCategory.json");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Categories = JsonSerializer.Deserialize<List<CategoryDto>>(content,
+                        new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+                }
+                else
+                {
+                    Debug.WriteLine(@"\tERROR {0}", response.ReasonPhrase);
+                }
             }
             catch (Exception ex)
             {
@@ -69,6 +92,7 @@ namespace RmsApp.Services
 
             return Categories;
         }
+
 
         public Task EditCategory(int restaurantId, int categoryId)
         {
