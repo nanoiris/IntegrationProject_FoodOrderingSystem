@@ -1,0 +1,82 @@
+﻿@page "/Restaurant/1"
+@using RestaurantNetowrkApp.Componants
+
+<div class="osahan-restaurant">
+    <div class="osahan-restaurant-detail">
+        <div class="p-3 osahan-inner-header bg-primary">
+            <div class="d-flex align-items-center">
+                <a class="font-weight-bold text-white text-back text-decoration-none d-flex" href="">
+                    <span class="pl-2">Back</span>
+                </a>
+                <div class="ml-auto d-flex align-items-center">
+                    <a class="text-white mx-2 top-nav-btn top-nav-btn-cart fs-18 position-relative"
+                       href="#ratings-and-reviews"><i class="feather-map-pin"></i></a>
+                    <a class="text-white mx-2 top-nav-btn top-nav-btn-cart fs-18 position-relative"
+                       href="contact-us.html"><i class="feather-phone"></i></a>
+                    <a class="toggle ml-2 text-white hc-nav-trigger hc-nav-1" href="#" role="button"
+                       aria-controls="hc-nav-1">
+
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="px-3 pt-4 pb-3 bg-primary">
+            <div>
+                <h2 class="font-weight-bold text-white">Conrad Chicago Restaurant</h2>
+                <p class="font-weight-light text-white-50 m-0">963 Madyson Drive Suite 679</p>
+                <div class="rating-wrap d-flex align-items-center mt-2">
+                    <ul class="rating-stars list-unstyled m-0">
+                        <RatingStars />
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div>
+            <p class="font-weight-bold px-3 pt-3 m-0">FEATURED ITEMS</p>
+
+            <div class="trending-slider rounded overflow-hidden">
+                <div class="osahan-slider-item px-1 py-3">
+                    <MenuItemCard />
+                </div>
+                <div class="osahan-slider-item px-1 py-3">
+                    <MenuItemCard />
+                </div>
+                <div class="osahan-slider-item px-1 py-3">
+                    <MenuItemCard />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-3 pt-3 pb-5">
+        <div class="d-flex item-aligns-center">
+            <p class="font-weight-bold">Menu</p>
+        </div>
+        <MenuCategory />
+        <MenuCategory />
+        <MenuCategory />
+    </div>
+
+       <div class="fixed-bottom p-3">
+        <a href="/Order/Review/1"
+           class="btn btn-success btn-block btn-lg text-white rounded shadow text-decoration-none d-flex align-items-center shadow">
+            <div class="border-right pr-3">
+                <h4 class="m-0"><i class="feather-shopping-bag" aria-hidden="true"></i></h4>
+            </div>
+            <div class="ml-3 text-left">
+                <p class="mb-0 small text-white-50">5 item</p>
+                <p class="mb-0 font-weight-bold text-white">$235,50.00</p>
+            </div>
+            <div class="ml-auto">
+                <p class="mb-0 text-white">
+                    Proceed to cart
+                    <i class="feather-chevron-right pl-2" aria-hidden="true"></i>
+                </p>
+            </div>
+        </a>
+    </div>
+
+</div>
+@code {
+
+}
