@@ -1,11 +1,18 @@
 ﻿@page "/fetchdata"
+@using RmsApp.Pages
+@inherits RmsApp.Pages.FetchDataBase
 @inject HttpClient Http
 
 <PageTitle>Weather forecast</PageTitle>
 
 <h1>Weather forecast</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+<ul class="breadcrumb breadcrumb-gray">
+    @foreach (var path in Paths)
+    {
+             <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
+    }
+    </ul>
 
 @if (forecasts == null)
 {
@@ -36,7 +43,13 @@ else
     </table>
 }
 
-@code {
+@* @code {
+    public List<TabPath> Paths = new List<TabPath>
+    {
+    new TabPath { Title = "Home", Path = "/" },
+    new TabPath { Title = "Weather Forcast", Path = "/fetchdata" },
+    };
+
     private WeatherForecast[]? forecasts;
 
     protected override async Task OnInitializedAsync()
@@ -54,4 +67,4 @@ else
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
-}
+} *@

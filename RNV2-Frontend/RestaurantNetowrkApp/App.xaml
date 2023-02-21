@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:RestaurantNetowrkApp"
              x:Class="RestaurantNetowrkApp.App">
     <Application.Resources>
+        
         <ResourceDictionary>
 
             <Color x:Key="PageBackgroundColor">#512bdf</Color>
