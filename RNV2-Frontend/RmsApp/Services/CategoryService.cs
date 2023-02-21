@@ -55,10 +55,7 @@ namespace RmsApp.Services
 
             try
             {
-                // Read the mock file from the wwwroot/mock directory
                 string content = await File.ReadAllTextAsync("wwwroot/mock/mockCategory");
-
-                // Deserialize the file content into a list of CategoryDto objects
                 Categories = JsonSerializer.Deserialize<List<CategoryDto>>(content,
                     new JsonSerializerOptions
                     {
