@@ -11,9 +11,9 @@ namespace RestaurantDaoBase.Models
 {
     public class Order
     {
-        public int Id { get; set; }
-        public string RestaurantId { get; set; }
-        public string RestaurantName { get; set; }
+        public string? Id { get; set; }
+        public string? RestaurantId { get; set; }
+        public string? RestaurantName { get; set; }
         public StatusEnum Status {get; set; }
         public DateTime? DesiredTime { get; set; }
         public string UserName { get; set; }
@@ -33,7 +33,7 @@ namespace RestaurantDaoBase.Models
         public decimal? Tips { get; set; }
 
         public bool IsDelivery { get; set; }
-        public List<OrderItem> ItemList { get; set; }
+        public List<OrderItem>? ItemList { get; set; }
 
     }
 }

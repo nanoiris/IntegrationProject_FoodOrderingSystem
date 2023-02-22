@@ -11,10 +11,10 @@ namespace RestaurantDaoBase.Models
 {
     public class OrderItem
     {
-        public string Id { get; set; }
-        public MenuItem Item { get; set; }
+        public string? Id { get; set; }
+        public MenuItem? Item { get; set; }
         public int Qty { get; set; }
         public StatusEnum Status { get; set; }
-        public string OrderId { get; set; }
+        public string? OrderId { get; set; }
     }
 }

@@ -14,17 +14,28 @@ namespace RatingServer
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
 
-            // Add cosmos 
-           /*
-            builder.Services.AddDbContext<RatingContext>(options =>
+            builder.Services.AddCors(options =>
             {
-                options.UseCosmos(
-                    builder.Configuration["Cosmos.EndPoint"],
-                    builder.Configuration["Cosmos.Key"],
-                    builder.Configuration["Cosmos.DatabasName"]
-                );
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                       policy.AllowAnyOrigin()
+                             .AllowAnyHeader()
+                             .AllowAnyMethod();
+                    });
             });
-            */
+
+            // Add cosmos 
+            /*
+             builder.Services.AddDbContext<RatingContext>(options =>
+             {
+                 options.UseCosmos(
+                     builder.Configuration["Cosmos.EndPoint"],
+                     builder.Configuration["Cosmos.Key"],
+                     builder.Configuration["Cosmos.DatabasName"]
+                 );
+             });
+             */
 
             builder.Services.AddScoped<IRatingService, RatingService>();
 
@@ -43,6 +54,8 @@ namespace RatingServer
             }
 
             app.UseHttpsRedirection();
+            
+            app.UseCors();
 
             app.UseAuthorization();
 

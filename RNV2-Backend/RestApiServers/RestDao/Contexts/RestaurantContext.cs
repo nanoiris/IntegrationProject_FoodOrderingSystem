@@ -33,8 +33,6 @@ namespace RestaurantDao.Contexts
                 .ToContainer("RestCategories");
             modelBuilder.Entity<WeeklyTrend>()
                 .ToContainer("WeeklyTrends");
-
-            modelBuilder.Entity<WeeklyTrend>();
         }
     }
 }

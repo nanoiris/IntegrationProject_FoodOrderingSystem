@@ -10,26 +10,26 @@ namespace RestaurantDaoBase.IServices
 {
     public interface IOrderService
     {
-        public Order FindOrderById(string orderId);
-        public void CancelOrder(string orderId);
-        public List<Order> ListActiveOrder();
+        public Task<Order> FindOrderById(string orderId);
+        public Task<bool> CancelOrder(string orderId);
+        public Task<List<Order>?> ListActiveOrder();
 
-        public List<Order> ListOrderByUserAndStatus(string email,StatusEnum status);
-        public Dictionary<string,Order> ListOrderByUser(string email);
+        public Task<List<Order>?> ListOrderByUserAndStatus(string email,StatusEnum status);
+        public Task<Dictionary<string,Order>> ListOrderByUser(string email);
         
-        public void AddDishToCart(string orderId,string menuId);
-        public void CreateCart(string email, string menuId, string restaurantId);
-        public string UpdateCart(string email, string menuId, string restaurantId,int orderId);
+        public Task<bool> AddDishToCart(string orderId,string menuId);
+        public Task<bool> CreateCart(string email, string menuId, string restaurantId);
+        public Task<string> UpdateCart(string email, string menuId, string restaurantId,int orderId);
 
-        public void IncreaseDishQty(string email, string orderItemId,string orderId);
-        public void DecreaseDishQty(string email, string orderItemId,string orderId);
+        public Task<bool> IncreaseDishQty(string email, string orderItemId,string orderId);
+        public Task<bool> DecreaseDishQty(string email, string orderItemId,string orderId);
 
-        public void PayCart(string email,string orderId,PayCard card);
+        public Task<bool> PayCart(string email,string orderId,PayCard card);
 
-        public void UpdateOrderStatus(string restaurantId, string orderId, StatusEnum newStatus);
+        public Task<bool> UpdateOrderStatus(string restaurantId, string orderId, StatusEnum newStatus);
 
-        public List<Order> ListOrderByStatus(string restaurantId, StatusEnum status);
-        public List<Order> SearchOrder(string restaurantId, string email, StatusEnum status);
+        public Task<List<Order>?> ListOrderByStatus(string restaurantId, StatusEnum status);
+        public Task<List<Order>?> SearchOrder(string restaurantId, string email, StatusEnum status);
 
     }
 }
