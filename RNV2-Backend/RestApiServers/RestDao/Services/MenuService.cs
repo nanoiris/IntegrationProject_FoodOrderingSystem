@@ -16,12 +16,13 @@ namespace RestaurantDao.Services
                     return false;
                 if (category!.MenuItemList == null)
                     category!.MenuItemList = new List<MenuItem>();
+                item.Id = Guid.NewGuid().ToString("N");
                 category!.MenuItemList!.Add(item);
                 var result = await ctx.SaveChangesAsync();
                 return result == 1 ? true : false;
             }
         }
-
+       
         public async Task<bool> DeleteMenu(string categoryId, string menuId)
         {
             using (var ctx = new RestaurantContext())
@@ -65,12 +66,13 @@ namespace RestaurantDao.Services
                 }
                 return resultList;
             }
-        }  
-        public Task<List<MenuCategory>> ListMenu(string restaurantId)
+        }
+
+        public Task<MenuCategory> ListMenu(string restaurantId,string categoryId)
         {
             using (var ctx = new RestaurantContext())
             {
-                return ctx.MenuCategories.Where(x => x.RestaurantId == restaurantId).ToListAsync();
+                return ctx.MenuCategories.Where(x => x.RestaurantId == restaurantId && x.Id == categoryId).FirstAsync();
             }
         }
 
@@ -115,6 +117,7 @@ namespace RestaurantDao.Services
                 var result = await ctx.SaveChangesAsync();
                 return result == 1 ? true : false;
             }
-        } 
+        }
+        
     }
 }

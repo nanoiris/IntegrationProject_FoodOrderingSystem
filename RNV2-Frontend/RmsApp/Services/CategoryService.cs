@@ -14,6 +14,7 @@ using RmsApp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Components;
 
+
 namespace RmsApp.Services
 {
     public class CategoryService : ICategoryService
@@ -21,55 +22,113 @@ namespace RmsApp.Services
         private readonly HttpClient _httpClient;
 
         private readonly ILogger _logger;
-        /*
-        public CategoryService() 
-        {
+        private readonly IFlashMessageService _flashMessageService;
 
-        }
-        public CategoryService(HttpClient httpClient, ILogger _logger)
+        public CategoryService(HttpClient httpClient, IFlashMessageService flashMessageService)
         {
             _httpClient = httpClient;
-            this._logger = _logger; 
+            _httpClient.BaseAddress = new Uri("http://localhost:5064/");
+            _flashMessageService = flashMessageService;
         }
-        public CategoryService(ILogger _logger)
-        {
-            this._logger = _logger;
-        }
-        */
 
-        public CategoryService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
 
         public List<CategoryDto> Categories { get; set; }
 
-        public async Task<List<CategoryDto>> ListCategoryAsync(int restaurantId)
+        // public async Task<List<CategoryDto>> ListCategoryAsync(int restaurantId)
+        // {
+        //     Console.WriteLine("Enter CategoryListservice Log...");
+        //     Categories = new List<CategoryDto>();
+        //     return await _httpClient.GetFromJsonAsync<List<CategoryDto>>("http://localhost:5000/mock/mockCategory.json");
+        // }
+        public async Task<List<CategoryDto>> ListCategoryAsync(string restaurantId)
         {
-            Console.WriteLine("Enter CategoryListservice Log...");
+            Console.WriteLine("Enter CategoryListService Log...");
             Categories = new List<CategoryDto>();
-            return await _httpClient.GetFromJsonAsync<List<CategoryDto>>("http://localhost:5000/mock/mockCategory.json");
-        }
-        public async Task GetCategoryAsync(int restaurantId, int categoryId)
-        {
-            // Console.WriteLine("Enter categortGet service Log...");
+            HttpResponseMessage response = await _httpClient.GetAsync($"api/MenuCategory/List/{restaurantId}");
+            if (response.IsSuccessStatusCode)
+            {
+                //parse the JSON response into a list of CategoryDto objects
+                Categories = await response.Content.ReadFromJsonAsync<List<CategoryDto>>();
+            }
+            else
+            {
+                _logger.LogError("Failed to get categories. Status code: {0}", response.StatusCode);
+            }
+
+            return Categories;
         }
 
-        public async Task AddCategoryAsync(int restaurantId, CategoryDto category)
+
+        public async Task AddCategoryAsync(string restaurantId, CategoryDto category)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var newCategory = new CategoryDto
+                {
+                    Name = category.Name,
+                    RestaurantId = restaurantId
+                };
+                var response = await _httpClient.PostAsJsonAsync("api/menucategory/NewOne", newCategory);
+                if (response.IsSuccessStatusCode)
+                {
+                    _flashMessageService.SuccessMessage = "Category added successfully.";
+                    // NavigationManager.NavigateTo("/category");
+                }
+                else
+                {
+                    _flashMessageService.FailureMessage = "Failed to add the category.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding category.");
+                _flashMessageService.FailureMessage = "Failed to add the category.";
+            }
+        }
+        public async Task<CategoryDto> GetCategoryAsync(string categoryId)
+        {
+            if (string.IsNullOrEmpty(categoryId))
+            {
+                throw new ArgumentException("Category ID cannot be null or empty.", nameof(categoryId));
+            }
+            var response = await _httpClient.GetAsync($"api/menucategory/one/{categoryId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<CategoryDto>();
+            }
+            _logger.LogError("Failed to get category with ID {CategoryId}. StatusCode: {StatusCode}", categoryId, response.StatusCode);
+            throw new ApplicationException("Failed to get category.");
         }
 
 
-        public async Task EditCategoryAsync(int restaurantId, int categoryId)
+        public async Task UpdateCategoryAsync(CategoryDto categoryDto)
         {
-            throw new NotImplementedException();
-        }
-        public async Task DeleteCategoryAsync(int restaurantId, int categoryId)
-        {
-            throw new NotImplementedException();
+            if (categoryDto == null)
+            {
+                throw new ArgumentNullException(nameof(categoryDto));
+            }
+            var response = await _httpClient.PutAsJsonAsync($"api/menucategory/updatedone/{categoryDto.Id}", categoryDto);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Failed to update category with ID {CategoryId}. StatusCode: {StatusCode}", categoryDto.Id, response.StatusCode);
+                throw new ApplicationException("Failed to update category.");
+            }
         }
 
+
+
+
+        public async Task DeleteCategoryAsync(string categoryId)
+        {
+            var response = await _httpClient.DeleteAsync($"api/menucategory/deletedone/{categoryId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Failed to delete category with ID {CategoryId}. StatusCode: {StatusCode}", categoryId, response.StatusCode);
+                throw new ApplicationException("Failed to delete category.");
+            }
+        }
 
     }
 

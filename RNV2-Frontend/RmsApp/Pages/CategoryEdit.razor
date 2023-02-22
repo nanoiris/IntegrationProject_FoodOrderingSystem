@@ -1,12 +1,11 @@
-﻿@page "/category/edit/{categoryId:int}"
+﻿@page "/category/edit/{categoryId}"
 @using RmsApp.Services
 @using RmsApp.Dtos
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 @using Microsoft.Extensions.Logging
 @inject ILogger<CategoryService> logger
-
-
+@inject IFlashMessageService FlashMessageService
 
 <h1>Category Edit</h1>
 <ul class="breadcrumb breadcrumb-gray">
@@ -16,18 +15,25 @@
     }
 </ul>
 
-<form>
-        <div class="form-group">
+@if (Category != null)
+{
+    <form>
+        <div class="form-group mb-3">
             <label for="id">ID:</label>
             <input type="text" id="id" class="form-control" value="@Category.Id" readonly />
         </div>
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label for="name">Name:</label>
             <input type="text" id="name" class="form-control" value="@Category.Name" @oninput="@(e => Category.Name = e.Value.ToString())" />
 
         </div>
         <button class="btn btn-primary" @onclick="SaveCategory">Save</button>
     </form>
+}
+else
+{
+    <p>Loading...</p>
+}
 
 @code {
     public List<TabPath> Paths = new List<TabPath>
@@ -36,7 +42,7 @@
         new TabPath { Title = "Category", Path = "/categoryList" },
         new TabPath { Title = "Edit", Path = "/categoryEdit" },
         };
-   [Parameter]
+    [Parameter]
     public string categoryId { get; set; }
 
     public CategoryDto Category { get; set; }
@@ -48,18 +54,19 @@
     {
         logger.LogInformation("OnInitializedAsync");
 
-        if (!int.TryParse(categoryId, out var id))
+        if (string.IsNullOrEmpty(categoryId))
         {
             NavigationManager.NavigateTo("/category");
         }
 
-        @* Category = await CategoryService.GetCategoryAsync(id); *@
+        Category = await CategoryService.GetCategoryAsync(categoryId);
     }
 
     private async Task SaveCategory()
     {
-        @* await CategoryService.UpdateCategoryAsync(Category);
-        NavigationManager.NavigateTo("/category"); *@
+        await CategoryService.UpdateCategoryAsync(Category);
+        FlashMessageService.SuccessMessage = "Category saved successfully.";
+        FlashMessageService.DurationInSeconds = 5;
+        await JSRuntime.InvokeVoidAsync("setTimeout", "location.href='/categoryList';", 3000);
     }
 }
-
