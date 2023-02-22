@@ -8,12 +8,12 @@ namespace RestaurantServer.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class RestaurantController : ControllerBase
+    public class RestCategoryController : ControllerBase
     {
-        private readonly ILogger<RestaurantController> logger;
+        private readonly ILogger<RestCategoryController> logger;
         private readonly IRestaurantService service;
         private readonly IFileService fileService;
-        public RestaurantController(ILogger<RestaurantController> logger, IRestaurantService service, IFileService fileService)
+        public RestCategoryController(ILogger<RestCategoryController> logger, IRestaurantService service,IFileService fileService)
         {
             this.logger = logger;
             this.service = service;
@@ -21,24 +21,24 @@ namespace RestaurantServer.Controllers
         }
 
         [HttpGet]
-        public Task<List<Restaurant>> List()
+        public Task<List<RestCategory>> List()
         {
-            return service.ListRestaurant();
+             return service.ListCategory();
         }
 
         [HttpPost]
-        public async Task<IActionResult> NewOne([FromForm] RestaurantForm form)
+        public async Task<IActionResult> NewOne([FromForm] RestCategory category)
         {
             if (ModelState.IsValid)
             {
-                if (form.UploadImg != null)
+                if(category.UploadImg != null)
                 {
                     try
                     {
-                        form.Logo = fileService.SaveFile(form.UploadImg);
-                        form.UploadImg = null;
+                        category.Logo = fileService.SaveFile(category.UploadImg);
+                        category.UploadImg = null;
                     }
-                    catch (Exception ex)
+                    catch(Exception ex) 
                     {
                         logger.LogInformation(ex.Message);
                         return BadRequest(new AppResult("NewOne : The file cannot be saved", false));
@@ -47,21 +47,21 @@ namespace RestaurantServer.Controllers
 
                 try
                 {
-                    var result = await service.AddRestaurant(form);
+                    var result = await service.AddCategory(category);
                     if (result == true)
                         return Ok(new AppResult("", true));
                     else
                     {
-                        if (form.Logo != null)
-                            fileService.DeleteFile(form.Logo);
+                        if (category.Logo != null)
+                            fileService.DeleteFile(category.Logo);
                         return BadRequest(new AppResult("", false));
                     }
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     logger.LogInformation(ex.Message);
-                    if (form.Logo != null)
-                        fileService.DeleteFile(form.Logo);
+                    if (category.Logo != null)
+                        fileService.DeleteFile(category.Logo);
                     return BadRequest(new AppResult(ex.Message, false));
                 }
             }
@@ -69,25 +69,26 @@ namespace RestaurantServer.Controllers
         }
 
         [HttpGet("{id}")]
-        public Task<Restaurant?> One(string id)
+        public Task<RestCategory?> One(string id)
         {
-            return service.FindRestaurant(id);
+            return service.FindCategory(id);
         }
+
         [HttpPut]
-        public async Task<IActionResult> UpdatedOne([FromForm] RestaurantForm form)
+        public async Task<IActionResult> UpdatedOne([FromForm] RestCategory category)
         {
             if (ModelState.IsValid)
             {
-                Restaurant? oldOne = await service.FindRestaurant(form.Id);
+                RestCategory? oldOne = await service.FindCategory(category.Id);
                 if (oldOne == null)
-                    return BadRequest(new AppResult($"No restaurant(id={form.Id}", false));
+                    return BadRequest(new AppResult($"No rest category(id={category.Id}", false));
 
-                if (form.UploadImg != null)
+                if (category.UploadImg != null)
                 {
                     try
                     {
-                        form.Logo = fileService.SaveFile(form.UploadImg);
-                        form.UploadImg = null;
+                        category.Logo = fileService.SaveFile(category.UploadImg);
+                        category.UploadImg = null;
                     }
                     catch (Exception ex)
                     {
@@ -96,7 +97,7 @@ namespace RestaurantServer.Controllers
                     }
                 }
 
-                var result = await service.UpdateRestaurant(form);
+                var result = await service.UpdateCategory(category);
                 if (result == true)
                 {
                     fileService.DeleteFile(oldOne.Logo);
@@ -104,12 +105,12 @@ namespace RestaurantServer.Controllers
                 }
                 else
                 {
-                    logger.LogInformation("service.UpdateRestaurant failed ");
-                    if (form.Logo != null)
-                        fileService.DeleteFile(form.Logo);
+                    logger.LogInformation("service.UpdateCategory failed ");
+                    if (category.Logo != null)
+                        fileService.DeleteFile(category.Logo);
                     return BadRequest(new AppResult("", false));
                 }
-
+                    
             }
             return BadRequest(new AppResult("Some properties are not correct", false));
         }
@@ -117,22 +118,22 @@ namespace RestaurantServer.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletedOne(string id)
         {
-            Restaurant? row = await service.FindRestaurant(id);
-            if (row == null)
-                return BadRequest(new AppResult($"No restaurant(id={id}", false));
-            if (row.Logo != null)
+            RestCategory? category = await service.FindCategory(id);
+            if (category == null)
+                return BadRequest(new AppResult($"No rest category(id={id}", false));
+            if(category.Logo != null)
             {
                 try
                 {
-                    fileService.DeleteFile(row.Logo);
+                    fileService.DeleteFile(category.Logo);
                 }
-                catch (Exception ex)
+                catch(Exception ex) 
                 {
                     logger.LogInformation(ex.Message);
                     return BadRequest(new AppResult(ex.Message, false));
                 }
             }
-            var result = await service.DeleteRestaurant(id);
+            var result = await service.DeleteCategory(id);
             if (result == true)
                 return Ok(new AppResult("", true));
             else

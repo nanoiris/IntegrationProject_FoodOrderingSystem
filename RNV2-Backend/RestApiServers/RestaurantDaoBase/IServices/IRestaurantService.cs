@@ -10,15 +10,15 @@ namespace RestaurantDaoBase.IServices
     public interface IRestaurantService
     {
         public Task<List<RestCategory>> ListCategory();
-        public List<Restaurant> ListWeeklyTrends();
-        public List<Restaurant> ListWithLimit(int limit);
-        public List<Restaurant> Search(string searchKey, string categoryName, string sortField);
+        public Task<WeeklyTrend> ListWeeklyTrends();
+        public Task<List<Restaurant>> ListWithLimit(int limit);
+        public Task<List<Restaurant>> Search(string searchKey, string categoryName);
 
-        public void AddRestaurant(Restaurant restaurant, Stream logo);
-        public List<Restaurant> ListRestaurant();
-        public Restaurant? FindRestaurant(string restaurantId);
-        public void DeleteRestaurant(string restaurantId);
-        public void UpdateRestaurant(Restaurant restaurant, Stream logo);
+        public Task<bool> AddRestaurant(RestaurantForm form);
+        public Task<List<Restaurant>> ListRestaurant();
+        public Task<Restaurant?> FindRestaurant(string restaurantId);
+        public Task<bool> DeleteRestaurant(string restaurantId);
+        public Task<bool> UpdateRestaurant(RestaurantForm form);
 
         public Task<RestCategory?> FindCategory(string categoryId);
         public Task<bool> DeleteCategory(string categoryId);

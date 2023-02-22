@@ -10,7 +10,8 @@ namespace RestaurantServer
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -21,7 +22,6 @@ namespace RestaurantServer
             builder.Services.AddScoped<IFileService, LocalFileService>(
                 x => new LocalFileService(builder.Configuration["LogoRootPath"]));
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
-
 
             var app = builder.Build();
 

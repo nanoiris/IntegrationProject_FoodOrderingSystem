@@ -11,7 +11,7 @@ namespace RestaurantDaoBase.Models
     public class RestRating
     {
         public string? Id { get; set; }
-        public string? PartionKey { get; set; }
+        //public string? PartionKey { get; set; }
         public string RestaurantId { get; set; }
         public int Value { get; set; }
         public string CreateBy { get; set; }
@@ -21,7 +21,7 @@ namespace RestaurantDaoBase.Models
     public class MenuItemRating
     {
         public string? Id { get; set; }
-        public string? PartionKey { get; set; }
+        //public string? PartionKey { get; set; }
         public string RestaurantId { get; set; }
         public string MenuItemId { get; set; }
         public int Value { get; set; }
@@ -32,7 +32,7 @@ namespace RestaurantDaoBase.Models
     public class DeliveryRating
     {
         public string? Id { get; set; }
-        public string? PartionKey { get; set; }
+        //public string? PartionKey { get; set; }
         public string OrderId { get; set; }
         public string DeliveryManId { get; set; }
         public int Value { get; set; }

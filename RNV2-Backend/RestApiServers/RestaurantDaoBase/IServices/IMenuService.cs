@@ -10,20 +10,20 @@ namespace RestaurantDaoBase.IServices
 {
     public interface IMenuService
     {
-        public List<MenuItem> GetFeaturedMenus(string restaurantId);
+        public Task<List<MenuItem>?> GetFeaturedMenus(string restaurantId);
 
-        public List<MenuCategory> ListCategry(string restaurantId);
-        public MenuCategory? FindCategory(string restaurantId, string id);
-        public void AddCategory(string restaurantId, MenuCategory category);
-        public void UpdateCategory(string restaurantId, MenuCategory category);
-        public void DeleteCategory(string restaurantId, string categoryId);
+        public Task<List<MenuCategory>> ListCategry(string restaurantId);
+        public Task<MenuCategory?> FindCategory(string id);
+        public Task<bool> AddCategory(MenuCategory category);
+        public Task<bool> UpdateCategory(MenuCategory category);
+        public Task<bool> DeleteCategory(string categoryId);
 
-        public List<MenuItem>? ListMenu(string restaurantId);
-        public MenuItem? FindMenu(string restaurantId, string menuId);
-        public List<MenuItem>? SearchMenu(string restaurantId, string name);
-        public void AddMenu(string restaurantId, MenuItem item, Stream logo);
-        public void UpdateMenu(string restaurantId, MenuItem item, Stream logo);
-        public void DeleteMenu(string restaurantId, string menuId);
+        public Task<List<MenuCategory>> ListMenu(string restaurantId);
+        public Task<MenuItem?> FindMenu(string restaurantId,string menuId);
+        public Task<List<MenuItem>?> SearchMenu(string restaurantId, string name);
+        public Task<bool> AddMenu(string restaurantId, MenuItem item);
+        public Task<bool> UpdateMenu(MenuItem item);
+        public Task<bool> DeleteMenu(string restaurantId, string menuId);
 
     }
 }

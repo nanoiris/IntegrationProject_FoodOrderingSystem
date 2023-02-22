@@ -51,7 +51,7 @@ namespace RestaurantDao.Services
             using(var ctx = new RatingContext())
             {
                 rating.Id = Guid.NewGuid().ToString("N");
-                rating.PartionKey = "Delivery";
+                //rating.PartionKey = "Delivery";
                 ctx.Add(rating);
                 var result = await ctx.SaveChangesAsync();
                 if (result == 1)
@@ -65,7 +65,7 @@ namespace RestaurantDao.Services
             using (var ctx = new RatingContext())
             {
                 rating.Id = Guid.NewGuid().ToString("N");
-                rating.PartionKey = "MenuItem";
+                //rating.PartionKey = "MenuItem";
                 ctx.MenuRatings.Add(rating);
                 var result = await ctx.SaveChangesAsync();
                 if (result == 1)
@@ -79,8 +79,8 @@ namespace RestaurantDao.Services
             using (var ctx = new RatingContext())
             {
                 rating.Id = Guid.NewGuid().ToString("N");
-                rating.PartionKey = "Restaurant";
-                ctx.Add(rating);
+               // rating.PartionKey = "Restaurant";
+                ctx.RestRatings.Add(rating);
                 var result = await ctx.SaveChangesAsync();
                 if (result == 1)
                     return true;

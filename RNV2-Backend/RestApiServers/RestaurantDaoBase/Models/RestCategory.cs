@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,15 +11,11 @@ namespace RestaurantDaoBase.Models
 {
     public class RestCategory
     {
-        public string PartionKey;
-
         public string? Id { get; set; }
+        //public string? PartionKey { get; set; }
         public string Name { get; set; }
         public string? Logo { get; set; }
-
-        public static implicit operator RestCategory(MenuCategory v)
-        {
-            throw new NotImplementedException();
-        }
+        [NotMapped]
+        public IFormFile? UploadImg { get; set; }
     }
 }

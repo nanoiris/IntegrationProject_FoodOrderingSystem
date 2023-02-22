@@ -9,12 +9,16 @@ namespace RestaurantDao.Services
     {
         public async Task<bool> AddCategory(RestCategory category)
         {
-            category.Id = Guid.NewGuid().ToString("N");
-            category.PartionKey = "MenuCategory";
             using (var ctx = new RestaurantContext())
             {
-               ctx.RestCategories.Add(category);
-               var result = await ctx.SaveChangesAsync();
+               var result = ctx.RestCategories.Where(x => x.Name == category.Name).CountAsync()
+                    .GetAwaiter().GetResult();
+               if (result > 0)
+                    return false;
+               category.Id = Guid.NewGuid().ToString("N");
+               //category.PartionKey = "Restaurant";
+               ctx.Add(category);
+               result = await ctx.SaveChangesAsync();
                if (result == 1)
                     return true;
                 return false;
@@ -60,7 +64,8 @@ namespace RestaurantDao.Services
 
                 if (row != null)
                 {
-                    row = category;
+                    row.Name = category.Name;
+                    row.Logo = category.Logo;
                     var result = await ctx.SaveChangesAsync();
                     if (result == 1)
                         return true;

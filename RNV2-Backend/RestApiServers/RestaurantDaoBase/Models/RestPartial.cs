@@ -9,16 +9,12 @@ using System.Threading.Tasks;
 
 namespace RestaurantDaoBase.Models
 {
-    public class Restaurant
+    public class RestPartial
     {
         public string? Id { get; set; }
         //public string? PartionKey { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public string? Logo { get; set; }
-        public Address? Address { get; set; }
-        public string? PhoneNo { get; set; }
-        public string? Email { get; set; }
-        public string CategoryId { get; set; }
     }
 }
