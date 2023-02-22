@@ -7,7 +7,7 @@ namespace RmsApp.Dtos
         public string Id { get; set; }
         public string Name { get; set; }
 
-        public int RestaurantId { get; set; }
+        public string RestaurantId { get; set; }
 
     }
 }

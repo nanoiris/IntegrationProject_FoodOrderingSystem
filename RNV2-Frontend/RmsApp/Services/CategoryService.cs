@@ -14,6 +14,7 @@ using RmsApp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Components;
 
+
 namespace RmsApp.Services
 {
     public class CategoryService : ICategoryService
@@ -21,51 +22,82 @@ namespace RmsApp.Services
         private readonly HttpClient _httpClient;
 
         private readonly ILogger _logger;
-        /*
-        public CategoryService() 
-        {
+        private readonly IFlashMessageService _flashMessageService;
 
-        }
-        public CategoryService(HttpClient httpClient, ILogger _logger)
+        public CategoryService(HttpClient httpClient, IFlashMessageService flashMessageService)
         {
             _httpClient = httpClient;
-            this._logger = _logger; 
+            _httpClient.BaseAddress = new Uri("http://localhost:5064/");
+            _flashMessageService = flashMessageService;
         }
-        public CategoryService(ILogger _logger)
-        {
-            this._logger = _logger;
-        }
-        */
 
-        public CategoryService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
 
         public List<CategoryDto> Categories { get; set; }
 
-        public async Task<List<CategoryDto>> ListCategoryAsync(int restaurantId)
+        // public async Task<List<CategoryDto>> ListCategoryAsync(int restaurantId)
+        // {
+        //     Console.WriteLine("Enter CategoryListservice Log...");
+        //     Categories = new List<CategoryDto>();
+        //     return await _httpClient.GetFromJsonAsync<List<CategoryDto>>("http://localhost:5000/mock/mockCategory.json");
+        // }
+        public async Task<List<CategoryDto>> ListCategoryAsync(string restaurantId)
         {
-            Console.WriteLine("Enter CategoryListservice Log...");
+            Console.WriteLine("Enter CategoryListService Log...");
             Categories = new List<CategoryDto>();
-            return await _httpClient.GetFromJsonAsync<List<CategoryDto>>("http://localhost:5000/mock/mockCategory.json");
+            HttpResponseMessage response = await _httpClient.GetAsync($"api/MenuCategory/List/{restaurantId}");
+            if (response.IsSuccessStatusCode)
+            {
+                //parse the JSON response into a list of CategoryDto objects
+                Categories = await response.Content.ReadFromJsonAsync<List<CategoryDto>>();
+            }
+            else
+            {
+                _logger.LogError("Failed to get categories. Status code: {0}", response.StatusCode);
+            }
+
+            return Categories;
         }
-        public async Task GetCategoryAsync(int restaurantId, int categoryId)
+
+        public async Task GetCategoryAsync(string restaurantId, string categoryId)
         {
             // Console.WriteLine("Enter categortGet service Log...");
         }
 
-        public async Task AddCategoryAsync(int restaurantId, CategoryDto category)
+        public async Task AddCategoryAsync(string restaurantId, CategoryDto category)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var newCategory = new CategoryDto
+                {
+                    Name = category.Name,
+                    RestaurantId = restaurantId
+                };
+                var response = await _httpClient.PostAsJsonAsync("api/category/NewOne", newCategory);
+                if (response.IsSuccessStatusCode)
+                {
+                    _flashMessageService.SuccessMessage = "Category added successfully.";
+                    // NavigationManager.NavigateTo("/category");
+                }
+                else
+                {
+                    _flashMessageService.FailureMessage = "Failed to add the category.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding category.");
+                _flashMessageService.FailureMessage = "Failed to add the category.";
+            }
         }
 
 
-        public async Task EditCategoryAsync(int restaurantId, int categoryId)
+
+
+        public async Task EditCategoryAsync(string restaurantId, string categoryId)
         {
             throw new NotImplementedException();
         }
-        public async Task DeleteCategoryAsync(int restaurantId, int categoryId)
+        public async Task DeleteCategoryAsync(string restaurantId, string categoryId)
         {
             throw new NotImplementedException();
         }

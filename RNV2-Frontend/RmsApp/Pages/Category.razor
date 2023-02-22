@@ -72,7 +72,7 @@ else
         new TabPath { Title = "Category", Path = "/category" },
         };
     public List<CategoryDto> Categories { get; set; }
-    public int restaurantId = 1; 
+    public string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
 
     [Inject]
     public ICategoryService CategoryService { get; set; }
@@ -81,7 +81,7 @@ else
     {
         logger.LogInformation("OnInitializedAsync");
         Categories = (await CategoryService.ListCategoryAsync(restaurantId)).ToList();
-        @* await FlashMessageService.ClearMessagesAsync(); *@
+        
     } 
 }
 

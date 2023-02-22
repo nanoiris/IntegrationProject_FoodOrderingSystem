@@ -6,10 +6,10 @@ namespace RmsApp.Services
 {
     public interface ICategoryService
     {
-        Task<List<CategoryDto>> ListCategoryAsync(int restaurantId);
-        Task GetCategoryAsync(int restaurantId, int categoryId);
-        Task AddCategoryAsync(int restaurantId, CategoryDto category);
-        Task EditCategoryAsync(int restaurantId, int categoryId);
-        Task DeleteCategoryAsync(int restaurantId, int categoryId);
+        Task<List<CategoryDto>> ListCategoryAsync(string restaurantId);
+        Task GetCategoryAsync(string restaurantId, string categoryId);
+        Task AddCategoryAsync(string restaurantId, CategoryDto category);
+        Task EditCategoryAsync(string restaurantId, string categoryId);
+        Task DeleteCategoryAsync(string restaurantId, string categoryId);
     }
 }

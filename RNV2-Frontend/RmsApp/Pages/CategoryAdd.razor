@@ -62,10 +62,10 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
     private async Task AddCategory()
     {
         FlashMessageService.SuccessMessage = "Add successfully!";
-        FlashMessageService.DurationInSeconds = 10; 
+        FlashMessageService.DurationInSeconds = 5; 
         await FlashMessageService.ClearMessagesAsync();
         NavigationManager.NavigateTo("/category");
-        var restaurantId = 1; 
+        string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
         var newCategory = new CategoryDto { Name = NewCategoryName };
         await CategoryService.AddCategoryAsync(restaurantId, newCategory);
         NewCategoryName = string.Empty;
