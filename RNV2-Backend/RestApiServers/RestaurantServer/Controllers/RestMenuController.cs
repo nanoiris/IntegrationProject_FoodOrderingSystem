@@ -7,5 +7,6 @@ namespace RestaurantServer.Controllers
     [ApiController]
     public class RestMenuController : ControllerBase
     {
+
     }
 }

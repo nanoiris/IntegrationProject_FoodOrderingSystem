@@ -34,7 +34,7 @@ namespace RestaurantDao.Contexts
             modelBuilder.Entity<WeeklyTrend>()
                 .ToContainer("WeeklyTrends");
 
-            modelBuilder.Entity<WeeklyTrend>().Ignore(x => x.Trenders);
+            modelBuilder.Entity<WeeklyTrend>();
         }
     }
 }

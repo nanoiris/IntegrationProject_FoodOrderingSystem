@@ -42,7 +42,7 @@ namespace RestaurantDao.Services
                     .FirstAsync();
             }
         }
-        public Task<List<MenuCategory>> ListCategry(string restaurantId)
+        public Task<List<MenuCategory>> ListCategory(string restaurantId)
         {
             using (var ctx = new RestaurantContext())
             {
