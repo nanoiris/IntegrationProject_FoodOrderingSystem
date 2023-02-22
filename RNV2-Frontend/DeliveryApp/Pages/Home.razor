@@ -1,35 +1,40 @@
-﻿@page "/"
+﻿@page "/home"
+@using DeliveryApp.Componants
 
 
-<div class="login-page vh-100">
-
-    <div class="d-flex align-items-center justify-content-center vh-100">
-        <div class="px-5 col-md-6 ">
-            <div class="px-5 col-10 mx-auto">
-                <h2 class="text-dark my-0">Restaurant Network Delivery,Welcome! </h2>
-                <p></p>
-                <p class="text-50">Sign in to continue</p>
-                 <form class="mt-5 mb-4" method="post">
-              <div class="form-group">
-                <label asp-for="Email" class="text-dark">Email</label>
-                <input asp-for="Email" type="text" placeholder="" class="form-control" id="Email" />
-                 <span asp-validation-for="Email" class="text-danger"></span>
-              </div>
-              <div class="form-group">
-                <label asp-for="Password" class="text-dark">Password</label>
-                <input asp-for="Password" type="password" placeholder="" class="form-control" id="Password" />
-                 <span asp-validation-for="Password" class="text-danger"></span>
-              </div>
-              <button class="btn btn-primary btn-lg btn-block">SIGN IN</button>
-            </form>
-                <br>
-                <div class="d-flex align-items-center justify-content-center">
-                    <a asp-action="Signup">
-                        <p class="text-center m-0">Don't have an account? Sign up</p>
-                    </a>
+<div class="osahan-home-page">
+    <div class="shadow p-3 homepage-osahan-header bg-white">
+        <div class="title d-flex align-items-center "> 
+ <img src="img/logo_web1.png" class="img-fluid" />
+            <div class="input-group border osahan-search mt-3 rounded-lg shadow-sm overflow-hidden">  
+               
+                <div class="input-group-prepend">
+                    <button class="border-0 btn btn-outline-secondary text-primary bg-white btn-block">
+                        <i class="feather-search"></i>
+                    </button>
                 </div>
+                <input type="text" class="shadow-none border-0 form-control pl-0"
+                       placeholder="Search for Orders" aria-label="" aria-describedby="basic-addon1">
             </div>
+
+            <NavMenu />
         </div>
     </div>
+
+
+    <div class="osahan-main">
+        <AllList />
+
+    </div>
+    <div>
+        <NavMenuFooter />
+    </div>
 </div>
+
+
+
+@code {
+
+}
+
 

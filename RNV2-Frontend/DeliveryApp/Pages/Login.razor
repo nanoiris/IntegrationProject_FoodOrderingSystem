@@ -1,0 +1,37 @@
+﻿@page "/"
+<div class="login-page">
+
+    <div class="font-weight-bold text-back text-decoration-none d-flex">
+        <div class="px-5 col-md-6 ">
+            <div class="px-5 col-10 mx-auto">
+                
+        <h2 class="text-dark my-0"><img src="img/OIP.jpg" class="img-fluid" />Restaurant Network Delivery,Welcome! </h2>
+                <p></p>
+                <p class="text-50">Sign in to continue</p>
+                <form class="mt-5 mb-4" method="post" action="Home">
+                    <div class="form-group">
+                        <label asp-for="Email" class="text-dark">Email</label>
+                        <input asp-for="Email" type="text" placeholder="" class="form-control" id="Email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="text-dark">Password</label>
+                        <input asp-for="Password" type="password" placeholder="" class="form-control" id="Password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <button class="btn btn-primary btn-lg btn-block">SIGN IN</button>
+                </form>
+                <br>
+                <div class="d-flex align-items-center justify-content-center">
+                    <a href="Signup">
+                        <p class="text-center m-0">Don't have an account? Sign up</p>
+                    </a>
+                </div>
+             </div>
+       </div>
+    </div>
+</div>
+
+@code {
+
+}
