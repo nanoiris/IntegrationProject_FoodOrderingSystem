@@ -38,7 +38,7 @@
     <div class="p-3">
         <form action="/Order/CreateCheckOutSession" method="post">
             <p class="mb-1">Pick up Time:</p>
-            <input type="datetime-local" class="form-control" id="pickupTime" name="pickupTime" asp-for="pickupTime" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")">
+            <input type="datetime-local" class="form-control" id="pickupTime" name="pickupTime" asp-for="pickupTime" value="@DateTime.Now.ToString('yyyy-MM-ddTHH:mm')">
 
             <p></p>
             <input type="hidden" value="@Model.Order.PayTotal" asp-for="payTotal" />

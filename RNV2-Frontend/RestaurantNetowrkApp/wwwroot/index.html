@@ -51,6 +51,11 @@
                 { breakpoint: 480, settings: { arrows: false, centerMode: true, centerPadding: '40px', slidesToShow: 1 } }]
             });
         }
+        window.restaurantQuantity = () => {
+            $('.plus').on('click', function () { if ($(this).prev().val()) { $(this).prev().val(+$(this).prev().val() + 1); } });
+            $('.minus').on('click', function () { if ($(this).next().val() > 1) { if ($(this).next().val() > 1) $(this).next().val(+$(this).next().val() - 1); } });
+        }
+
     </script>
 
 </body>

@@ -2,9 +2,10 @@
 
 <div class="osahan-payment">
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
-        <div class="d-flex align-items-center">
+        <a class="font-weight-bold text-dark text-back text-decoration-none " href="Order/Review/1">
+            <i class="feather-chevron-left"></i>
             <span class="ml-3 h6 mb-0">Checkout</span>
-        </div>
+        </a>
     </div>
 
     <div class="py-3 osahan-cart-item">
@@ -23,6 +24,16 @@
                 <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#exampleModal">
                     ADD NEW ADDRESS
                 </a>
+            </div>
+        </div
+    </div>
+    <div class="py-3 osahan-cart-item">
+        <div class="osahan-cart-item-profile bg-white shadow p-3">
+            <div class="d-flex flex-column">
+                <h6 class="mb-2 font-weight-bold">PICKUP TIME</h6>
+                <div class="custom-control custom-radio mb-2 px-0">
+                    <input type="datetime-local" class="form-control" id="pickupTime" name="pickupTime" asp-for="pickupTime" value='@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")'>
+                </div>
             </div>
         </div>
     </div>
@@ -44,8 +55,7 @@
                     <h6 class="m-0">Add new card</h6>
                     <p class="small">
                         WE ACCEPT <span class="osahan-card ml-2 font-weight-bold">
-                            ( Master Card / Visa
-                            Card / Rupay )
+                            ( Master Card / Visa Card / Rupay )
                         </span>
                     </p>
                     <form>
@@ -64,8 +74,7 @@
                             </div>
                             <div class="col-md-8 form-group">
                                 <label class="form-label mb-1 small">
-                                    Valid
-                                    through(MM/YY)
+                                    Valid through(MM/YY)
                                 </label><input placeholder="Enter Valid through(MM/YY)"
                                                type="number" class="form-control">
                             </div>
@@ -74,17 +83,15 @@
                             </div>
                             <div class="col-md-12 form-group">
                                 <label class="form-label mb-1 small">
-                                    Name on
-                                    card
+                                    Name on card
                                 </label><input placeholder="Enter Card number" type="text"
                                                class="form-control">
                             </div>
                             <div class="col-md-12 form-group mb-0">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox"
-                                           id="custom-checkbox1" class="custom-control-input"><label title=""
-                                                                                                     type="checkbox" for="custom-checkbox1"
-                                                                                                     class="custom-control-label small pt-1">
+                                           id="custom-checkbox1" class="custom-control-input">
+                                    <label title=""  type="checkbox" for="custom-checkbox1"  class="custom-control-label small pt-1">
                                         Securely save this card for a faster
                                         checkout next time.
                                     </label>

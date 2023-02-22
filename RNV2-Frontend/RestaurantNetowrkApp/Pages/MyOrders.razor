@@ -1,0 +1,150 @@
+﻿@page "/Order"
+
+@*<div class="accordion accordion-flush" id="accordionFlushExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-orderCart" aria-expanded="false" aria-controls="flush-collapseOne">
+                <i class="feather-shopping-cart mr-2 text-primary mb-0"></i> Cart
+            </button>
+        </h2>
+        <div id="flush-orderCart" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-OrderPaid" aria-expanded="false" aria-controls="flush-collapseTwo">
+                <i class="feather-package mr-2 text-success mb-0"></i>
+                Paid
+            </button>
+        </h2>
+        <div id="flush-OrderPaid" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-OrderOnProgress" aria-expanded="false" aria-controls="flush-collapseThree">
+                <i class="feather-clock mr-2 text-warning mb-0"></i>
+                On Progress
+            </button>
+        </h2>
+        <div id="flush-OrderOnProgress" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-OrderCompleted" aria-expanded="false" aria-controls="flush-collapseThree">
+                <i class="feather-x-circle mr-2 text-danger mb-0"></i>
+                On Progress
+            </button>
+        </h2>
+        <div id="flush-OrderCompleted" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+        </div>
+    </div>
+
+</div>*@
+
+<div class="myorders">
+    <div class="p-3 osahan-inner-header bg-white shadow-sm">
+        <a class="font-weight-bold text-dark text-back text-decoration-none " href="">
+            <i class="feather-chevron-left"></i>
+            <span class="ml-3 h6 mb-0">MyOrders</span>
+        </a>
+    </div>
+    <div class="order-body">
+        <div class="pb-3">
+            <div class="p-3 rounded shadow-sm bg-white">
+                <div class="row border-bottom pb-3">
+                    <p class="col-2 text-secondary">#123</p>
+                    <div class="col-4 font-weight-bold">
+                        <a onclick="/Restaurant/1" class="text-dark">
+                            Pizza Club
+                        </a>
+                         <p class="text-secondary">$99.9</p>
+                    </div>                  
+                    <div class="col-4">
+                        <p class="bg-success text-white py-1 text-center rounded small mb-1" style="width:80px">In Cart</p>
+                    </div>
+
+                    <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/OrderDetails/1">
+                        <i class="feather-chevron-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="pb-3">
+            <div class="p-3 rounded shadow-sm bg-white">
+                <div class="row border-bottom pb-3">
+                    <p class="col-2 text-secondary">#123</p>
+                    <div class="col-4 font-weight-bold">
+                        <a onclick="/Restaurant/1" class="text-dark">
+                            Pizza Club
+                        </a>
+                        <p class="text-secondary">$99.9</p>
+                    </div>
+                    <div class="col-4">
+                        <p class="bg-success text-white py-1 text-center rounded small mb-1" style="width:80px">Paid</p>
+                    </div>
+
+                    <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/OrderDetails/1">
+                        <i class="feather-chevron-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="pb-3">
+            <div class="p-3 rounded shadow-sm bg-white">
+                <div class="row border-bottom pb-3">
+                    <p class="col-2 text-secondary">#123</p>
+                    <div class="col-4 font-weight-bold">
+                        <a onclick="/Restaurant/1" class="text-dark">
+                            Pizza Club
+                        </a>
+                        <p class="text-secondary">$99.9</p>
+                    </div>
+                    <div class="col-4">
+                        <p class="bg-success text-white py-1 text-center rounded small mb-1" style="width:80px">Accept</p>
+                    </div>
+
+                    <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/OrderDetails/1">
+                        <i class="feather-chevron-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="pb-3">
+            <div class="p-3 rounded shadow-sm bg-white">
+                <div class="row border-bottom pb-3">
+                    <p class="col-2 text-secondary">#123</p>
+                    <div class="col-4 font-weight-bold">
+                        <a onclick="/Restaurant/1" class="text-dark">
+                            Pizza Club
+                        </a>
+                        <p class="text-secondary">$99.9</p>
+                    </div>
+                    <div class="col-4">
+                        <p class="bg-warning text-white py-1 text-center rounded small mb-1" style="width:80px">On progress</p>
+                    </div>
+
+                    <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/OrderDetails/1">
+                        <i class="feather-chevron-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+@code {
+
+}

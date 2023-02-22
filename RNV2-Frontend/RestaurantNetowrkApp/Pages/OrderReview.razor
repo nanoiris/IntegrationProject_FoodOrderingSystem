@@ -1,5 +1,8 @@
 ﻿@page "/Order/Review/1"
 @using RestaurantNetowrkApp.Componants
+@inject IJSRuntime JSRuntime
+
+
 <div class="osahan-checkout">
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
         <div class="d-flex align-items-center">
@@ -51,5 +54,14 @@
 
 
 @code {
+    bool firstRender = true;
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeAsync<object>("restaurantQuantity");
+            firstRender = false;
+        }
 
+    }
 }
