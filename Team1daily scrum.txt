@@ -314,8 +314,11 @@ continue RMS food item CRUD
 2. To do until next Scrum:
 3. Need assistance / figure things out
 
-2023/02/22 Wednesday Zibin 
+2023/02/22 Zibin 
 1. Done / not done since last scrum:
+finish the available list/completed list UI  
 2. To do until next Scrum:
+edit profile UI
+picked up UI
+Try to Use Azure cosmos DB Emulator to fetch data
 3. Need assistance / figure things out
-
