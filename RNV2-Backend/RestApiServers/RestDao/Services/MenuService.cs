@@ -16,6 +16,7 @@ namespace RestaurantDao.Services
                     return false;
                 if (category!.MenuItemList == null)
                     category!.MenuItemList = new List<MenuItem>();
+                item.Id = Guid.NewGuid().ToString("N");
                 category!.MenuItemList!.Add(item);
                 var result = await ctx.SaveChangesAsync();
                 return result == 1 ? true : false;

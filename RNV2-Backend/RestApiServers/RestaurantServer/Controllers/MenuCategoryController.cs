@@ -62,11 +62,16 @@ namespace RestaurantServer.Controllers
             return BadRequest(new AppResult("Cannot delete the category", false));
         }
 
-        /*
-         *
-         public Task<bool> UpdateCategory(MenuCategory category);
-         public Task<bool> DeleteCategory(string categoryId);
-        */
-
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatedOne(MenuCategory category)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await service.UpdateCategory(category);
+                if (result == true)
+                    return Ok(new AppResult("", true));
+            }
+            return BadRequest(new AppResult("Cannot delete the category", false));
+        }
     }
 }
