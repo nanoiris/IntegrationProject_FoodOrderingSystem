@@ -6,6 +6,7 @@
 @inject IJSRuntime JSRuntime
 @using Microsoft.Extensions.Logging
 @inject ILogger<CategoryService> logger
+@inject IFlashMessageService FlashMessageService  
 
 
 <ul class="breadcrumb breadcrumb-gray">
@@ -14,6 +15,19 @@
              <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
     }
 </ul>
+
+@if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @FlashMessageService.SuccessMessage
+    </div>
+}
+else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
+{
+    <div class="alert alert-danger">
+        @FlashMessageService.FailureMessage
+    </div>
+}
 
 <div class="row pb-3">
             <div class="col-2">
@@ -58,6 +72,7 @@ else
         new TabPath { Title = "Category", Path = "/category" },
         };
     public List<CategoryDto> Categories { get; set; }
+    public int restaurantId = 1; 
 
     [Inject]
     public ICategoryService CategoryService { get; set; }
@@ -65,8 +80,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         logger.LogInformation("OnInitializedAsync");
-        Categories = (await CategoryService.ListCategoryAsync(1)).ToList();
-
+        Categories = (await CategoryService.ListCategoryAsync(restaurantId)).ToList();
+        @* await FlashMessageService.ClearMessagesAsync(); *@
     } 
 }
 

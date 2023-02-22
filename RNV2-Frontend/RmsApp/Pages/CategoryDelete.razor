@@ -70,6 +70,7 @@
             try
             {
                 await CategoryService.DeleteCategoryAsync(categoryId);
+                FlashMessageService.SuccessMessage = "Category deleted successfully.";
                 NavigationManager.NavigateTo("/category");
             }
             catch (Exception ex)

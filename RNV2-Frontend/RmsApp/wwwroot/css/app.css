@@ -110,3 +110,26 @@ button:active {
 .loading-progress-text:after {
   content: var(--blazor-load-percentage-text, "Loading");
 }
+.flash-message {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  animation: fadeOut 15s linear forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}
