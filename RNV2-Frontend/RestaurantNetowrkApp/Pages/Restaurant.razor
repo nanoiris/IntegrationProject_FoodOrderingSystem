@@ -1,5 +1,7 @@
 ﻿@page "/Restaurant/1"
 @using RestaurantNetowrkApp.Componants
+@inject IJSRuntime JSRuntime
+
 
 <div class="osahan-restaurant">
     <div class="osahan-restaurant-detail">
@@ -34,7 +36,7 @@
         <div>
             <p class="font-weight-bold px-3 pt-3 m-0">FEATURED ITEMS</p>
 
-            <div class="trending-slider rounded overflow-hidden">
+            <div class="restaurant-slider rounded overflow-hidden">
                 <div class="osahan-slider-item px-1 py-3">
                     <MenuItemCard />
                 </div>
@@ -78,5 +80,15 @@
 
 </div>
 @code {
+    bool firstRender = true;
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeAsync<object>("restaurantSlick");
+            firstRender = false;
+        }
+
+    }
 
 }

@@ -19,7 +19,7 @@ namespace RmsApp.Services
     public class CategoryService : ICategoryService
     {
         private readonly HttpClient _httpClient;
-      
+
         private readonly ILogger _logger;
         /*
         public CategoryService() 
@@ -41,85 +41,34 @@ namespace RmsApp.Services
         {
             _httpClient = httpClient;
         }
-        
+
         public List<CategoryDto> Categories { get; set; }
-        // public CategoryService()
-        // {
-        //     Categories = new List<CategoryDto>();
-        // }
 
-
-        // public async Task<List<CategoryDto>> ListCategoryAsync(int restaurantId)
-        // {
-        //     Categories = new List<CategoryDto>();
-
-        //     Uri uri = new Uri(string.Format(Constants.RestUrl, string.Empty));
-        //     try
-        //     {
-        //         HttpResponseMessage response = await _client.GetAsync(uri);
-        //         if (response.IsSuccessStatusCode)
-        //         {
-        //             string content = await response.Content.ReadAsStringAsync();
-        //             Categories = JsonSerializer.Deserialize<List<CategoryDto>>(content,
-        //             new JsonSerializerOptions
-        //             {
-        //                 PropertyNameCaseInsensitive = true
-        //             });
-        //         }
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Debug.WriteLine(@"\tERROR {0}", ex.Message);
-        //     }
-
-        //     return Categories;
-        // }
         public async Task<List<CategoryDto>> ListCategoryAsync(int restaurantId)
         {
-           Console.WriteLine("Enter service Log...");
-            restaurantId = 1;
+            Console.WriteLine("Enter CategoryListservice Log...");
             Categories = new List<CategoryDto>();
-
             return await _httpClient.GetFromJsonAsync<List<CategoryDto>>("http://localhost:5000/mock/mockCategory.json");
-
-            /*
-            try
-            {
-                var response = await _httpClient.GetAsync("mock/mockCategory.json");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    Categories = JsonSerializer.Deserialize<List<CategoryDto>>(content,
-                        new JsonSerializerOptions
-                        {
-                            PropertyNameCaseInsensitive = true
-                        });
-                }
-                else
-                {
-                    Debug.WriteLine(@"\tERROR {0}", response.ReasonPhrase);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(@"\tERROR {0}", ex.Message);
-            }
-            */
-            return Categories;
         }
-
-
-        public Task EditCategory(int restaurantId, int categoryId)
+        public async Task GetCategoryAsync(int restaurantId, int categoryId)
         {
-            throw new NotImplementedException();
+            // Console.WriteLine("Enter categortGet service Log...");
         }
-        public Task DeleteCategoryAsync(int restaurantId, int categoryId)
+
+        public async Task AddCategoryAsync(int restaurantId, CategoryDto category)
         {
             throw new NotImplementedException();
         }
 
 
+        public async Task EditCategoryAsync(int restaurantId, int categoryId)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task DeleteCategoryAsync(int restaurantId, int categoryId)
+        {
+            throw new NotImplementedException();
+        }
 
 
     }

@@ -2632,8 +2632,8 @@ fieldset:disabled .btn {
 .btn-check:focus + .btn-primary,
 .btn-primary:focus {
   color: #fff;
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
+  background-color: #e0334c;
+  border-color: #e0334c;
   box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
 }
 .btn-check:active + .btn-primary,
@@ -2655,8 +2655,8 @@ fieldset:disabled .btn {
 .btn-primary.disabled,
 .btn-primary:disabled {
   color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: #e0334c;
+  border-color: #e0334c;
 }
 .btn-secondary {
   color: #fff;
@@ -2932,13 +2932,13 @@ fieldset:disabled .btn {
   border-color: #212529;
 }
 .btn-outline-primary {
-  color: #0d6efd;
-  border-color: #0d6efd;
+  color: #e0334c;
+  border-color: #e0334c;
 }
 .btn-outline-primary:hover {
   color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: #e0334c;
+  border-color: #e0334c;
 }
 .btn-check:focus + .btn-outline-primary,
 .btn-outline-primary:focus {
@@ -2950,8 +2950,8 @@ fieldset:disabled .btn {
 .btn-outline-primary.dropdown-toggle.show,
 .btn-outline-primary:active {
   color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: #e0334c;
+  border-color: #e0334c;
 }
 .btn-check:active + .btn-outline-primary:focus,
 .btn-check:checked + .btn-outline-primary:focus,
@@ -2962,7 +2962,7 @@ fieldset:disabled .btn {
 }
 .btn-outline-primary.disabled,
 .btn-outline-primary:disabled {
-  color: #0d6efd;
+  color: #e0334c;
   background-color: transparent;
 }
 .btn-outline-secondary {
@@ -3205,7 +3205,7 @@ fieldset:disabled .btn {
 }
 .btn-link {
   font-weight: 400;
-  color: #0d6efd;
+  color: #e0334c;
   text-decoration: underline;
 }
 .btn-link:hover {
@@ -3499,7 +3499,7 @@ fieldset:disabled .btn {
 .dropdown-item:active {
   color: #fff;
   text-decoration: none;
-  background-color: #0d6efd;
+  background-color: #e0334c;
 }
 .dropdown-item.disabled,
 .dropdown-item:disabled {
@@ -3539,7 +3539,7 @@ fieldset:disabled .btn {
 .dropdown-menu-dark .dropdown-item.active,
 .dropdown-menu-dark .dropdown-item:active {
   color: #fff;
-  background-color: #0d6efd;
+  background-color: #e0334c;
 }
 .dropdown-menu-dark .dropdown-item.disabled,
 .dropdown-menu-dark .dropdown-item:disabled {
@@ -3657,7 +3657,7 @@ fieldset:disabled .btn {
 .nav-link {
   display: block;
   padding: 0.5rem 1rem;
-  color: #0d6efd;
+  color: #e0334c;
   text-decoration: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
@@ -3714,7 +3714,7 @@ fieldset:disabled .btn {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #0d6efd;
+  background-color: #e0334c;
 }
 .nav-fill .nav-item,
 .nav-fill > .nav-link {
@@ -4485,7 +4485,7 @@ fieldset:disabled .btn {
 .page-link {
   position: relative;
   display: block;
-  color: #0d6efd;
+  color: #e0334c;
   text-decoration: none;
   background-color: #fff;
   border: 1px solid #dee2e6;
@@ -4515,8 +4515,8 @@ fieldset:disabled .btn {
 .page-item.active .page-link {
   z-index: 3;
   color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: #e0334c;
+  border-color: #e0334c;
 }
 .page-item.disabled .page-link {
   color: #6c757d;
@@ -4691,7 +4691,7 @@ fieldset:disabled .btn {
   color: #fff;
   text-align: center;
   white-space: nowrap;
-  background-color: #0d6efd;
+  background-color: #e0334c;
   transition: width 0.6s ease;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -4770,8 +4770,8 @@ fieldset:disabled .btn {
 .list-group-item.active {
   z-index: 2;
   color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: #e0334c;
+  border-color: #e0334c;
 }
 .list-group-item + .list-group-item {
   border-top-width: 0;
@@ -6030,7 +6030,7 @@ fieldset:disabled .btn {
   content: "";
 }
 .link-primary {
-  color: #0d6efd;
+  color: #e0334c;
 }
 .link-primary:focus,
 .link-primary:hover {
@@ -6407,7 +6407,7 @@ fieldset:disabled .btn {
   border-left: 0 !important;
 }
 .border-primary {
-  border-color: #0d6efd !important;
+  border-color: #e0334c !important;
 }
 .border-secondary {
   border-color: #6c757d !important;

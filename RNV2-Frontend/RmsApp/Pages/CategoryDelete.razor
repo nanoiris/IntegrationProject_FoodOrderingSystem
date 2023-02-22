@@ -1,0 +1,85 @@
+﻿@page "/category/delete/{categoryId:int}"
+@using RmsApp.Services
+@using RmsApp.Dtos
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using Microsoft.Extensions.Logging
+@inject ILogger<CategoryService> logger
+
+
+
+@* <h1>Delete Category</h1> *@
+<ul class="breadcrumb breadcrumb-gray">
+    @foreach (var path in Paths)
+    {
+             <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
+    }
+</ul>
+<div class="form-group mb-3">
+    <label for="categoryId">ID</label>
+    <input type="text" class="form-control" id="categoryId" value="@categoryId" readonly />
+</div>
+
+<div class="form-group mb-3">
+    <label for="categoryName">Name</label>
+    <input type="text" class="form-control" id="categoryName" value="@Category?.Name" readonly />
+</div>
+
+<div class="text-center">
+    <button class="btn btn-primary" @onclick="DeleteCategory">Delete Category</button>
+</div>
+
+
+
+@code {
+    public List<TabPath> Paths = new List<TabPath>
+        {
+        new TabPath { Title = "Home", Path = "/" },
+        new TabPath { Title = "Category", Path = "/category" },
+        new TabPath { Title = "Delete", Path = "/category/delete/{categoryId:int}" },
+        };
+    
+        [Parameter]
+    public int categoryId { get; set; }
+
+    public CategoryDto Category { get; set; }
+
+    [Inject]
+    public ICategoryService CategoryService { get; set; }
+
+    [Inject]
+    public ILogger<CategoryDelete> Logger { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        @* try
+        {
+            Category = await CategoryService.GetCategoryAsync(categoryId);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error retrieving category");
+        } *@
+    }
+
+    private async Task DeleteCategory()
+    {
+        @* var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this category?");
+        if (confirm)
+        {
+            try
+            {
+                await CategoryService.DeleteCategoryAsync(categoryId);
+                FlashMessageService.SuccessMessage = "Category deleted successfully.";
+                NavigationManager.NavigateTo("/category");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Error deleting category");
+            }
+        } *@
+    }
+    
+    
+}
+
