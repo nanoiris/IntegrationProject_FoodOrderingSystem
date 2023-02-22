@@ -1,0 +1,68 @@
+﻿@page "/Account/Signup"
+<div class="p-4 login-page-form">
+    <a class="font-weight-bold text-back text-decoration-none d-flex" href="">
+        <i class="feather-chevron-left"></i>
+        <span class="pl-2">Back</span>
+    </a>
+    <h2 class="my-0">Hello There.</h2>
+    <p class="text-50">Sign up to continue</p>
+    <form class="mt-4 " id="signupForm" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <input asp-for="Name" type="text" placeholder="Name" class="form-control" id="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="Email" type="text" placeholder="Email" class="form-control" id="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="PhoneNo" type="text" placeholder="Mobile Number" class="form-control" id="Phone" />
+            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="Password" type="password" placeholder="Password" class="form-control" id="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="ConfirmPassword" type="password" placeholder="Retype Password" class="form-control" id="ConformPassword" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="Street" type="text" placeholder="Street" class="form-control" id="Street" />
+            <span asp-validation-for="Street" class="text-danger"></span>
+        </div>
+        <div class="form-group"> 
+            <input asp-for="City" type="text" placeholder="City" class="form-control" id="City" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="Province" type="text" placeholder="Province" class="form-control" id="Province" />
+            <span asp-validation-for="Province" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="Country" type="text" placeholder="Country" class="form-control" id="Country" />
+            <span asp-validation-for="Country" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="Zip" type="text" placeholder="Zip" class="form-control" id="Zip" />
+            <span asp-validation-for="Zip" class="text-danger"></span>
+        </div>
+        <div class="form-group mr-3 ">
+            <div class="custom-file  mr-3">
+                <label class="custom-file-label" asp-for="Upload"></label>
+                <input type="file" asp-for="Upload" class="form-control d-none" />
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block mb-2" type="submit">SIGN UP</button>
+        <div class="d-flex align-items-center justify-content-center">
+            <a href="/Account/Login">
+                <p class="text-center m-0">Already an account? Log in</p>
+            </a>
+        </div>
+    </form>
+</div>
+
+@code {
+
+}

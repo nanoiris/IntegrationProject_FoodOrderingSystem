@@ -1,0 +1,35 @@
+﻿@page "/Account/Login"
+<div class="login-page ">
+	<a class="font-weight-bold text-back text-decoration-none d-flex" href="">
+		<i class="feather-chevron-left"></i>
+		<span class="pl-2">Back</span>
+	</a>
+	<form class="mt-5 mb-4" action="">
+		<h2 class="text-dark my-0 mb-2">Welcome! </h2>
+		<h5 class="text-secondary my-0 mb-5"> Please Log in </h5>
+		<div class="mb-3">
+			<input class="form-control form-control-lg bg-light py-4 border-0 mb-2 rounded" placeholder="Login with Email" />
+			<input type="password" class="form-control form-control-lg bg-light py-4 border-0 rounded" placeholder="Password" />
+		</div>
+		<div class="or-osahan text-center my-4 border-bottom">
+			<span>OR</span>
+		</div>
+
+		<div class="mb-3">
+			<button class="btn btn-lg btn-light btn-block">
+				<img src="img/search.svg" alt=""> Login with Google
+			</button>
+		</div>
+		<button class="btn btn-primary btn-lg btn-block mt-5">Log in</button>
+
+	</form>
+	<div class="d-flex align-items-center justify-content-center">
+		<a href="Account/Signup">
+			<p class="text-center m-0">Don't have an account? Sign up</p>
+		</a>
+	</div>
+</div>
+
+@code {
+
+}
