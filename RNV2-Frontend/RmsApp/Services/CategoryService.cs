@@ -108,7 +108,7 @@ namespace RmsApp.Services
             {
                 throw new ArgumentNullException(nameof(categoryDto));
             }
-            var response = await _httpClient.PutAsJsonAsync($"api/menucategory/updateone/{categoryDto.Id}", categoryDto);
+            var response = await _httpClient.PutAsJsonAsync($"api/menucategory/updatedone/{categoryDto.Id}", categoryDto);
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogError("Failed to update category with ID {CategoryId}. StatusCode: {StatusCode}", categoryDto.Id, response.StatusCode);
@@ -121,7 +121,7 @@ namespace RmsApp.Services
 
         public async Task DeleteCategoryAsync(string categoryId)
         {
-            var response = await _httpClient.DeleteAsync($"api/menucategory/deleteone/{categoryId}");
+            var response = await _httpClient.DeleteAsync($"api/menucategory/deletedone/{categoryId}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -129,8 +129,6 @@ namespace RmsApp.Services
                 throw new ApplicationException("Failed to delete category.");
             }
         }
-
-
 
     }
 

@@ -18,11 +18,11 @@
 @if (Category != null)
 {
     <form>
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label for="id">ID:</label>
             <input type="text" id="id" class="form-control" value="@Category.Id" readonly />
         </div>
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label for="name">Name:</label>
             <input type="text" id="name" class="form-control" value="@Category.Name" @oninput="@(e => Category.Name = e.Value.ToString())" />
 
