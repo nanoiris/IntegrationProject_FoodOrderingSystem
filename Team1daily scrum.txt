@@ -302,7 +302,11 @@ continue RMS food item CRUD
 
 2023/02/22 Wednesday Xiao Pei
 1. Done / not done since last scrum:
+- Fix problem: using javascrip library in blazor
+- Implement dropdowm menu and all slick sliders
+- UI for My Orders, Order Details
 2. To do until next Scrum:
+- Finish all the UI for End User
 3. Need assistance / figure things out
 
 2023/02/22 Wednesday Wenzhe
