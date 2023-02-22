@@ -1,4 +1,6 @@
-﻿using RestaurantDaoBase.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantDao.Contexts;
+using RestaurantDaoBase.Enums;
 using RestaurantDaoBase.IServices;
 using RestaurantDaoBase.Models;
 using System;
@@ -11,32 +13,102 @@ namespace RestaurantDao.Services
 {
     public class OrderService : IOrderService
     {
-        public Task<bool> AddDishToCart(string orderId, string menuId)
+        public async Task<bool> AddDishToCart(string orderId, MenuItem menuItem)
         {
-            throw new NotImplementedException();
+            using (var ctx = new OrderContext())
+            {
+                var order = await ctx.Orders.FindAsync(orderId);
+                if (order == null)
+                    return false;
+                
+                var itemList = order.ItemList;
+                if(itemList == null)
+                    itemList = new List<OrderItem>();
+
+                decimal subtotal = order.SubTotal ?? 0;
+
+                var orderItem = itemList.Find(x => x.Item?.Id == menuItem.Id);
+                if(orderItem == null)
+                {
+                    orderItem = new OrderItem
+                    {
+                        Id = Guid.NewGuid().ToString("N"),
+                        Qty = 1,
+                        Status = StatusEnum.Cart,
+                        Item = menuItem,
+                        OrderId = orderId
+                    };
+                    itemList.Add(orderItem);
+                }
+                else
+                {
+                    orderItem.Qty = orderItem.Qty + 1;
+                }
+                subtotal += orderItem.Item!.Price;
+                order.SubTotal = subtotal;
+                order.PayTotal = subtotal * 1.15m;
+                var result = await ctx.SaveChangesAsync();
+                return result == 1 ? true : false; 
+            }
         }
 
-        public Task<bool> CancelOrder(string orderId)
+        public async Task<bool> CancelOrder(string orderId)
         {
-            throw new NotImplementedException();
+            using (var ctx = new OrderContext())
+            {
+                Order? order = await ctx.Orders.FindAsync(orderId);
+                if (order == null)
+                    return false;
+                 order!.Status = StatusEnum.Canceled;
+                var result = await ctx.SaveChangesAsync();
+                return result == 1 ? true : false;
+            }
         }
 
-        public Task<bool> CreateCart(string email, string menuId, string restaurantId)
+        public async Task<bool> CreateCart(string email, MenuItem menuItem, string restaurantId,string restaurantName)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DecreaseDishQty(string email, string orderItemId, string orderId)
-        {
-            throw new NotImplementedException();
+            Order newOrder = new Order()
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Status = StatusEnum.Cart,
+                UserName = email,
+                CreateTime = DateTime.Now,
+                RestaurantId = restaurantId,
+                RestaurantName = restaurantName,
+                SubTotal = menuItem.Price,
+                PayTotal = menuItem.Price * 1.15m
+            };
+            using (var ctx = new OrderContext())
+            {
+                OrderItem orderItem = new OrderItem
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    Qty = 1,
+                    Status = StatusEnum.Cart,
+                    Item = menuItem,
+                    OrderId = newOrder.Id,
+                };
+                newOrder.ItemList = new List<OrderItem> { orderItem };
+                var result = await ctx.SaveChangesAsync();
+                return result == 1 ? true : false;
+            } 
         }
 
         public Task<Order> FindOrderById(string orderId)
         {
-            throw new NotImplementedException();
+            using (var ctx = new OrderContext())
+            {
+                return ctx.Orders.Where(x => x.Id == orderId).FirstAsync();
+            }
         }
-
-        public Task<bool> IncreaseDishQty(string email, string orderItemId, string orderId)
+        public Task<bool> DecreaseDishQty(string email, string orderItemId, string orderId)
+        {
+            using (var ctx = new OrderContext())
+            {
+                Order order = ctx.Orders.FirstOrDefault(x => x.Id == orderItemId);
+            }
+        }
+            public Task<bool> IncreaseDishQty(string email, string orderItemId, string orderId)
         {
             throw new NotImplementedException();
         }
@@ -51,11 +123,18 @@ namespace RestaurantDao.Services
             throw new NotImplementedException();
         }
 
-        public Task<Dictionary<string, Order>> ListOrderByUser(string email)
+        public async Task<Dictionary<string, Order>> ListOrderByUser(string email)
         {
             throw new NotImplementedException();
-        }
+            /*
+            using (var ctx = new OrderContext())
+            {
+                var rows = await ctx.Orders.Where(x => x.UserName == email).ToListAsync();
 
+
+            }
+            */
+        } 
         public Task<List<Order>?> ListOrderByUserAndStatus(string email, StatusEnum status)
         {
             throw new NotImplementedException();

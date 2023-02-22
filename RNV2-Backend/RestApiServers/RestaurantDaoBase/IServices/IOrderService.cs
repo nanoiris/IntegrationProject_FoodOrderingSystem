@@ -17,8 +17,8 @@ namespace RestaurantDaoBase.IServices
         public Task<List<Order>?> ListOrderByUserAndStatus(string email,StatusEnum status);
         public Task<Dictionary<string,Order>> ListOrderByUser(string email);
         
-        public Task<bool> AddDishToCart(string orderId,string menuId);
-        public Task<bool> CreateCart(string email, string menuId, string restaurantId);
+        public Task<bool> AddDishToCart(string orderId, MenuItem menuItem);
+        public Task<bool> CreateCart(string email, MenuItem menuItem, string restaurantId, string restaurantName);
         public Task<string> UpdateCart(string email, string menuId, string restaurantId,int orderId);
 
         public Task<bool> IncreaseDishQty(string email, string orderItemId,string orderId);
