@@ -6,7 +6,7 @@
 @inject IJSRuntime JSRuntime
 @using Microsoft.Extensions.Logging
 @inject ILogger<CategoryService> logger
-    @inject IFlashMessageService FlashMessageService  
+@inject IFlashMessageService FlashMessageService  
 
 
 <ul class="breadcrumb breadcrumb-gray">
@@ -61,14 +61,14 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
     } 
     private async Task AddCategory()
     {
+        string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
+        var newCategory = new CategoryDto { Name = NewCategoryName };
+        await CategoryService.AddCategoryAsync(restaurantId, newCategory);
         FlashMessageService.SuccessMessage = "Add successfully!";
         FlashMessageService.DurationInSeconds = 5; 
         await FlashMessageService.ClearMessagesAsync();
         NavigationManager.NavigateTo("/category");
-        string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
-        var newCategory = new CategoryDto { Name = NewCategoryName };
-        await CategoryService.AddCategoryAsync(restaurantId, newCategory);
-        NewCategoryName = string.Empty;
+        @* NewCategoryName = string.Empty; *@
     }
 }
 

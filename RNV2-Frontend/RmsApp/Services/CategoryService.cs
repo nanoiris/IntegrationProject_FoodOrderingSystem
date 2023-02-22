@@ -58,10 +58,6 @@ namespace RmsApp.Services
             return Categories;
         }
 
-        public async Task GetCategoryAsync(string restaurantId, string categoryId)
-        {
-            // Console.WriteLine("Enter categortGet service Log...");
-        }
 
         public async Task AddCategoryAsync(string restaurantId, CategoryDto category)
         {
@@ -72,7 +68,7 @@ namespace RmsApp.Services
                     Name = category.Name,
                     RestaurantId = restaurantId
                 };
-                var response = await _httpClient.PostAsJsonAsync("api/category/NewOne", newCategory);
+                var response = await _httpClient.PostAsJsonAsync("api/menucategory/NewOne", newCategory);
                 if (response.IsSuccessStatusCode)
                 {
                     _flashMessageService.SuccessMessage = "Category added successfully.";
@@ -89,18 +85,51 @@ namespace RmsApp.Services
                 _flashMessageService.FailureMessage = "Failed to add the category.";
             }
         }
-
-
-
-
-        public async Task EditCategoryAsync(string restaurantId, string categoryId)
+        public async Task<CategoryDto> GetCategoryAsync(string categoryId)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(categoryId))
+            {
+                throw new ArgumentException("Category ID cannot be null or empty.", nameof(categoryId));
+            }
+            var response = await _httpClient.GetAsync($"api/menucategory/one/{categoryId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<CategoryDto>();
+            }
+            _logger.LogError("Failed to get category with ID {CategoryId}. StatusCode: {StatusCode}", categoryId, response.StatusCode);
+            throw new ApplicationException("Failed to get category.");
         }
-        public async Task DeleteCategoryAsync(string restaurantId, string categoryId)
+
+
+        public async Task UpdateCategoryAsync(CategoryDto categoryDto)
         {
-            throw new NotImplementedException();
+            if (categoryDto == null)
+            {
+                throw new ArgumentNullException(nameof(categoryDto));
+            }
+            var response = await _httpClient.PutAsJsonAsync($"api/menucategory/updateone/{categoryDto.Id}", categoryDto);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Failed to update category with ID {CategoryId}. StatusCode: {StatusCode}", categoryDto.Id, response.StatusCode);
+                throw new ApplicationException("Failed to update category.");
+            }
         }
+
+
+
+
+        public async Task DeleteCategoryAsync(string categoryId)
+        {
+            var response = await _httpClient.DeleteAsync($"api/menucategory/deleteone/{categoryId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Failed to delete category with ID {CategoryId}. StatusCode: {StatusCode}", categoryId, response.StatusCode);
+                throw new ApplicationException("Failed to delete category.");
+            }
+        }
+
 
 
     }
