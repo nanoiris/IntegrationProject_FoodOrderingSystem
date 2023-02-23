@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using RestaurantNetowrkApp.Data;
+using RestaurantNetowrkApp.Services;
+using RestaurantNetowrkApp.Services.IServices;
 
 namespace RestaurantNetowrkApp;
 
@@ -15,15 +17,18 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 			});
 
-		builder.Services.AddMauiBlazorWebView();
+        builder.Services.AddMauiBlazorWebView();
+
+		//builder.Services.AddHttpClient<IRestaurantService, RestaurantService>(client =>
+		//{
+		//	client.BaseAddress = new Uri("https://localhost:5064/");
+		//});
 
 #if DEBUG
-        builder.Services.AddBlazorWebViewDeveloperTools();
+		builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
 #endif
 
-		builder.Services.AddSingleton<WeatherForecastService>();
-
-		return builder.Build();
+        return builder.Build();
 	}
 }

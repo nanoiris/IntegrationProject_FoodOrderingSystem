@@ -130,6 +130,7 @@ namespace RestaurantDao.Services
                 var result = await ctx.SaveChangesAsync();
                 return result == 1 ? true : false;
             }
+            throw new NotImplementedException();
         }
         public async Task<bool> IncreaseDishQty(string orderItemId, string orderId)
         {
