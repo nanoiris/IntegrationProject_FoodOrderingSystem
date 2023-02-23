@@ -26,6 +26,18 @@ namespace RestaurantServer.Controllers
             return service.ListRestaurant();
         }
 
+        [HttpGet("{limit}")]
+        public Task<List<Restaurant>> ListWithLimit(int limit)
+        {
+            return service.ListWithLimit(limit);
+        }
+
+        [HttpGet]
+        public Task<List<Restaurant>> ListWeeklyTrends()
+        {
+            return service.ListWeeklyTrends();
+        }
+
         [HttpPost]
         public async Task<IActionResult> NewOne([FromForm] RestaurantForm form)
         {
