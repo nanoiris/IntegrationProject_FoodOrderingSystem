@@ -326,3 +326,30 @@ edit profile UI
 picked up UI
 Try to Use Azure cosmos DB Emulator to fetch data
 3. Need assistance / figure things out
+
+=============================================================
+2023/02/23 Thursday  Yi 
+1. Done / not done since last scrum:
+RMS category CRUD frontend services 
+RMS category CRUD razor pages 
+2. To do until next Scrum:
+RMS menu CRUD frontend services 
+RMS menu CRUD razor pages 
+3. Need assistance / figure things out
+
+2023/02/23 Thursday Xiao Pei
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/02/23 Thursday Wenzhe
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/02/23 Thursday Zibin 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+
