@@ -8,6 +8,6 @@ namespace RestaurantDaoBase.Enums
 {
     public enum PayTypeEnum
     {
-        Visa = 0, MastCard = 1, DebetCard = 2,Cash = 3
+        Visa = 0, MasterCard = 1, DebetCard = 2,Cash = 3
     }
 }

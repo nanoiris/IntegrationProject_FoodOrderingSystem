@@ -13,12 +13,12 @@ namespace RestaurantDao.Services
 {
     public partial class RestaurantService : IRestaurantService
     {
-        public Task<WeeklyTrend> ListWeeklyTrends()
+        public Task<List<Restaurant>> ListWeeklyTrends()
         {
             using (var ctx = new RestaurantContext())
             {
-                var today = DateTime.Now;
-                return ctx.WeeklyTrends.Where(x => x.StartDate <= today && x.EndDate > today).FirstAsync();
+                //var today = DateTime.Now;
+                return ctx.Restaurants.Where(x => x.IsFeatured == true).ToListAsync();
             }
         }
         public Task<List<Restaurant>> ListWithLimit(int limit)
