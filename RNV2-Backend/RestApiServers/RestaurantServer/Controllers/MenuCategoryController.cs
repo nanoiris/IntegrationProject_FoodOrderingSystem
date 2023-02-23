@@ -47,7 +47,7 @@ namespace RestaurantServer.Controllers
                 if (result == true)
                     return Ok(new AppResult("", true));
             }
-            return BadRequest(new AppResult("Cannot add the new category",false));
+            return BadRequest(new AppResult("Cannot add the new category", false));
         }
 
         [HttpDelete("{id}")]
@@ -71,7 +71,7 @@ namespace RestaurantServer.Controllers
                 if (result == true)
                     return Ok(new AppResult("", true));
             }
-            return BadRequest(new AppResult("Cannot delete the category", false));
+            return BadRequest(new AppResult("Cannot update the category", false));
         }
     }
 }

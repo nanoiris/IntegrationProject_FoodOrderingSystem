@@ -34,12 +34,6 @@ namespace RmsApp.Services
 
         public List<CategoryDto> Categories { get; set; }
 
-        // public async Task<List<CategoryDto>> ListCategoryAsync(int restaurantId)
-        // {
-        //     Console.WriteLine("Enter CategoryListservice Log...");
-        //     Categories = new List<CategoryDto>();
-        //     return await _httpClient.GetFromJsonAsync<List<CategoryDto>>("http://localhost:5000/mock/mockCategory.json");
-        // }
         public async Task<List<CategoryDto>> ListCategoryAsync(string restaurantId)
         {
             Console.WriteLine("Enter CategoryListService Log...");

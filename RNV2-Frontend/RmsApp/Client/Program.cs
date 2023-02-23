@@ -22,6 +22,10 @@ namespace RmsApp
             {
                 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
             });
+            builder.Services.AddHttpClient<IItemService, ItemService>(client =>
+            {
+                client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+            });
             builder.Services.AddFlashMessageService();
 
             var host = builder.Build();
