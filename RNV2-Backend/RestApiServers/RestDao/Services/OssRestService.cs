@@ -17,8 +17,12 @@ namespace RestaurantDao.Services
             using (var ctx = new RestaurantContext())
             {
                 RestCategory? category = await ctx.RestCategories.FindAsync(form.CategoryId);
-                if (category == null)
+                if (category == null) 
+                {
+                    Console.WriteLine("The category is not right");
                     return false;
+                }
+                    
 
                 Restaurant newOne = new Restaurant();
                 newOne.Id = Guid.NewGuid().ToString("N");
@@ -27,7 +31,8 @@ namespace RestaurantDao.Services
                 newOne.Description = form.Description;
                 newOne.Logo = form.Logo;
                 newOne.PhoneNo = form.PhoneNo;
-                
+                newOne.IsFeatured = form.IsFeatured;
+
                 Address address = new Address();
                 address.Street = form.Street;
                 address.City = form.City;
@@ -98,8 +103,11 @@ namespace RestaurantDao.Services
                     row.Email = form.Email;
                 if (form.Description != null)
                     row.Description = form.Description;
-                
-                if(form.Logo != null)
+
+                if (form.IsFeatured != null)
+                    row.IsFeatured = form.IsFeatured;
+
+                if (form.Logo != null)
                    row.Logo = form.Logo;
 
                 if (form.PhoneNo != null)

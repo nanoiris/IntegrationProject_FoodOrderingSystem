@@ -21,7 +21,7 @@ namespace RestaurantDaoBase.Models
         public string? Country { get; set; }
         public string? PhoneNo { get; set; }
         public string? Email { get; set; }
-
+        public bool? IsFeatured { get; set; }
         public string? CategoryId { get; set; }
         //public string? PartionKey { get; set; }
         
