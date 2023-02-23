@@ -1,11 +1,13 @@
-﻿@page "/SignUp"
+﻿@page "/EditProfile"
+@using DeliveryApp.Componants
+
 <div class="p-4 login-page-form">
-    <a class="font-weight-bold text-back text-decoration-none d-flex" href="">
+<a class="font-weight-bold text-back text-decoration-none d-flex" href="Profile">
         <i class="feather-chevron-left"></i>
         <span class="pl-2">Back</span>
     </a>
-    <h2 class="my-0">Hello There.</h2>
-    <p class="text-50">Sign up to continue</p>
+    <h2 class="my-0">Hello Anna!</h2>
+    <p class="text-50">Edit your profile</p>
     <form class="mt-4 " id="signupForm" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <input asp-for="Name" type="text" placeholder="Name" class="form-control" id="Name" />
@@ -20,18 +22,10 @@
             <span asp-validation-for="PhoneNo" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input asp-for="Password" type="password" placeholder="Password" class="form-control" id="Password" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <input asp-for="ConfirmPassword" type="password" placeholder="Retype Password" class="form-control" id="ConformPassword" />
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div>
-        <div class="form-group">
             <input asp-for="Street" type="text" placeholder="Street" class="form-control" id="Street" />
             <span asp-validation-for="Street" class="text-danger"></span>
         </div>
-        <div class="form-group"> 
+        <div class="form-group">
             <input asp-for="City" type="text" placeholder="City" class="form-control" id="City" />
             <span asp-validation-for="City" class="text-danger"></span>
         </div>
@@ -54,15 +48,11 @@
             </div>
         </div>
 
-        <button class="btn btn-primary btn-lg btn-block mb-2" type="submit">SIGN UP</button>
-        <div class="d-flex align-items-center justify-content-center">
-            <a href="/Account/Login">
-                <p class="text-center m-0">Already an account? Log in</p>
-            </a>
-        </div>
+        <button class="btn btn-primary btn-lg btn-block mb-2" type="submit">Update</button>
     </form>
+       
 </div>
-
 @code {
 
 }
+

@@ -19,7 +19,6 @@
                 <th class="border-0" scope="col" id="class">Restaurant Name</th>
                 <th class="border-0" scope="col" id="class">Customer Name</th>
                 <th class="border-0" scope="col" id="class">Status</th>
-                <th class="border-0" scope="col" id="class">Action</th>
                 @* }*@
             </tr>
         </thead>
@@ -27,22 +26,21 @@
             @*            @foreach (var item in Model.Rows)
             {*@
             <tr>
-                <td>                   
-                        1                  
+                <td>
+
+                    1
+
                 </td>
 
                 <td>Name1 123,SUN ROAD H3H 1K3,Montreal</td>
                 <td>Name2 456,SHERBOOK H3H 1K3,Montreal</td>
-
+                <td>Available</td>
                 @*   @if(Model.EditBtns != null)
                 {
                 @foreach(var btn in Model.EditBtns)
                 {*@
                 <td>
-                   Available
-                </td>
-                <td>
-                    <a class="btn btn-icon-only btn-pill btn-danger" href="orderdetail">
+                    <a class="btn btn-icon-only btn-pill btn-primary">
                         Details
                     </a>
                    
@@ -52,25 +50,49 @@
             </tr>
             <tr>
                 <td>
-                   
-                        2
-                   
+
+                    2
+
                 </td>
 
                 <td>Name1 123,SUN ROAD H3H 1K3,Montreal</td>
                 <td>Name2 456,SHERBOOK H3H 1K3,Montreal</td>
+                <td>Assigned</td>
 
                 @*   @if(Model.EditBtns != null)
                 {
                 @foreach(var btn in Model.EditBtns)
                 {*@
                 <td>
-                    Picked up
-                </td>
-                <td>
-                    <a class="btn btn-icon-only btn-pill btn-danger" href="orderdetail">
+                    <a class="btn btn-icon-only btn-pill btn-danger">
                         Details
                     </a>
+                   
+                </td>
+                @*     }
+                }*@
+            </tr>
+<tr>
+                <td>
+
+                    3
+
+                </td>
+
+                <td>Name1 123,SUN ROAD H3H 1K3,Montreal</td>
+                <td>Name2 456,SHERBOOK H3H 1K3,Montreal</td>
+                <td>Picked Up</td>
+
+                @*   @if(Model.EditBtns != null)
+                {
+                @foreach(var btn in Model.EditBtns)
+                {*@
+                <td>
+                    <a class="btn btn-icon-only btn-pill btn-danger">
+                        Details
+                    </a>
+                        
+                   
 
                 </td>
                 @*     }
@@ -78,47 +100,21 @@
             </tr>
             <tr>
                 <td>
-                   
-                        3
-                   
+
+                    4
+
                 </td>
 
                 <td>Name1 123,SUN ROAD H3H 1K3,Montreal</td>
                 <td>Name2 456,SHERBOOK H3H 1K3,Montreal</td>
+                <td>Completed</td>
 
                 @*   @if(Model.EditBtns != null)
                 {
                 @foreach(var btn in Model.EditBtns)
                 {*@
                 <td>
-                    Assigned
-                </td>
-                <td>
-                    <a class="btn btn-icon-only btn-pill btn-danger" href="orderdetail">
-                        Details
-                    </a>
-
-                </td>
-                @*     }
-                }*@
-            </tr>
-            <tr>
-                <td>
-                   4
-                </td>
-
-                <td>Name1 123,SUN ROAD H3H 1K3,Montreal</td>
-                <td>Name2 456,SHERBOOK H3H 1K3,Montreal</td>
-
-                @*   @if(Model.EditBtns != null)
-                {
-                @foreach(var btn in Model.EditBtns)
-                {*@
-                <td>
-                    Completed
-                </td>
-                <td>
-                    <a class="btn btn-icon-only btn-pill btn-danger" href="orderdetail">
+                    <a class="btn btn-icon-only btn-pill btn-danger">
                         Details
                     </a>
 

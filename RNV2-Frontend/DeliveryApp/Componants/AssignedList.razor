@@ -1,7 +1,90 @@
-﻿<h3>AssignedList</h3>
+﻿
+<div class="section">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-gray">
+            @* @foreach (var path in Model.Paths)
+            {
+                <li class="breadcrumb-item"><a asp-controller="@path.ControllerName" asp-action="@path.ActionName">@path.Titile</a></li>
+            }*@
+        </ol>
+    </nav>
 
 
+            <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
+                <thead class="text-danger font-weight-bold">
+                <tr>
+                @* @foreach (var tabHeader in Model.TabHeaders)
+                {*@
+                    <th class="border-0" scope="col" id="class">ID</th>
+                <th class="border-0" scope="col" id="class">Restaurant Name</th>
+                <th class="border-0" scope="col" id="class">Customer Name</th>
+                @* }*@
+            </tr>
+                </thead>
+                <tbody>
+            @*            @foreach (var item in Model.Rows)
+            {*@
+                <tr>
+                    <td>
+                   
+                           1
+                     
+                    </td>
 
+                    <td>Name1 123,SUN ROAD H3H 1K3,Montreal</td>
+                    <td>Name2 456,SHERBOOK H3H 1K3,Montreal</td>
+
+                @*   @if(Model.EditBtns != null)
+                    {
+                       @foreach(var btn in Model.EditBtns)
+                       {*@
+                    <td>
+                    <a class="btn btn-icon-only btn-pill btn-primary">
+                        Details
+                       </a>
+                    <a class="btn btn-icon-only btn-pill btn-primary">
+                                Refuse
+                            </a>
+                    <a class="btn btn-icon-only btn-pill btn-primary">
+                        Picked Up
+                    </a>
+                    </td>            
+                @*     }
+                    }*@
+                </tr>
+            <tr>
+                <td>
+                   
+                        1
+                 
+                </td>
+
+                <td>Name1 123,SUN ROAD H3H 1K3,Montreal</td>
+                <td>Name2 456,SHERBOOK H3H 1K3,Montreal</td>
+
+                @*   @if(Model.EditBtns != null)
+                {
+                @foreach(var btn in Model.EditBtns)
+                {*@
+                <td>
+                    <a class="btn btn-icon-only btn-pill btn-danger">
+                        Details
+                    </a>
+                    <a class="btn btn-icon-only btn-pill btn-primary">
+                        Refuse
+                    </a>
+                    <a class="btn btn-icon-only btn-pill btn-primary">
+                        Picked Up
+                    </a>
+                </td>
+                @*     }
+                }*@
+            </tr>
+            @*  }*@
+            </tbody>
+        </table>
+
+</div>
 @code {
 
 }
