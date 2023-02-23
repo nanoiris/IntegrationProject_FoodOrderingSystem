@@ -339,7 +339,12 @@ RMS menu CRUD razor pages
 
 2023/02/23 Thursday Xiao Pei
 1. Done / not done since last scrum:
+- finish UI for end user
+- start using Api for EndUser
 2. To do until next Scrum:
+- End user can brouse restaurant categories
+- End user can browse weeking trendings
+- End user can browse all restaurants
 3. Need assistance / figure things out
 
 2023/02/23 Thursday Wenzhe
