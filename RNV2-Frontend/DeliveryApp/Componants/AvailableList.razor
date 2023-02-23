@@ -1,5 +1,4 @@
-﻿<h3>AvailableList</h3>
-
+﻿
 <div class="section">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-gray">
@@ -27,7 +26,7 @@
             {*@
                 <tr>
                     <td>
-                        <a class="btn btn-icon-only btn-pill btn-primary">
+                    <a class="btn btn-icon-only btn-pill  btn-primary ">
                            1
                        </a>
                     </td>
@@ -40,16 +39,41 @@
                        @foreach(var btn in Model.EditBtns)
                        {*@
                     <td>
-                       <a class="btn btn-icon-only btn-pill btn-primary">
+                    <a class="btn btn-icon-only btn-pill btn-primary">
                            Details
                        </a>
-                            <a class="btn btn-icon-only btn-pill btn-primary">
+                    <a class="btn btn-icon-only btn-pill btn-primary">
                                 Take
                             </a>
                     </td>            
                   @*     }
                     }*@
                 </tr>
+            <tr>
+                <td>
+                    <a class="btn btn-icon-only btn-pill  btn-danger ">
+                        1
+                    </a>
+                </td>
+
+                <td>Name1 123,SUN ROAD H3H 1K3,Montreal</td>
+                <td>Name2 456,SHERBOOK H3H 1K3,Montreal</td>
+
+                @*   @if(Model.EditBtns != null)
+                {
+                @foreach(var btn in Model.EditBtns)
+                {*@
+                <td>
+                    <a class="btn btn-icon-only btn-pill btn-danger">
+                        Details
+                    </a>
+                    <a class="btn btn-icon-only btn-pill btn-danger">
+                        Take
+                    </a>
+                </td>
+                @*     }
+                }*@
+            </tr>
           @*  }*@
             </tbody>
         </table>
