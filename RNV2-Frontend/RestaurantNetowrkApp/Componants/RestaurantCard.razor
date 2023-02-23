@@ -1,5 +1,8 @@
-﻿
-<div class="list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm">
+﻿@using Data.Dto
+
+@if (Rest != null)
+{
+    <div class="list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm">
     <div class="list-card-image">
         <div class="star position-absolute">
             <span class="badge badge-success">
@@ -7,24 +10,27 @@
             </span>
         </div>
         <a href="/Restaurant/1">
-            <img src="img/popular1.png" class="img-fluid item-img w-100">
+            <img src="img/rest/@Rest.Logo" class="img-fluid item-img w-100">
         </a>
     </div>
     <div class="p-3 position-relative">
         <div class="list-card-body">
             <h6 class="mb-1">
-                <a href="restaurant.html" class="text-black">
-                    The Sakafo Restaurant
+                <a href="/Restaurant/@Rest.Id" class="text-black">
+                    @Rest.Name
                 </a>
             </h6>
-            <p class="text-gray mb-1 small">North, Hamburgers</p>
+            <p class="text-gray mb-1 small">@Rest.Description</p>
             <p class="text-gray mb-1 rating">
                 <RatingStars />
             </p>
         </div>
     </div>
 </div>
+}
+
 
 @code {
-
+    [Parameter]
+    public RestaurantDto Rest { get; set; }
 }

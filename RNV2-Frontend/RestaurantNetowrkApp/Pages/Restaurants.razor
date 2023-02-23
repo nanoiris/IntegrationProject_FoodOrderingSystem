@@ -1,6 +1,7 @@
 ﻿@page "/Restaurant/ListAll"
 @using RestaurantNetowrkApp.Componants
-
+@using Data.Dto
+@using System.Net.Http.Json;
 
 <div class="osahan-listAll">
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
@@ -16,18 +17,12 @@
 
     <div class="most_popular p-3">
         <div class="row">
-            <div class="col-6 pr-2">
-                <RestaurantCard />
-            </div>
-            <div class="col-6 pl-1">
-                <RestaurantCard />
-            </div>
-             <div class="col-6 pr-2">
-                <RestaurantCard />
-            </div>
-            <div class="col-6 pl-1">
-                <RestaurantCard />
-            </div>
+            @foreach (var rest in allRests)
+            {
+                <div class="col-6 pr-2">
+                    <RestaurantCard Rest="rest" />
+                </div>
+            }
         </div> 
      </div>
 </div>
@@ -36,4 +31,16 @@
 <NavMenuFooter />
 
 @code{
+    public List<RestaurantDto> allRests { get; set; }
+
+    public HttpClient httpClient = new HttpClient();
+
+    protected override async Task OnInitializedAsync()
+    {
+        httpClient.BaseAddress = new Uri("http://localhost:5064/");
+
+        allRests = new List<RestaurantDto>();
+
+        allRests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/list")).ToList();
+    }
 }

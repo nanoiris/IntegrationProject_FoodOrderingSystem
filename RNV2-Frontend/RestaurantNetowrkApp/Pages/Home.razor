@@ -6,7 +6,6 @@
 @using System.Net.Http;
 @using System.Net.Http.Json;
 
-
 <div class="osahan-home-page">
     <div class="shadow p-3 homepage-osahan-header bg-white">
         <div class="title d-flex align-items-center "> 
@@ -51,18 +50,13 @@
         </div>
 
         <div id="trending-slider">
-            <div class="osahan-slider-item py-3 px-1">
-                 <RestaurantCard />
-            </div>
-            <div class="osahan-slider-item py-3 px-1">
-                <RestaurantCard />
-            </div>
-            <div class="osahan-slider-item py-3 px-1">
-                <RestaurantCard />
-            </div>
-            <div class="osahan-slider-item py-3 px-1">
-                <RestaurantCard />
-            </div>
+            @foreach(var restaurant in trendingRests)
+            {
+                <div class="osahan-slider-item py-3 px-1">
+                     <RestaurantCard Rest="@restaurant"/>
+                </div>
+            }
+            
         </div>
 
         <div class="px-3 pt-4 pb-3 title d-flex align-items-center">
@@ -74,19 +68,13 @@
 
         <div class="most_popular px-3 pb-5">
             <div class="row">
-                <div class="col-6 col-sm-4 pr-1">
-                    <RestaurantCard />
-                </div>
-                <div class="col-6 col-sm-4 pl-1">
-                    <RestaurantCard />
-
-                </div>
-                <div class="col-6 col-sm-4 pr-1">
-                    <RestaurantCard />
-                </div>
-                <div class="col-6 col-sm-4 pl-1">
-                    <RestaurantCard />
-                </div>
+                @foreach(var rest in first2Rests)
+                {
+                    <div class="col-6 col-sm-4 pr-1">
+                        <RestaurantCard Rest="@rest" />
+                    </div>
+                }
+               
             </div>
         </div>
        
@@ -109,32 +97,22 @@
     }
 
     public List<RestCategoryDto> restCategories { get; set; }
-
-    //[Inject]
-    //public IRestaurantService restaurantService { get; set }
+    public List<RestaurantDto> trendingRests { get; set; }
+    public List<RestaurantDto> first2Rests { get; set; }
 
     public HttpClient httpClient = new HttpClient();
 
     protected override async Task OnInitializedAsync()
     {
-       Console.WriteLine("render start");
-       httpClient.BaseAddress = new Uri("http://localhost:5064/");
+        Console.WriteLine("render start");
+        httpClient.BaseAddress = new Uri("http://localhost:5064/");
 
-       restCategories = new List<RestCategoryDto>();
+        restCategories = new List<RestCategoryDto>();
+        trendingRests = new List<RestaurantDto>();
+        first2Rests = new List<RestaurantDto>();
 
-       restCategories = (await httpClient.GetFromJsonAsync<List<RestCategoryDto>>($"api/restcategory/list")).ToList();
-
-        //restCategories = new List<RestCategoryDto>(){
-        //    new RestCategoryDto { Id = "1", Name = "Hamberger", Logo = "1f7c5ee4377c4366b4e444981affb669.png" },
-        //    new RestCategoryDto { Id = "2", Name = "Breakfast", Logo = "ddc3035d7a454910b6f57f27fb820dc5.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //};
+        restCategories = (await httpClient.GetFromJsonAsync<List<RestCategoryDto>>($"api/restcategory/list")).ToList();  
+        trendingRests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/listweeklytrends")).ToList();
+        first2Rests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/listwithlimit/2")).ToList();
     }
 }
