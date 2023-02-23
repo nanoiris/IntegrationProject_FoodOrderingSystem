@@ -28,15 +28,29 @@ namespace RestaurantDao.Services
                 return ctx.Restaurants.Take(limit).ToListAsync();
             }
         }
-        public Task<List<Restaurant>> Search(string searchKey, string categoryName)
+        public Task<List<Restaurant>> Search(string searchKey, string categoryId)
         {
             using (var ctx = new RestaurantContext())
             {
-                return search(ctx, searchKey, categoryName);
+                return search(ctx, searchKey, categoryId);
             }
         }
         private Task<List<Restaurant>> search(RestaurantContext ctx, string searchKey, string categoryId)
         {
+            if (string.IsNullOrEmpty(categoryId))
+            {
+                if (string.IsNullOrEmpty(searchKey))
+                    return ctx.Restaurants.Take(20).ToListAsync();
+                return ctx.Restaurants.Take(20).Where(x => x.Name.Contains(searchKey))
+                    .ToListAsync();
+            }
+            if (string.IsNullOrEmpty(searchKey))
+                return ctx.Restaurants.Take(20).Where(x => x.CategoryId == categoryId)
+                    .ToListAsync();
+            else
+                return ctx.Restaurants.Take(20).Where(x => x.CategoryId == categoryId && x.Name.Contains(searchKey))
+                    .ToListAsync();
+            /*
             var query = from Restaurants in ctx.Restaurants
                         select Restaurants;
 
@@ -51,6 +65,7 @@ namespace RestaurantDao.Services
             }
             var ds = query.AsQueryable().Where(expression).OrderBy(x => x.Name);
             return ds.ToListAsync();
+            */
         }
     }
 }

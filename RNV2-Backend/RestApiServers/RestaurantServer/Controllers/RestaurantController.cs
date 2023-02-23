@@ -38,6 +38,12 @@ namespace RestaurantServer.Controllers
             return service.ListWeeklyTrends();
         }
 
+        [HttpGet]
+        public Task<List<Restaurant>> Search([FromBody]RestSearchForm model)
+        {
+            return service.Search(model.SearchKey,model.Categoryid);
+        }
+
         [HttpPost]
         public async Task<IActionResult> NewOne([FromForm] RestaurantForm form)
         {
