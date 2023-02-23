@@ -10,7 +10,8 @@ namespace RestaurantDaoBase.IServices
     public interface IRestaurantService
     {
         public Task<List<RestCategory>> ListCategory();
-        public Task<WeeklyTrend> ListWeeklyTrends();
+        //public Task<WeeklyTrend> ListWeeklyTrends();
+        public Task<List<Restaurant>> ListWeeklyTrends();
         public Task<List<Restaurant>> ListWithLimit(int limit);
         public Task<List<Restaurant>> Search(string searchKey, string categoryName);
 

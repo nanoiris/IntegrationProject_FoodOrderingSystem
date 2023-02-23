@@ -11,11 +11,19 @@ namespace RestaurantDaoBase.IServices
     public interface IDeliveryService
     {
 
-        public void AddDelivery(Delivery delivery);
-        public void UpdateDeliveryStatus(string deliveryId, DeliveryStatusEnum newStatus);
-        public List<Delivery> ListDeliveriesByStatus(string deliveryManId, StatusEnum status);
-        public List<Delivery> ListDeliveriesByStatus(StatusEnum status);
-        public List<Delivery> ListActiveDeliveries();
-        public List<Delivery> SearchDelivery(string restaurantId, string email, StatusEnum status);
+        public Task<bool> AddDelivery(Delivery delivery);
+        public Task<Delivery> FindDelivery(string id);
+        public Task<bool> UpdateDeliveryStatus(string deliveryId, DeliveryStatusEnum newStatus);
+        public Task<List<Delivery>> ListDeliveriesByStatus(string deliveryMan, DeliveryStatusEnum status);
+        public Task<List<Delivery>> ListDeliveriesByStatus(DeliveryStatusEnum status);
+        public Task<List<Delivery>> ListActiveDeliveries();
+        public Task<List<Delivery>> Search(string restaurantId, string email, DeliveryStatusEnum status);
+        public Task<List<Delivery>> Search(string restaurantId, string email);
+
+        public Task<bool> Accept(string deliveryId, string deliveryMan);
+        public Task<bool> Reject(string deliveryId, string deliveryMan);
+        public Task<bool> Pending(string deliveryId);
+        public Task<bool> Complete(string deliveryId);
+        public Task<bool> Assign(AssignForm form);
     }
 }
