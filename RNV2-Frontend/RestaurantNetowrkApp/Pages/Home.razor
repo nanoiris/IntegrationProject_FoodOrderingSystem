@@ -117,27 +117,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("render start");
-        httpClient.BaseAddress = new Uri("http://localhost:5064/");
-        //HttpResponseMessage response = await httpClient.GetAsync($"api/restcategory/list");
-        //if(response.IsSuccessStatusCode)
-        //{         
-        //    restCategories =(await response.Content.ReadFromJsonAsync<List<RestCategoryDto>>()).ToList();
-        //    Console.WriteLine(restCategories);
-        //}
+       Console.WriteLine("render start");
+       httpClient.BaseAddress = new Uri("http://localhost:5064/");
 
-        List<RestCategoryDto> restCategories = new List<RestCategoryDto>();
+       restCategories = new List<RestCategoryDto>();
 
        restCategories = (await httpClient.GetFromJsonAsync<List<RestCategoryDto>>($"api/restcategory/list")).ToList();
 
         //restCategories = new List<RestCategoryDto>(){
         //    new RestCategoryDto { Id = "1", Name = "Hamberger", Logo = "1f7c5ee4377c4366b4e444981affb669.png" },
         //    new RestCategoryDto { Id = "2", Name = "Breakfast", Logo = "ddc3035d7a454910b6f57f27fb820dc5.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
-        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
         //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
         //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
         //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
