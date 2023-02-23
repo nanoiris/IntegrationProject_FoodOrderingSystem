@@ -1,6 +1,10 @@
 ﻿@page "/"
 @using RestaurantNetowrkApp.Componants
 @inject IJSRuntime JSRuntime
+@using Data.Dto
+@using RestaurantNetowrkApp.Services.IServices;
+@using System.Net.Http;
+@using System.Net.Http.Json;
 
 
 <div class="osahan-home-page">
@@ -25,7 +29,19 @@
     </div>
 
     <div class="osahan-main">
-        <RestCategory />
+
+        <div class="cat-slider border-bottom">
+            @foreach (var category in restCategories)
+            {
+                <div class="cat-item px-1 py-3">
+                    <a class="d-block text-center" href="">
+                        <img src="img/rest/@category.Logo" class="img-fluid mb-2 shadow">
+                        <p class="m-0 small">@category.Name</p>
+                    </a>
+                </div>
+            }
+
+        </div>
 
         <div class="px-3 pt-3 title d-flex align-items-center">
             <h6 class="m-0 font-weight-bold">Trending this week</h6>
@@ -63,6 +79,7 @@
                 </div>
                 <div class="col-6 col-sm-4 pl-1">
                     <RestaurantCard />
+
                 </div>
                 <div class="col-6 col-sm-4 pr-1">
                     <RestaurantCard />
@@ -80,6 +97,7 @@
 
 @code {
     bool firstRender = true;
+
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -87,6 +105,47 @@
             await JSRuntime.InvokeAsync<object>("homeSlick");
             firstRender = false;
         }
-       
+
+    }
+
+    public List<RestCategoryDto> restCategories { get; set; }
+
+    //[Inject]
+    //public IRestaurantService restaurantService { get; set }
+
+    public HttpClient httpClient = new HttpClient();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("render start");
+        httpClient.BaseAddress = new Uri("http://localhost:5064/");
+        //HttpResponseMessage response = await httpClient.GetAsync($"api/restcategory/list");
+        //if(response.IsSuccessStatusCode)
+        //{         
+        //    restCategories =(await response.Content.ReadFromJsonAsync<List<RestCategoryDto>>()).ToList();
+        //    Console.WriteLine(restCategories);
+        //}
+
+        List<RestCategoryDto> restCategories = new List<RestCategoryDto>();
+
+       restCategories = (await httpClient.GetFromJsonAsync<List<RestCategoryDto>>($"api/restcategory/list")).ToList();
+
+        //restCategories = new List<RestCategoryDto>(){
+        //    new RestCategoryDto { Id = "1", Name = "Hamberger", Logo = "1f7c5ee4377c4366b4e444981affb669.png" },
+        //    new RestCategoryDto { Id = "2", Name = "Breakfast", Logo = "ddc3035d7a454910b6f57f27fb820dc5.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //    new RestCategoryDto { Id = "3", Name = "Coffee", Logo = "3694024bf1de42b0903b207a0206c7e6.png" },
+        //};
     }
 }

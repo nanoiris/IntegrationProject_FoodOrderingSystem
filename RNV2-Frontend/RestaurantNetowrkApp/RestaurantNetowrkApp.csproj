@@ -57,4 +57,10 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="RestaurantDaoBase">
+        <HintPath>..\..\RNV2-Backend\RestApiServers\RestaurantDaoBase\bin\Release\net7.0\publish\RestaurantDaoBase.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
