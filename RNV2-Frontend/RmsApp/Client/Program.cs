@@ -26,6 +26,10 @@ namespace RmsApp
             {
                 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
             });
+            builder.Services.AddHttpClient<IRestaurantService, RestaurantService>(client =>
+            {
+                client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+            });
             builder.Services.AddFlashMessageService();
 
             var host = builder.Build();
@@ -33,7 +37,7 @@ namespace RmsApp
             var logger = host.Services.GetRequiredService<ILoggerFactory>()
                 .CreateLogger<Program>();
 
-            logger.LogInformation("Enter Log...");
+            logger.LogInformation("enter Log from program.cs...");
 
             await host.RunAsync();
         }

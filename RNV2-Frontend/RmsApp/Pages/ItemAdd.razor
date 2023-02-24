@@ -98,7 +98,8 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
     public decimal NewItemPrice { get; set; }
     public bool NewItemIsFeatured { get; set; }
     @* public IFormFile UploadImg { get; set; } *@
-    public string NewItemCategoryId { get; set; }
+    public string NewItemCategoryId { get; set; } = "";
+
 
     public string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
 
@@ -125,19 +126,8 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
             UploadImg = UploadImg
 
         };
-        /*
-        if (UploadImg != null)
-            {
-            var ms = new MemoryStream();
-            await UploadImg.OpenReadStream().CopyToAsync(ms);
-            newItem.Logo = Convert.ToBase64String(ms.ToArray());
-        }
-        */
         var imgContent = new StreamContent(UploadImg.OpenReadStream());
         imgContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(UploadImg.ContentType);
-        
-
-
         await ItemService.AddItemAsync(restaurantId, newItem);
         FlashMessageService.SuccessMessage = "Menu item added successfully.";
         FlashMessageService.DurationInSeconds = 5;

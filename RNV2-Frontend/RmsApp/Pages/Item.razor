@@ -50,7 +50,7 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
                         @* <th>Item ID</th> *@
                         <th>Logo</th>
                         <th>Name</th>
-                        <th>Is Featured</th>
+                        <th>Featured</th>
                         <th>Price($)</th>
                         <th>Edit</th>
                         <th>Delete</th>
@@ -61,7 +61,7 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
                     {
                         <tr>
                             <td style="display:none">@item.Id</td>
-                            <td scope="row"><img src="@item.Logo" width="50px" height="50px"/></td>
+                           <td scope="row"><img src="@(item.Logo != null ? $"/img/{item.Logo}" : null)" width="50px" height="50px"/></td>
                             <td>@item.Name</td>
                             <td>
                                 <p class="@(item.IsFeatured.ToString().Contains("True")? "bg-success text-white" : "bg-primary text-white")  py-1 px-2 rounded small mb-1" style="margin: 0;">

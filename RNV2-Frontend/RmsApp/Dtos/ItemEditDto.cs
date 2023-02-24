@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using RestaurantDaoBase.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace RmsApp.Dtos
 {
@@ -18,7 +19,7 @@ namespace RmsApp.Dtos
         public string? Logo { get; set; }
         public List<CategoryDto> Categories { get; set; }
         public string? CategoryId { get; set; }
-        public IFormFile? UploadImg { get; set; }
+        public IBrowserFile? UploadImg { get; set; }
 
     }
 }
