@@ -1,8 +1,112 @@
 ﻿@page "/item"
+@using RmsApp.Services
+@using RmsApp.Dtos
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using Microsoft.Extensions.Logging
+@inject ILogger<ItemService> logger
+@inject IFlashMessageService FlashMessageService  
 
 
 <PageTitle>Items</PageTitle>
+<ul class="breadcrumb breadcrumb-gray">
+    @foreach (var path in Paths)
+    {
+             <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
+    }
+</ul>
 
-@code{
-    
+@if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @FlashMessageService.SuccessMessage
+    </div>
 }
+else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
+{
+    <div class="alert alert-danger">
+        @FlashMessageService.FailureMessage
+    </div>
+}
+
+<div class="row pb-3">
+    <div class="col-2">
+        <a class="btn btn-icon-only btn-pill btn-primary" href="/item/Add"><i class="fa fa-plus"></i></a>
+    </div>
+</div>
+<br>
+
+@if (Categories != null && Categories.Any())
+{
+    @foreach (var category in Categories)
+    {
+        <h3>@category.Name</h3>
+         <h3 style="display:none">@category.Id</h3>
+        @if (category.MenuItemList != null && category.MenuItemList.Any())
+        {
+            <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
+                <thead class="text-danger font-weight-bold">
+                    <tr>
+                        @* <th>Item ID</th> *@
+                        <th>Logo</th>
+                        <th>Name</th>
+                        <th>Is Featured</th>
+                        <th>Price($)</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in category.MenuItemList)
+                    {
+                        <tr>
+                            <td style="display:none">@item.Id</td>
+                            <td scope="row"><img src="@item.Logo" width="50px" height="50px"/></td>
+                            <td>@item.Name</td>
+                            <td>
+                                <p class="@(item.IsFeatured.ToString().Contains("True")? "bg-success text-white" : "bg-primary text-white")  py-1 px-2 rounded small mb-1" style="margin: 0;">
+                                    @item.IsFeatured
+                                </p>
+                            </td>
+                            <td>@item.Price</td>
+                            <td><a class="btn btn-icon-only btn-pill btn-primary" href="/item/edit/@category.Id/@item.Id"><i class="fa fa-pen"></i></a></td>
+                            <td><a class="btn btn-icon-only btn-pill btn-primary" href="/item/delete/@category.Id/@item.Id"><i class="fa fa-trash"></i></a></td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No Menu Items found in this category.</p>
+        }
+    }
+}
+else
+{
+    <p>No Menu Categories found.</p>
+}
+
+@code {
+    public List<TabPath> Paths = new List<TabPath>
+        {
+        new TabPath { Title = "Home", Path = "/" },
+        new TabPath { Title = "Item", Path = "/item" },
+        };
+    public List<ItemListDto> Items { get; set; }
+    public string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
+     public List<CategoryDto> Categories { get; set; }
+
+    [Inject]
+    public IItemService ItemService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+      
+        logger.LogInformation("OnInitializedAsync");
+        Categories = await ItemService.ListCategoryAsync(restaurantId);
+
+    } 
+}
+

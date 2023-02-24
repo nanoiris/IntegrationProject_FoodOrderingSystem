@@ -32,7 +32,8 @@ namespace RestaurantServer
             builder.Services.AddScoped<IFileService, LocalFileService>(
                 x => new LocalFileService(builder.Configuration["LogoRootPath"]));
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
-            builder.Services.AddScoped<IMenuService, MenuService>();
+            builder.Services.AddScoped<IMenuService, MenuService>(x =>
+              new MenuService(x.GetRequiredService<ILogger<MenuService>>()));
 
             var app = builder.Build();
 

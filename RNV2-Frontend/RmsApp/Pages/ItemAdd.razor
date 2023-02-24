@@ -1,0 +1,148 @@
+﻿@page "/item/add"
+
+@using RmsApp.Services
+@using RmsApp.Dtos
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using Microsoft.Extensions.Logging
+@inject ILogger<CategoryService> logger
+@inject IFlashMessageService FlashMessageService  
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Components.Forms
+
+<ul class="breadcrumb breadcrumb-gray">
+    @foreach (var path in Paths)
+    {
+             <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
+    }
+</ul>
+@if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @FlashMessageService.SuccessMessage
+    </div>
+}
+else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
+{
+    <div class="alert alert-danger">
+        @FlashMessageService.FailureMessage
+    </div>
+}
+<div class="form-group col-12">
+    <form @onsubmit="AddMenuItem">
+         <div class="form-group mb-3">
+          <label >Menu Name</label>
+          <input class="form-control" @bind="NewItemName" />
+        <span class="text-danger"></span>
+       </div>
+       <div class="form-group mb-3">
+          <label >Description</label>
+          <input class="form-control" @bind="NewItemDescription" />
+        <span class="text-danger"></span>
+       </div>
+       <div class="form-group mb-3">
+          <label >Price</label>
+          <input type="number" step="0.01" class="form-control" @bind="NewItemPrice" />
+        <span class="text-danger"></span>
+       </div>
+       <div class="form-group mb-3">
+         <div class="form-check">
+            <input type="checkbox" class="form-check-input" @bind="NewItemIsFeatured" />
+            <label class="form-check-label">Featured Menu Item</label>
+        </div>
+        <span class="text-danger"></span>
+        </div>
+
+       <div class="form-group mb-3">
+            <label>Logo</label>
+            <InputFile class="form-control" OnChange="@OnFileChange" />
+            <span class="text-danger"></span>
+        </div>
+
+
+       <div class="form-group mb-3">
+          <label >Choose Category</label>
+          <select class="form-control" @bind="NewItemCategoryId">
+            @foreach (var category in Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+          </select>
+        <span class="text-danger"></span>
+       </div>
+       <div class="text-center">
+         <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+   </form>
+</div>
+
+@code {
+    public List<TabPath> Paths = new List<TabPath>
+    {
+        new TabPath { Title = "Home", Path = "/" },
+        new TabPath { Title = "Menu Item", Path = "/menu-item" },
+        new TabPath { Title = "Add", Path = "/menu-item/add" },
+    };
+
+    [Inject]
+    public IItemService ItemService { get; set; }
+
+    [Inject]
+    public ICategoryService CategoryService { get; set; }
+
+    @* public ItemAddDto NewItem = new ItemAddDto(); *@
+    public List<CategoryDto> Categories = new List<CategoryDto>();
+    
+    public string NewItemName { get; set; }
+    public string NewItemDescription { get; set; }
+    public decimal NewItemPrice { get; set; }
+    public bool NewItemIsFeatured { get; set; }
+    @* public IFormFile UploadImg { get; set; } *@
+    public string NewItemCategoryId { get; set; }
+
+    public string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = await CategoryService.ListCategoryAsync(restaurantId);
+    }
+    private IBrowserFile UploadImg { get; set; }
+
+    private void OnFileChange(InputFileChangeEventArgs e)
+    {
+        UploadImg = e.File;
+    }
+    private async Task AddMenuItem()
+    {
+        string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd";
+        var newItem = new ItemAddDto 
+        {
+            Name = NewItemName,
+            Description = NewItemDescription,
+            Price = NewItemPrice,
+            IsFeatured = NewItemIsFeatured,
+            CategoryId = NewItemCategoryId,
+            UploadImg = UploadImg
+
+        };
+        /*
+        if (UploadImg != null)
+            {
+            var ms = new MemoryStream();
+            await UploadImg.OpenReadStream().CopyToAsync(ms);
+            newItem.Logo = Convert.ToBase64String(ms.ToArray());
+        }
+        */
+        var imgContent = new StreamContent(UploadImg.OpenReadStream());
+        imgContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(UploadImg.ContentType);
+        
+
+
+        await ItemService.AddItemAsync(restaurantId, newItem);
+        FlashMessageService.SuccessMessage = "Menu item added successfully.";
+        FlashMessageService.DurationInSeconds = 5;
+        await FlashMessageService.ClearMessagesAsync();
+        NavigationManager.NavigateTo("/item");
+    }
+
+}

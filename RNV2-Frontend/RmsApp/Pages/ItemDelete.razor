@@ -1,0 +1,80 @@
+@page "/item/delete/{categoryId}/{itemId}"
+
+@using RmsApp.Dtos
+@using RmsApp.Services
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@inject ILogger<ItemService> logger
+@inject IFlashMessageService FlashMessageService
+
+<h1>Delete Item</h1>
+
+
+
+@if (Item != null)
+{
+    <div class="form-group mb-3">
+        <label>ID</label>
+        <input type="text" class="form-control" value="@Item.Id" readonly />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Name</label>
+        <input type="text" class="form-control" value="@Item.Name" readonly />
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-danger" @onclick="DeleteItem">Delete Item</button>
+    </div>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+    [Parameter]
+    public string categoryId { get; set; }
+    
+    [Parameter]
+    public string itemId { get; set; }
+
+    public ItemEditDto Item { get; set; }
+
+    [Inject]
+    public IItemService ItemService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Item = await ItemService.GetItemAsync(categoryId, itemId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to load item with ID {ItemId}"+ex.Message);
+            FlashMessageService.FailureMessage = "Failed to load";
+            NavigationManager.NavigateTo("/item");
+        }
+    }
+
+    private async Task DeleteItem()
+{
+    var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this item?");
+    if (confirm)
+    {
+        try
+        {
+           
+            await ItemService.DeleteItemAsync(categoryId, itemId);
+            FlashMessageService.SuccessMessage = "Item deleted successfully.";
+            NavigationManager.NavigateTo("/item");
+        }
+        catch (Exception ex)
+        {
+           Console.WriteLine(ex.Message);
+        }
+    }
+}
+
+}
