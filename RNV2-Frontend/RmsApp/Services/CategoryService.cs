@@ -85,7 +85,6 @@ namespace RmsApp.Services
                 throw new ArgumentException("Category ID cannot be null or empty.", nameof(categoryId));
             }
             var response = await _httpClient.GetAsync($"api/menucategory/one/{categoryId}");
-
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<CategoryDto>();
@@ -115,7 +114,6 @@ namespace RmsApp.Services
         public async Task DeleteCategoryAsync(string categoryId)
         {
             var response = await _httpClient.DeleteAsync($"api/menucategory/deletedone/{categoryId}");
-
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogError("Failed to delete category with ID {CategoryId}. StatusCode: {StatusCode}", categoryId, response.StatusCode);
