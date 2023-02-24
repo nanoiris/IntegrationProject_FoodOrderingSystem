@@ -1,18 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RestaurantDao.Contexts;
 using RestaurantDaoBase.IServices;
 using RestaurantDaoBase.Models;
+using System.Diagnostics;
 
 namespace RestaurantDao.Services
 {
     public partial class MenuService : IMenuService
     {
+        private readonly ILogger<MenuService> logger;
+        public MenuService(ILogger<MenuService> logger)
+        {
+            this.logger = logger;
+        }
+
         public async Task<bool> AddMenu(string restaurantId, MenuItem item)
         {
             using (var ctx = new RestaurantContext())
             {
                 var category = await ctx.MenuCategories.FirstAsync(x => x.RestaurantId == restaurantId && x.Id == item.CategoryId);
-                if(category == null)
+                if (category == null)
                     return false;
                 if (category!.MenuItemList == null)
                     category!.MenuItemList = new List<MenuItem>();

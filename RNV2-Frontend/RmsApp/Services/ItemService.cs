@@ -42,38 +42,59 @@ namespace RmsApp.Services
             {
                 Console.WriteLine("start add menu...");
                 var multipartContent = new MultipartFormDataContent();
+                menuItem.Name = "m1";
                 multipartContent.Add(new StringContent(menuItem.Name), "Name");
                 Console.WriteLine("name is: " + menuItem.Name);
+                menuItem.Description = "desc";
                 multipartContent.Add(new StringContent(menuItem.Description), "Description");
+                menuItem.Price = 10;
                 multipartContent.Add(new StringContent(menuItem.Price.ToString()), "Price");
                 Console.WriteLine("price is: " + menuItem.Price);
                 multipartContent.Add(new StringContent(restaurantId), "RestaurantId");
                 Console.WriteLine("restaurantId is: " + restaurantId);
+                menuItem.CategoryId = "235c23f5448f421e8cf45d6d09e0afa3";
                 multipartContent.Add(new StringContent(menuItem.CategoryId), "CategoryId");
                 Console.WriteLine("categoryId is: " + menuItem.CategoryId);
+                menuItem.IsFeatured = true;
                 multipartContent.Add(new StringContent(menuItem.IsFeatured.ToString()), "IsFeatured");
                 Console.WriteLine("is featured is: " + menuItem.IsFeatured);
-                if (!string.IsNullOrEmpty(menuItem.Logo))
-                {
-                    byte[] imageBytes = Convert.FromBase64String(menuItem.Logo);
-                    ByteArrayContent imageContent = new ByteArrayContent(imageBytes);
-                    imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
-                    multipartContent.Add(imageContent, "Image", "image.jpg");
-                }
 
-                // multipartContent.Add(new StreamContent(menuItem.UploadImg.OpenReadStream()), "Image", menuItem.UploadImg.FileName);
-                // var imageContent = new StreamContent(menuItem.UploadImg.OpenReadStream; 
-                var response = await _httpClient.PostAsync($"api/menu/NewOne/{restaurantId}", multipartContent);
-                Console.WriteLine("add menu, after post");
-                if (response.IsSuccessStatusCode)
-                {
-                    _flashMessageService.SuccessMessage = "Menu item added successfully.";
-                    // NavigationManager.NavigateTo("/menuitem");
-                }
-                else
-                {
-                    _flashMessageService.FailureMessage = "Failed to add the menu item.";
-                }
+                Console.WriteLine(menuItem.UploadImg?.Name);
+
+             
+                    var img = new StreamContent(menuItem.UploadImg?.OpenReadStream());
+                    img.Headers.ContentType = new MediaTypeHeaderValue(menuItem.UploadImg.ContentType);
+                    
+                    multipartContent.Add(content:img,"UploadImg",fileName: menuItem.UploadImg.Name);
+                   restaurantId = "10";
+                   var response = await _httpClient.PostAsync($"api/menu/NewOne/{restaurantId}", multipartContent);
+                   Console.WriteLine("add menu, after post");
+
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        _flashMessageService.SuccessMessage = "Menu item added successfully.";
+                        // NavigationManager.NavigateTo("/menuitem");
+                    }
+                    else
+                    {
+                        _flashMessageService.FailureMessage = "Failed to add the menu item.";
+                    }
+             
+                
+
+                    /*
+                    if (!string.IsNullOrEmpty(menuItem.Logo))
+                    {
+                        byte[] imageBytes = Convert.FromBase64String(menuItem.Logo);
+                        ByteArrayContent imageContent = new ByteArrayContent(imageBytes);
+                        imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
+                        multipartContent.Add(imageContent, "Image", "image.jpg");
+                    }
+                    */
+                    // multipartContent.Add(new StreamContent(menuItem.UploadImg.OpenReadStream()), "Image", menuItem.UploadImg.FileName);
+                    // var imageContent = new StreamContent(menuItem.UploadImg.OpenReadStream; 
+               
             }
             catch (Exception ex)
             {

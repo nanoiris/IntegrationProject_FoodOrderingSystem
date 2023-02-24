@@ -8,7 +8,7 @@
 @inject ILogger<CategoryService> logger
 @inject IFlashMessageService FlashMessageService  
 @using Microsoft.AspNetCore.Http;
-
+@using Microsoft.AspNetCore.Components.Forms
 
 <ul class="breadcrumb breadcrumb-gray">
     @foreach (var path in Paths)
@@ -122,13 +122,22 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
             Price = NewItemPrice,
             IsFeatured = NewItemIsFeatured,
             CategoryId = NewItemCategoryId,
+            UploadImg = UploadImg
+
         };
+        /*
         if (UploadImg != null)
-        {
+            {
             var ms = new MemoryStream();
             await UploadImg.OpenReadStream().CopyToAsync(ms);
             newItem.Logo = Convert.ToBase64String(ms.ToArray());
         }
+        */
+        var imgContent = new StreamContent(UploadImg.OpenReadStream());
+        imgContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(UploadImg.ContentType);
+        
+
+
         await ItemService.AddItemAsync(restaurantId, newItem);
         FlashMessageService.SuccessMessage = "Menu item added successfully.";
         FlashMessageService.DurationInSeconds = 5;
