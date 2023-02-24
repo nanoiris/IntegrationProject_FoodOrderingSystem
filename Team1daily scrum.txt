@@ -384,6 +384,9 @@ put things on cloud testing
 
 2023/02/24 Friday Zibin 
 1. Done / not done since last scrum:
+- finish read data from api 
 2. To do until next Scrum:
+- change delivery order status 
+- Optimize interface
 3. Need assistance / figure things out
 
