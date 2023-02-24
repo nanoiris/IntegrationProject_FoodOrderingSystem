@@ -141,7 +141,8 @@ namespace RmsApp.Services
 
         public async Task DeleteItemAsync(string categoryId, string id)
         {
-            var response = await _httpClient.DeleteAsync($"api/menu/deleteOne/{categoryId}/{id}");
+            Console.WriteLine("Enter item delete service ...");
+            var response = await _httpClient.DeleteAsync($"api/menu/deletedOne/{categoryId}/{id}");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Failed to delete menu item with ID {ItemId}. StatusCode: {StatusCode}", id, response.StatusCode);

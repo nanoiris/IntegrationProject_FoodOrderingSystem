@@ -1,6 +1,6 @@
 @page "/item/delete/{categoryId}/{itemId}"
 
-@* @using RmsApp.Dtos
+@using RmsApp.Dtos
 @using RmsApp.Services
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
@@ -9,11 +9,7 @@
 
 <h1>Delete Item</h1>
 
-<ul class="breadcrumb breadcrumb-gray">
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="/item">Item</a></li>
-    <li class="breadcrumb-item active">Delete</li>
-</ul>
+
 
 @if (Item != null)
 {
@@ -43,7 +39,7 @@ else
     [Parameter]
     public string itemId { get; set; }
 
-    public ItemDeleteDto Item { get; set; }
+    public ItemEditDto Item { get; set; }
 
     [Inject]
     public IItemService ItemService { get; set; }
@@ -56,8 +52,8 @@ else
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Failed to load item with ID {ItemId}", itemId);
-            FlashMessageService.DisplayError("Failed to load item.");
+            Console.WriteLine("Failed to load item with ID {ItemId}"+ex.Message);
+            FlashMessageService.FailureMessage = "Failed to load";
             NavigationManager.NavigateTo("/item");
         }
     }
@@ -70,15 +66,15 @@ else
         try
         {
            
-            await ItemService.DeleteItemAsync(itemId);
+            await ItemService.DeleteItemAsync(categoryId, itemId);
             FlashMessageService.SuccessMessage = "Item deleted successfully.";
-            NavigationManager.NavigateTo("/items");
+            NavigationManager.NavigateTo("/item");
         }
         catch (Exception ex)
         {
-           
+           Console.WriteLine(ex.Message);
         }
     }
 }
 
-} *@
+}
