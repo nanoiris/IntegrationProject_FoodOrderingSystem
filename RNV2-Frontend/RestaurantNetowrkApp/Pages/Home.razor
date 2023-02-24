@@ -5,6 +5,7 @@
 @using RestaurantNetowrkApp.Services.IServices;
 @using System.Net.Http;
 @using System.Net.Http.Json;
+@using Serilog;
 
 <div class="osahan-home-page">
     <div class="shadow p-3 homepage-osahan-header bg-white">
@@ -104,7 +105,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("render start");
+        Log.Debug("render start");
         httpClient.BaseAddress = new Uri("http://localhost:5064/");
 
         restCategories = new List<RestCategoryDto>();
