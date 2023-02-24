@@ -359,4 +359,27 @@ finish all the UI for deliveryApp
 Delivery person can browse all orders/available /assigned/picked up
 3. Need assistance / figure things out
 
+=============================================================
+2023/02/24 Friday Yi 
+1. Done / not done since last scrum:
+RMS menu CRUD full stack done 
+2. To do until next Scrum:
+RMS edit profile 
+put things on cloud testing 
+3. Need assistance / figure things out
+
+2023/02/24 Friday Xiao Pei
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/02/24 Friday Wenzhe
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/02/24 Friday Zibin 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
 
