@@ -42,14 +42,6 @@ namespace RmsApp.Services
             {
                 Console.WriteLine("start add menu...");
                 var multipartContent = new MultipartFormDataContent();
-
-                // multipartContent.Add(new StringContent("test4"), "Name");
-
-                // Console.WriteLine("test");
-                // multipartContent.Add(new StringContent("test3"), "Description");
-                // multipartContent.Add(new StringContent("2"), "Price");
-                // multipartContent.Add(new StringContent("cf7faf91419e4a0099c58d832402da84"), "CategoryId");
-                // multipartContent.Add(new StringContent(restaurantId), "RestaurantId");
                 multipartContent.Add(new StringContent(menuItem.Name), "Name");
                 Console.WriteLine("name is: " + menuItem.Name);
                 multipartContent.Add(new StringContent(menuItem.Description), "Description");
@@ -90,15 +82,30 @@ namespace RmsApp.Services
             }
         }
 
-        public Task DeleteItemAsync(string itemId)
+
+        public async Task<ItemEditDto> GetItemAsync(string categoryId, string itemId)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(categoryId))
+            {
+                throw new ArgumentException("Category ID cannot be null or empty.", nameof(categoryId));
+            }
+            if (string.IsNullOrEmpty(itemId))
+            {
+                throw new ArgumentException("Item ID cannot be null or empty.", nameof(itemId));
+            }
+
+            var response = await _httpClient.GetAsync($"api/menu/one/{categoryId}/{itemId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var item = await response.Content.ReadFromJsonAsync<ItemEditDto>();
+                return item;
+            }
+
+            Console.WriteLine("Failed to get item with ID {ItemId} in category with ID {CategoryId}. StatusCode: {StatusCode}", itemId, categoryId, response.StatusCode);
+            throw new ApplicationException($"Failed to get item with ID {itemId} in category with ID {categoryId}.");
         }
 
-        public Task<ItemEditDto> GetItemAsync(string itemId)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<List<CategoryDto>> ListCategoryAsync(string restaurantId)
         {
@@ -112,18 +119,36 @@ namespace RmsApp.Services
             }
             else
             {
-                _logger.LogError("Failed to get categories. Status code: {0}", response.StatusCode);
+                Console.WriteLine("Failed to get categories. Status code: {0}", response.StatusCode);
             }
 
             return Categories;
         }
 
-
-
-
-        public Task UpdateItemAsync(ItemEditDto itemEditDto)
+        public async Task UpdateItemAsync(ItemEditDto menuItemDto)
         {
-            throw new NotImplementedException();
+            if (menuItemDto == null)
+            {
+                throw new ArgumentNullException(nameof(menuItemDto));
+            }
+            var response = await _httpClient.PutAsJsonAsync($"api/menu/updateone", menuItemDto);
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Failed to update menu item with ID {MenuItemId}. StatusCode: {StatusCode}", menuItemDto.Id, response.StatusCode);
+                throw new ApplicationException("Failed to update menu item.");
+            }
         }
+
+        public async Task DeleteItemAsync(string categoryId, string id)
+        {
+            var response = await _httpClient.DeleteAsync($"api/menu/deleteOne/{categoryId}/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Failed to delete menu item with ID {ItemId}. StatusCode: {StatusCode}", id, response.StatusCode);
+                throw new ApplicationException("Failed to delete menu item.");
+            }
+        }
+
+
     }
 }

@@ -41,16 +41,17 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
     @foreach (var category in Categories)
     {
         <h3>@category.Name</h3>
+         <h3 style="display:none">@category.Id</h3>
         @if (category.MenuItemList != null && category.MenuItemList.Any())
         {
             <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
                 <thead class="text-danger font-weight-bold">
                     <tr>
-                        <th>Item ID</th>
+                        @* <th>Item ID</th> *@
                         <th>Logo</th>
                         <th>Name</th>
                         <th>Is Featured</th>
-                        <th>Price</th>
+                        <th>Price($)</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
@@ -59,17 +60,18 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
                     @foreach (var item in category.MenuItemList)
                     {
                         <tr>
-                            <td>@item.Id</td>
+                            <td style="display:none">@item.Id</td>
                             <td scope="row"><img src="@item.Logo" width="50px" height="50px"/></td>
                             <td>@item.Name</td>
                             <td>
-                                <p class="@(item.IsFeatured.ToString().Contains("True")? "bg-success text-white" : "bg-primary text-white") py-1 pl-2 rounded small mb-1">
+                                <p class="@(item.IsFeatured.ToString().Contains("True")? "bg-success text-white" : "bg-primary text-white")  py-1 px-2 rounded small mb-1" style="margin: 0;">
                                     @item.IsFeatured
                                 </p>
                             </td>
                             <td>@item.Price</td>
-                            <td><a class="btn btn-icon-only btn-pill btn-primary" href="/item/edit/@item.Id"><i class="fa fa-pen"></i></a></td>
-                            <td><a class="btn btn-icon-only btn-pill btn-primary" href="/item/delete/@item.Id"><i class="fa fa-trash"></i></a></td>
+                            <td><a class="btn btn-icon-only btn-pill btn-primary" href="/item/edit/@category.Id/@item.Id"><i class="fa fa-pen"></i></a></td>
+                            <td><a class="btn btn-icon-only btn-pill btn-primary" href="/item/delete/@category.Id/@item.Id"><i class="fa fa-trash"></i></a></td>
+
                         </tr>
                     }
                 </tbody>
@@ -101,18 +103,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        @* logger.LogInformation("OnInitializedAsync");
-        Items = (await ItemService.ListCategoryAsync(restaurantId)).SelectMany(c => c.MenuItemList.Select(i => new ItemListDto { 
-            Id = i.Id,
-            Logo = i.Logo,
-            Name = i.Name,
-            IsFeatured = i.IsFeatured,
-            Price = i.Price
-        })).ToList(); *@
       
         logger.LogInformation("OnInitializedAsync");
         Categories = await ItemService.ListCategoryAsync(restaurantId);
-
 
     } 
 }

@@ -8,9 +8,9 @@ namespace RmsApp.Services
     {
         Task<List<CategoryDto>> ListCategoryAsync(string restaurantId);
         Task AddItemAsync(string restaurantId, ItemAddDto menuItem);
-        Task<ItemEditDto> GetItemAsync(string itemId);
+        Task<ItemEditDto> GetItemAsync(string categoryId, string itemId);
         Task UpdateItemAsync(ItemEditDto itemEditDto);
-        Task DeleteItemAsync(string itemId);
+        Task DeleteItemAsync(string categoryId, string id);
         // SearchByname
         // FeaturedList 
     }

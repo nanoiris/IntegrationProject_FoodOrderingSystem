@@ -41,7 +41,6 @@ namespace RmsApp.Services
             HttpResponseMessage response = await _httpClient.GetAsync($"api/MenuCategory/List/{restaurantId}");
             if (response.IsSuccessStatusCode)
             {
-                //parse the JSON response into a list of CategoryDto objects
                 Categories = await response.Content.ReadFromJsonAsync<List<CategoryDto>>();
             }
             else

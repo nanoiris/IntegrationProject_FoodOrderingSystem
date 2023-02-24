@@ -1,0 +1,124 @@
+@page "/item/edit/{categoryId}/{itemId}"
+
+@using RmsApp.Services
+@using RmsApp.Dtos
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using Microsoft.Extensions.Logging
+@inject ILogger<ItemService> logger
+@inject IFlashMessageService FlashMessageService
+
+<PageTitle>Item Edit</PageTitle>
+
+<ul class="breadcrumb breadcrumb-gray">
+    @foreach (var path in Paths)
+    {
+        <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
+    }
+    <li class="breadcrumb-item active">Edit Item</li>
+</ul>
+
+@if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+    {
+        <div class="alert alert-success">
+            @FlashMessageService.SuccessMessage
+        </div>
+    }
+else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
+    {
+        <div class="alert alert-danger">
+            @FlashMessageService.FailureMessage
+        </div>
+    }
+
+@if (Item != null)
+{
+    <form @onsubmit="UpdateItem">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" @bind="@Item.Name" />
+            </div>
+        </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Description</label>
+        <div class="col-sm-10">
+        <textarea class="form-control" @bind="@Item.Description"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Price</label>
+        <div class="col-sm-10">
+        <input type="number" class="form-control" @bind="@Item.Price" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Is Featured</label>
+        <div class="col-sm-10">
+        <input type="checkbox" @bind="@Item.IsFeatured" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Logo</label>
+        <div class="col-sm-10">
+        <input type="file" />
+        <img src="@Item.Logo" width="50px" height="50px" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary" href="/item">Cancel</a>
+    </form>
+}
+else
+{
+<p>Item not found.</p>
+}
+
+@code {
+
+[Parameter]
+public string categoryId { get; set; }
+[Parameter]
+public string itemId { get; set; }
+
+public List<TabPath> Paths = new List<TabPath>
+{
+        new TabPath { Title = "Home", Path = "/" },
+        new TabPath { Title = "Item", Path = "/Item" },
+        new TabPath { Title = "Edit", Path = "/Item/Edit" },
+};
+public ItemEditDto Item { get; set; }
+public string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd";
+private IBrowserFile UploadImg { get; set; }
+
+[Inject]
+public IItemService ItemService { get; set; }
+
+protected override async Task OnInitializedAsync()
+{
+    logger.LogInformation("OnInitializedAsync");
+    Item = await ItemService.GetItemAsync(categoryId, itemId);
+}
+
+
+private async Task UpdateItem()
+{
+    try
+    {
+        await ItemService.UpdateItemAsync(Item);
+        FlashMessageService.SuccessMessage = "Edit successfully.";
+        NavigationManager.NavigateTo("/item");
+    }
+    catch (Exception ex)
+    {
+        FlashMessageService.FailureMessage = "Fail to edit: " + ex.Message;
+    }
+}
+
+
+}
