@@ -97,11 +97,11 @@
 
     }
 
-    public List<RestCategoryDto> restCategories { get; set; }
-    public List<RestaurantDto> trendingRests { get; set; }
-    public List<RestaurantDto> first2Rests { get; set; }
+    private List<RestCategoryDto> restCategories { get; set; }
+    private List<RestaurantDto> trendingRests { get; set; }
+    private List<RestaurantDto> first2Rests { get; set; }
 
-    public HttpClient httpClient = new HttpClient();
+    private HttpClient httpClient = new HttpClient();
 
     protected override async Task OnInitializedAsync()
     {
@@ -115,5 +115,6 @@
         restCategories = (await httpClient.GetFromJsonAsync<List<RestCategoryDto>>($"api/restcategory/list")).ToList();  
         trendingRests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/listweeklytrends")).ToList();
         first2Rests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/listwithlimit/2")).ToList();
+
     }
 }

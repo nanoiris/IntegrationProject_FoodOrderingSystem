@@ -4,7 +4,7 @@ using RestaurantDaoBase.Enums;
 using RestaurantDaoBase.IServices;
 using RestaurantDaoBase.Models;
 
-namespace OrderServer.Controllers
+namespace DeliveryServer.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
