@@ -1,0 +1,109 @@
+﻿@page "/Order/Details/1"
+@using DeliveryApp.Componants
+
+
+<div class="OrderDetails pb-5">
+    <div class="p-3 osahan-inner-header bg-white shadow-sm">
+        <a class="font-weight-bold text-dark text-back text-decoration-none " href="/Order">
+            <i class="feather-chevron-left"></i>
+            <span class="ml-3 h6 mb-0">Order Details</span>
+        </a>
+    </div>
+    <div class="card-header bg-white">
+        <div class="row">
+            <div class="col-6 my-auto">
+                <p class="text-muted"> Order No. <span class="font-weight-bold text-dark"># 123</span></p>
+                <p class="text-muted"> Place On <span class="font-weight-bold text-dark"> 12,Feb 2023</span> </p>
+            </div>
+            <div class="col-5 text-center  my-auto pl-0 pt-sm-4">
+                <img class="img-fluid my-auto align-items-center mb-0 pt-3" src="img/trending1.png" width="115"
+                     height="115">
+                <p></p>
+                <p class="mb-4 pt-0 Glasses">Pizza Club</p>
+            </div>
+        </div>
+    </div>
+    <div class="shadow bg-white p-3 mb-3 clearfix">
+        <p class="mb-1">6' Cheese <span class="float-right text-dark">$15.90</span></p>
+        <p class="mb-1">Frech Fries <span class="float-right text-dark">$7.90</span></p>
+        <p class="mb-1">Vanila Ice Cream <span class="float-right text-dark">$3.99</span></p>
+    </div>
+    <div class="shadow bg-white p-3 mb-3 clearfix">
+        <p class="mb-1">SubTotal <span class="float-right text-dark">$3140</span></p>
+        <p class="mb-1">GST/HST <span class="float-right text-dark">$314</span></p>
+        <p class="mb-1">PST/TST/QST <span class="float-right text-dark">$157</span></p>
+        <p class="mb-1">
+            Delivery Fee<span class="text-info ml-1"><i class="icofont-info-circle"></i></span><span class="float-right text-dark">$10</span>
+        </p>
+        <hr>
+        <h6 class="font-weight-bold mb-0">Total <span class="float-right">$1329</span></h6>
+    </div>
+    <div class="track mx-2">
+        <div class="step active">
+            <span class="icon">  <i class="fa fa-check"></i> </span>
+            <span class="text">Order confirmed</span>
+        </div>
+        <div class="step active">
+            <span class="icon"> <i class="fa fa-user"></i> </span>
+            <span class="text"> Picked by courier</span>
+        </div>
+        <div class="step active">
+            <span class="icon"> <i class="fa fa-truck"></i> </span>
+            <span class="text"> On the way</span>
+        </div>
+        <div class="step">
+            <span class="icon"> <i class="fa fa-box"></i> </span>
+            <span class="text">Complete</span>
+        </div>
+    </div>
+   
+</div>
+<div id="ratings-and-reviews"
+     class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
+    <h6 class="mb-0">Rate the Restaurant</h6>
+    <div class="star-rating ml-auto">
+        <div class="d-inline-block h6 m-0">
+            <i class="feather-star text-warning"></i>
+            <i class="feather-star text-warning"></i>
+            <i class="feather-star text-warning"></i>
+            <i class="feather-star text-warning"></i>
+            <i class="feather-star"></i>
+        </div>
+    </div>
+</div>
+<div class="p-3 bg-white shadow-sm">
+    <h6>Rate the Food</h6>
+    <div id="ratings-and-reviews"
+         class=" d-flex align-items-center py-2 clearfix restaurant-detailed-star-rating">
+        <p class="mb-0">6' Cheese</p>
+        <div class="star-rating ml-auto">
+            <div class="d-inline-block h6 m-0">
+                <i class="feather-star text-warning"></i>
+                <i class="feather-star text-warning"></i>
+                <i class="feather-star text-warning"></i>
+                <i class="feather-star text-warning"></i>
+                <i class="feather-star"></i>
+            </div>
+        </div>
+    </div>
+    <div id="ratings-and-reviews" class=" d-flex align-items-center  py-2 clearfix restaurant-detailed-star-rating">
+        <p class="mb-0">6' Cheese</p>
+        <div class="star-rating ml-auto">
+            <div class="d-inline-block h6 m-0">
+                <i class="feather-star text-warning"></i>
+                <i class="feather-star text-warning"></i>
+                <i class="feather-star text-warning"></i>
+                <i class="feather-star text-warning"></i>
+                <i class="feather-star"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="py-5">
+    <hr />
+</div>
+<NavMenuFooter />
+@code {
+
+}
+
