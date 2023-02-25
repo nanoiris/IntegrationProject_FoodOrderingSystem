@@ -25,9 +25,11 @@
         <div class="form-group mb-3">
             <label for="name">Name:</label>
             <input type="text" id="name" class="form-control" value="@Category.Name" @oninput="@(e => Category.Name = e.Value.ToString())" />
-
         </div>
-        <button class="btn btn-primary" @onclick="SaveCategory">Save</button>
+        <div class="text-center">
+            <button class="btn btn-primary" @onclick="SaveCategory">Save</button>
+        </div>
+        
     </form>
 }
 else

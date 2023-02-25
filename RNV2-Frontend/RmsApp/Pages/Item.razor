@@ -49,7 +49,7 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
                     <tr>
                         @* <th>Item ID</th> *@
                         <th>Logo</th>
-                        <th>Name</th>
+                        <th>Menu Item Name</th>
                         <th>Featured</th>
                         <th>Price($)</th>
                         <th>Edit</th>
@@ -95,7 +95,7 @@ else
         new TabPath { Title = "Item", Path = "/item" },
         };
     public List<ItemListDto> Items { get; set; }
-    public string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
+    public string restaurantId = Constants.RestaurantId; 
      public List<CategoryDto> Categories { get; set; }
 
     [Inject]

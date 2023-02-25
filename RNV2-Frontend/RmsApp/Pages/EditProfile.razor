@@ -98,20 +98,11 @@ else
     protected override async Task OnInitializedAsync()
     {
         @* var id = int.Parse(Regex.Match(NavigationManager.Uri, @"\d+$").Value); *@
-        string id = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
+        string id = Constants.RestaurantId; 
         restaurant = await RestaurantService.GetOneRestaurantAsync(id);
+
         @* categories = await GetRestCategoryAsync(); *@
     }
 
-    private async Task<Restaurant> GetOneRestaurantAsync(string id)
-    {
-        var restaurant = await RestaurantService.GetOneRestaurantAsync(id);
 
-        if (restaurant == null)
-        {
-             NavigationManager.NavigateTo("/");
-        }
-
-        return restaurant;
-    }
     }

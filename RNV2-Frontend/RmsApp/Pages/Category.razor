@@ -72,7 +72,8 @@ else
         new TabPath { Title = "Category", Path = "/category" },
         };
     public List<CategoryDto> Categories { get; set; }
-    public string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
+    public string restaurantId = Constants.RestaurantId;
+
 
     [Inject]
     public ICategoryService CategoryService { get; set; }
