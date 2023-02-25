@@ -1,56 +1,64 @@
 ﻿@page "/Account/Signup"
+@using Data.Dto;
+@using System.Net.Http;
+@using System.Net.Http.Json;
+@using System.Net.Http.Headers;
+@using Serilog;
+@inject NavigationManager NavigationManager
+
+
 <div class="p-4 login-page-form">
     <a class="font-weight-bold text-back text-decoration-none d-flex" href="">
         <i class="feather-chevron-left"></i>
         <span class="pl-2">Back</span>
     </a>
-    <h2 class="my-0">Hello There.</h2>
+    <h2 class="mb-0 mt-2">Hello There.</h2>
     <p class="text-50">Sign up to continue</p>
-    <form class="mt-4 " id="signupForm" method="post" enctype="multipart/form-data">
+    <EditForm class="mt-4 " id="signupForm" Model="@user" OnValidSubmit="SignupPost" enctype="multipart/form-data">
+        <DataAnnotationsValidator />
         <div class="form-group">
-            <input asp-for="Name" type="text" placeholder="Name" class="form-control" id="Name" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+            <input @bind-value="user.Name" type="text" placeholder="Name" class="form-control" id="Name" />
+            <ValidationMessage For="@(() => user.Name)" />
         </div>
         <div class="form-group">
-            <input asp-for="Email" type="text" placeholder="Email" class="form-control" id="Email" />
-            <span asp-validation-for="Email" class="text-danger"></span>
+            <input @bind-value="user.Email" type="text" placeholder="Email" class="form-control" id="Email" />
+            <ValidationMessage For="@(() => user.Email)" />
         </div>
         <div class="form-group">
-            <input asp-for="PhoneNo" type="text" placeholder="Mobile Number" class="form-control" id="Phone" />
-            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+            <input @bind-value="user.PhoneNumber" type="text" placeholder="Mobile Number" class="form-control" id="Phone" />
+            <ValidationMessage For="@(() => user.PhoneNumber)" />
         </div>
         <div class="form-group">
-            <input asp-for="Password" type="password" placeholder="Password" class="form-control" id="Password" />
-            <span asp-validation-for="Password" class="text-danger"></span>
+            <input @bind-value="user.Password" type="password" placeholder="Password" class="form-control" id="Password" />
+            <ValidationMessage For="@(() => user.Password)" />
         </div>
         <div class="form-group">
-            <input asp-for="ConfirmPassword" type="password" placeholder="Retype Password" class="form-control" id="ConformPassword" />
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            <input @bind-value="user.ConfirmPassword" type="password" placeholder="Retype Password" class="form-control" id="ConformPassword" />
+            <ValidationMessage For="@(() => user.ConfirmPassword)" />
         </div>
         <div class="form-group">
-            <input asp-for="Street" type="text" placeholder="Street" class="form-control" id="Street" />
-            <span asp-validation-for="Street" class="text-danger"></span>
+            <input @bind-value="user.Street" type="text" placeholder="Street" class="form-control" id="Street" />
+            <ValidationMessage For="@(() => user.Street)" />
         </div>
         <div class="form-group"> 
-            <input asp-for="City" type="text" placeholder="City" class="form-control" id="City" />
-            <span asp-validation-for="City" class="text-danger"></span>
+            <input @bind-value="user.City" type="text" placeholder="City" class="form-control" id="City" />
+            <ValidationMessage For="@(() => user.City)" />
         </div>
         <div class="form-group">
-            <input asp-for="Province" type="text" placeholder="Province" class="form-control" id="Province" />
-            <span asp-validation-for="Province" class="text-danger"></span>
+            <input @bind-value="user.State" type="text" placeholder="Province" class="form-control" id="Province" />
+            <ValidationMessage For="@(() => user.State)" />
         </div>
         <div class="form-group">
-            <input asp-for="Country" type="text" placeholder="Country" class="form-control" id="Country" />
-            <span asp-validation-for="Country" class="text-danger"></span>
+            <input @bind-value="user.Country" type="text" placeholder="Country" class="form-control" id="Country" />
+            <ValidationMessage For="@(() => user.Country)" />
         </div>
         <div class="form-group">
-            <input asp-for="Zip" type="text" placeholder="Zip" class="form-control" id="Zip" />
-            <span asp-validation-for="Zip" class="text-danger"></span>
+            <input @bind-value="user.PostCode" type="text" placeholder="Zip" class="form-control" id="Zip" />
+            <ValidationMessage For="@(() => user.PostCode)" />
         </div>
         <div class="form-group mr-3 ">
             <div class="custom-file  mr-3">
-                <label class="custom-file-label" asp-for="Upload"></label>
-                <input type="file" asp-for="Upload" class="form-control d-none" />
+                <InputFile class="form-control" OnChange="@onFileChange" />
             </div>
         </div>
 
@@ -60,9 +68,44 @@
                 <p class="text-center m-0">Already an account? Log in</p>
             </a>
         </div>
-    </form>
+    </EditForm>
 </div>
 
 @code {
+    public RegisterUser user = new RegisterUser();
+    private HttpClient httpClient = new HttpClient();
 
+    private async Task SignupPost()
+    {
+        var multipartContent = new MultipartFormDataContent();
+        multipartContent.Add(new StringContent(user.Name), "Name");
+        multipartContent.Add(new StringContent(user.Email), "Email");
+        multipartContent.Add(new StringContent(user.Password), "Password");
+        multipartContent.Add(new StringContent(user.ConfirmPassword), "ConfirmPassword");
+        multipartContent.Add(new StringContent(user.PhoneNumber), "PhoneNumber");
+        multipartContent.Add(new StringContent("user"), "Role");
+
+        var img = new StreamContent(user.UploadImg?.OpenReadStream());
+        Log.Debug(user.UploadImg.Name);
+        Log.Debug(user.UploadImg.ContentType);
+        img.Headers.ContentType = new MediaTypeHeaderValue(user.UploadImg.ContentType);
+        multipartContent.Add(content: img, "UploadImg", fileName: user.UploadImg.Name);
+
+        HttpResponseMessage response = await httpClient.PostAsync("http://localhost:5191/api/auth/register", multipartContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/Account/Login");
+        }
+        else
+        {
+            
+        }
+
+    }
+
+    private void onFileChange(InputFileChangeEventArgs e)
+    {
+        user.UploadImg = e.File;
+    }
 }
