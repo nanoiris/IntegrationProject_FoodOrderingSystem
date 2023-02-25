@@ -27,7 +27,7 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
         @FlashMessageService.FailureMessage
     </div>
 }
-<div class="form-group col-4">
+<div class="form-group col-12">
     <form @onsubmit="AddCategory">
          <div class="form-group mb-3">
           <label >Category Name</label>
@@ -61,7 +61,7 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
     } 
     private async Task AddCategory()
     {
-        string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd"; 
+        string restaurantId = Constants.RestaurantId;
         var newCategory = new CategoryDto { Name = NewCategoryName };
         await CategoryService.AddCategoryAsync(restaurantId, newCategory);
         FlashMessageService.SuccessMessage = "Add successfully!";

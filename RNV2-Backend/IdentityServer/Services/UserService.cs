@@ -47,8 +47,8 @@ namespace IdentityServer.Services
                 Email = model.Email,
                 UserName = model.Email,
                 Logo = model.Logo,
-                RestaurantId = model.RestaurantId,
-                RestaurantName = model.RestaurantName
+                //RestaurantId = model.RestaurantId,
+                //RestaurantName = model.RestaurantName
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
