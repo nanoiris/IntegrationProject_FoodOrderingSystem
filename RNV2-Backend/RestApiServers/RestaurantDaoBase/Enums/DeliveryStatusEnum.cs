@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RestaurantDaoBase.Enums
 {
     public enum DeliveryStatusEnum
-    { 
-        Pending = 0, Accept = 1, Assigned = 2, Reject = 3, Completed = 4
+    {
+        Pending = 0, Accept = 1, Assigned = 2, Reject = 3, PickedUp = 4, Completed = 5
     }
 }
