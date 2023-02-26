@@ -29,6 +29,8 @@ public static class MauiProgram
 		//	client.BaseAddress = new Uri("https://localhost:5064/");
 		//});
 
+		builder.Services.AddScoped<SessionStorageAccessor>();
+
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();

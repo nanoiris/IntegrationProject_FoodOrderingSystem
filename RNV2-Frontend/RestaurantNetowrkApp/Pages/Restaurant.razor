@@ -5,6 +5,7 @@
 @using System.Net.Http.Json;
 @using Serilog;
 @using RestaurantDaoBase.Models;
+@using System.Text.Json;
 
 
 <div class="osahan-restaurant">
@@ -49,9 +50,7 @@
                             <MenuItemCard  Item="@menuItem"/>
                         </div>
                     }
-                }
-                
-                
+                }               
             </div>
         </div>
     </div>
@@ -84,7 +83,7 @@
                                         </div>
                                     </div>
                                     <span class="ml-auto">
-                                        <a href="checkout.html"
+                                        <a onclick="addToCart(@menuItem)"
                                            class="btn btn-outline-secondary btn-sm add-sm-btn">ADD</a>
                                     </span>
                                 @*    <div class="osahan-quantity ml-auto">
@@ -136,26 +135,36 @@
         }
     }
 
-    public RestaurantDto restaurant { get; set; }
-    public List<MenuCategoryDto> menuCategories { get; set; }
-    public List<MenuItemDto> FeaturedMenuItems { get; set; }
+    public RestaurantDto restaurant = new RestaurantDto();
+    public List<MenuCategoryDto> menuCategories = new List<MenuCategoryDto>();
+    public List<MenuItemDto> FeaturedMenuItems = new List<MenuItemDto>();
 
     public HttpClient httpClient = new HttpClient();
+    private HttpClient httpOrder = new HttpClient();
 
     protected override async Task OnInitializedAsync()
     {
         Log.Debug("Rest:" + restId);
         httpClient.BaseAddress = new Uri("http://localhost:5064/");
+        httpOrder.BaseAddress = new Uri("http://localhost:5275/");
 
-        restaurant = new RestaurantDto();
-        menuCategories = new List<MenuCategoryDto>();
+        //restaurant = new RestaurantDto();
+        //menuCategories = new List<MenuCategoryDto>();
 
         restaurant = await httpClient.GetFromJsonAsync<RestaurantDto>($"api/restaurant/one/"+ restId);
         menuCategories = (await httpClient.GetFromJsonAsync<List<MenuCategoryDto>>($"api/menucategory/list/" + restId)).ToList();
         FeaturedMenuItems = (await httpClient.GetFromJsonAsync<List<MenuItemDto>>($"api/menucategory/featuredlist/{restId}")).ToList();
 
-        Log.Debug(menuCategories.Count().ToString());
+    }
 
+    private async void addToCart(MenuItemDto menuItem)
+    {
+        var userAndStatus = 
+          new {    
+              userName = "u2@gmail.com",
+              status = 0
+          };
+        //HttpResponseMessage response = await httpOrder.GetFromJsonAsync<MenuItemDto>($"api/order/listbyuserandstatus");
     }
 
 }
