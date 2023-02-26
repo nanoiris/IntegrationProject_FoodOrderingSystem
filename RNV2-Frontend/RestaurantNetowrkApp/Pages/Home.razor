@@ -1,4 +1,6 @@
 ﻿@page "/"
+@page "/{msg}"
+
 @using RestaurantNetowrkApp.Componants
 @inject IJSRuntime JSRuntime
 @using Data.Dto
@@ -27,6 +29,11 @@
             <DropDownMenu />
         </div>
     </div>
+
+    @if (msg != null)
+    {
+        <p class="py-2 pl-2 bg-warning">@msg</p>
+    }
 
     <div class="osahan-main">
 
@@ -85,6 +92,9 @@
 <NavMenuFooter />
 
 @code {
+    [Parameter]
+    public string msg{ get; set; }
+
     bool firstRender = true;
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -97,9 +107,9 @@
 
     }
 
-    private List<RestCategoryDto> restCategories { get; set; }
-    private List<RestaurantDto> trendingRests { get; set; }
-    private List<RestaurantDto> first2Rests { get; set; }
+    private List<RestCategoryDto> restCategories = new List<RestCategoryDto>();
+    private List<RestaurantDto> trendingRests = new List<RestaurantDto>();
+    private List<RestaurantDto> first2Rests = new List<RestaurantDto>();
 
     private HttpClient httpClient = new HttpClient();
 
@@ -108,13 +118,8 @@
         Log.Debug("render start");
         httpClient.BaseAddress = new Uri("http://localhost:5064/");
 
-        restCategories = new List<RestCategoryDto>();
-        trendingRests = new List<RestaurantDto>();
-        first2Rests = new List<RestaurantDto>();
-
         restCategories = (await httpClient.GetFromJsonAsync<List<RestCategoryDto>>($"api/restcategory/list")).ToList();  
         trendingRests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/listweeklytrends")).ToList();
         first2Rests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/listwithlimit/2")).ToList();
-
     }
 }
