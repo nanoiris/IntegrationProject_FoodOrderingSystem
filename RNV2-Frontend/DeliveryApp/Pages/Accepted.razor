@@ -1,12 +1,12 @@
-﻿@page "/home";
+﻿@page "/accepted"
 @using DeliveryApp.Componants
+
 
 <div class="osahan-home-page">
     <div class="shadow p-3 homepage-osahan-header bg-white">
-        <div class="title d-flex align-items-center "> 
- <img src="img/logo_web1.png" class="img-fluid" />
-            <div class="input-group border osahan-search mt-3 rounded-lg shadow-sm overflow-hidden">  
-               
+        <div class="title d-flex align-items-center ">
+            <img src="img/logo_web1.png" class="img-fluid" />
+            <div class="input-group border osahan-search mt-3 rounded-lg shadow-sm overflow-hidden">               
                 <div class="input-group-prepend">
                     <button class="border-0 btn btn-outline-secondary text-primary bg-white btn-block">
                         <i class="feather-search"></i>
@@ -15,24 +15,25 @@
                 <input type="text" class="shadow-none border-0 form-control pl-0"
                        placeholder="Search for Orders" aria-label="" aria-describedby="basic-addon1">
             </div>
-
+          
             <NavMenu />
         </div>
     </div>
 
-
+    
     <div class="osahan-main">
-        <AvailableList />
-
+        <AcceptedList />
+               
     </div>
     <div>
-       <NavMenuFooter />
+        <NavMenuFooter />
     </div>
 </div>
- 
+
 
 
 @code {
-
+     
 }
+
 

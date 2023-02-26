@@ -15,7 +15,7 @@
     </nav>
 
 
-    <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
+    <table class="table table-hover shadow-inset table-responsive-sm rounded table-striped table align-middle">
         <thead class="text-danger font-weight-bold">
             <tr>
                 <th class="border-0" scope="col" id="class">Restaurant Name</th>
@@ -23,36 +23,51 @@
                 <th class="border-0" scope="col" id="class">Status</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
             @foreach (var item in restDelivery)
             {
-            <tr>
-                <td>
-                    @item.Restaurant.Name
+                <tr class="align-top">
+                    <td>
+                        @item.Restaurant.Name
+                        <br>
                         @item.Restaurant.Address.Street
                         @item.Restaurant.Address.City
                         @item.Restaurant.Address.PostalCode
-                </td>
-                <td>
-                    @item.CustomerName
+                    </td>
+                    <td>
+                        @item.CustomerName
+                        <br>
                         @item.Destination.Street
                         @item.Destination.City
                         @item.Destination.PostalCode
                     </td>
-                <td>
-                    @item.Status
-                        <a a href="/Order/Details/@item.Id" class="d-flex w-100 align-items-center border-bottom px-3 py-4">
+                    <td>
+                        @item.Status
+                        <br>
+                        <a a href="/Order/Details/@item.Id">
                             <i class="feather-archive"></i>Details
                         </a>
-                </td>        
-            </tr>
-               
-             }
+                        <br>
+
+                        <a a href="/Order/Details/@item.Id">
+                            <i class="feather-check-square"></i>Complete
+                        </a>                       
+                    </td>
+                </tr>
+
+            }
         </tbody>
+        <tfoot>
+            ...
+        </tfoot>
     </table>
 
 </div>
 @code {
+    [Parameter]
+    public string deliveryman { get; set; }
+
+
     public List<Delivery> restDelivery { get; set; }
     public HttpClient httpClient = new HttpClient();
     protected override async Task OnInitializedAsync()
@@ -60,6 +75,7 @@
         //Log.Debug("render start");
         httpClient.BaseAddress = new Uri("http://localhost:5175/");
         restDelivery = new List<Delivery>();
-        restDelivery = (await httpClient.GetFromJsonAsync<List<Delivery>>($"api/delivery/ByStatus/0")).ToList();
+        deliveryman = "deliveryman1";
+        restDelivery = (await httpClient.GetFromJsonAsync<List<Delivery>>($"api/delivery/ByDeliveryManAndStatus/" + deliveryman + "/4")).ToList();
     }
 }
