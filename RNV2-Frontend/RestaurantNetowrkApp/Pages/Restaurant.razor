@@ -165,16 +165,19 @@
         string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
         if (userEmail == null)
         {
-            Log.Debug("Haven't login");
+            string msg = "Please login to make an order";
+            NavigationManager.NavigateTo($"/Account/Login/{msg}");
         }
         else
         {
-             string str = JsonSerializer.Serialize(
-              new {
-                  userName = userEmail,
-                  status = 0
-              }
-            );
+            // check if this user has an unpaid order in this restaurant
+
+            string str = JsonSerializer.Serialize(
+             new {
+                 userName = userEmail,
+                 status = 0
+             }
+           );
             var request = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
@@ -182,13 +185,38 @@
                     Content = new StringContent(str, Encoding.UTF8, MediaTypeNames.Application.Json /* or "application/json" in older versions */),
                 };
 
-            //var str = "{'Id':'123','DateOfRegistration':'2012-10-21T00:00:00+05:30','Status':0}"
-            //     .Replace("'", "\"");
+
             var response = await httpOrder.SendAsync(request);
             if (response.IsSuccessStatusCode)
             {
-                using var responseStream = await response.Content.ReadAsStreamAsync();
-               // OrderDto order = await JsonSerializer.DeserializeAsync<List< OrderDto>>(responseStream);
+                var orders = (await response.Content.ReadFromJsonAsync<List<OrderDto>>()).ToList();
+                bool newCart = true;
+                if (orders.Count > 0)
+                {
+                    foreach(var order in orders)
+                    {
+                        if(order.RestaurantId == restId)
+                        {
+                            // this user already has an order unpaid in this restaurant, show it
+                            newCart = false;
+                            // cart order
+                            break;
+
+                        }
+                    }
+                }
+                if (newCart == true)
+                {
+                    // this user dosn't have an order unpaid in this restaurant, create a new order with status "cart"
+                    var cart = new
+                    {
+                        email = userEmail,
+                        menuItem = menuItem,
+                        restaurantId = restId,
+                        restaurantName = restaurant.Name,
+                    };
+                    response = await httpOrder.PostAsJsonAsync("http://localhost:5275/api/cart/newone", cart);
+                }
             }
             else
             {
