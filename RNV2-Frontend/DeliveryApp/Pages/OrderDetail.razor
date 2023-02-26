@@ -1,12 +1,16 @@
-﻿@page "/Order/Details/1"
+﻿@page "/Order/Details/{delyId}"
 @using DeliveryApp.Componants
-
+@using RestaurantDaoBase.Models;
+@using System.Net.Http;
+@using System.Net.Http.Json;
+@using RestaurantDaoBase;
+@using Serilog;
 
 <div class="OrderDetails pb-5">
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
-        <a class="font-weight-bold text-dark text-back text-decoration-none " href="/Order">
+        <a class="font-weight-bold text-dark text-back text-decoration-none " href="/home">
             <i class="feather-chevron-left"></i>
-            <span class="ml-3 h6 mb-0">Order Details</span>
+            <span class="ml-3 h6 mb-0">Home</span>
         </a>
     </div>
     <div class="card-header bg-white">
@@ -60,41 +64,46 @@
 </div>
 <div id="ratings-and-reviews"
      class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
-    <h6 class="mb-0">Rate the Restaurant</h6>
+    <h6 class="mb-0">Delivery Createtime</h6>
     <div class="star-rating ml-auto">
         <div class="d-inline-block h6 m-0">
-            <i class="feather-star text-warning"></i>
-            <i class="feather-star text-warning"></i>
-            <i class="feather-star text-warning"></i>
-            <i class="feather-star text-warning"></i>
-            <i class="feather-star"></i>
+            item.createtime
         </div>
     </div>
 </div>
 <div class="p-3 bg-white shadow-sm">
-    <h6>Rate the Food</h6>
+    <h6>Delivery Info</h6>
     <div id="ratings-and-reviews"
          class=" d-flex align-items-center py-2 clearfix restaurant-detailed-star-rating">
-        <p class="mb-0">6' Cheese</p>
+        <p class="mb-0">Create Time</p>
         <div class="star-rating ml-auto">
             <div class="d-inline-block h6 m-0">
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star"></i>
+                @delivery.CreateTime
+            </div>
+        </div>
+    </div>
+    <div id="ratings-and-reviews"
+         class=" d-flex align-items-center py-2 clearfix restaurant-detailed-star-rating">
+        <p class="mb-0">Estimate Time</p>
+        <div class="star-rating ml-auto">
+            <div class="d-inline-block h6 m-0">
+                @delivery.EstimateTime
             </div>
         </div>
     </div>
     <div id="ratings-and-reviews" class=" d-flex align-items-center  py-2 clearfix restaurant-detailed-star-rating">
-        <p class="mb-0">6' Cheese</p>
+        <p class="mb-0">Accept Time</p>
         <div class="star-rating ml-auto">
             <div class="d-inline-block h6 m-0">
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star"></i>
+               @delivery.AcceptTime
+            </div>
+        </div>
+    </div>
+    <div id="ratings-and-reviews" class=" d-flex align-items-center  py-2 clearfix restaurant-detailed-star-rating">
+        <p class="mb-0">Delivery Time</p>
+        <div class="star-rating ml-auto">
+            <div class="d-inline-block h6 m-0">
+                @delivery.DeliveryTime
             </div>
         </div>
     </div>
@@ -104,6 +113,17 @@
 </div>
 <NavMenuFooter />
 @code {
+    [Parameter]
+    public string delyId { get; set; }
 
+    public Delivery delivery { get; set; }
+    public HttpClient httpClient = new HttpClient();
+    protected override async Task OnInitializedAsync()
+    {
+        //Log.Debug("render start");
+        httpClient.BaseAddress = new Uri("http://localhost:5175/");
+        delivery = new Delivery();
+        delivery = (await httpClient.GetFromJsonAsync<Delivery>($"api/delivery/one/"+delyId));
+    }
 }
 

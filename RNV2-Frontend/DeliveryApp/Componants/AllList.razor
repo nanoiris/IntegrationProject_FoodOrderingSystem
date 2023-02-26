@@ -41,7 +41,7 @@
                     </td>
                 <td>
                     @item.Status
-                    <a a href="" class="d-flex w-100 align-items-center border-bottom px-3 py-4">
+                        <a a href="/Order/Details/@item.Id" class="d-flex w-100 align-items-center border-bottom px-3 py-4">
                             <i class="feather-archive"></i>Details
                         </a>
                 </td>        
@@ -57,7 +57,7 @@
     public HttpClient httpClient = new HttpClient();
     protected override async Task OnInitializedAsync()
     {
-        Log.Debug("render start");
+        //Log.Debug("render start");
         httpClient.BaseAddress = new Uri("http://localhost:5175/");
         restDelivery = new List<Delivery>();
         restDelivery = (await httpClient.GetFromJsonAsync<List<Delivery>>($"api/delivery/ByStatus/0")).ToList();
