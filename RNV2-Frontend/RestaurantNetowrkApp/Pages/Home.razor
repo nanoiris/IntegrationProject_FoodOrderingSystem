@@ -42,7 +42,7 @@
             {
                 <div class="cat-item px-1 py-3">
                     <a class="d-block text-center" href="">
-                        <img src="http://fsd05rnv.eastus.cloudapp.azure.com:5000/img/share/@category.Logo" class="img-fluid mb-2 shadow">
+                        <img src="img/rest/@category.Logo" class="img-fluid mb-2 shadow">
                         <p class="m-0 small">@category.Name</p>
                     </a>
                 </div>
@@ -85,6 +85,9 @@
                
             </div>
         </div>
+        <div class="py-3">
+            <p>  </p>
+        </div>
        
     </div>
 </div>
@@ -99,12 +102,12 @@
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (restCategories.Count != 0 && trendingRests.Count !=0)
         {
             await JSRuntime.InvokeAsync<object>("homeSlick");
             //firstRender = false;
         }
-
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private List<RestCategoryDto> restCategories = new List<RestCategoryDto>();
@@ -116,7 +119,7 @@
     protected override async Task OnInitializedAsync()
     {
         Log.Debug("render start");
-        httpClient.BaseAddress = new Uri("http://fsd05rnv.eastus.cloudapp.azure.com:5064/");
+        httpClient.BaseAddress = new Uri("http://localhost:5064/");
 
         restCategories = (await httpClient.GetFromJsonAsync<List<RestCategoryDto>>($"api/restcategory/list")).ToList();  
         trendingRests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/listweeklytrends")).ToList();

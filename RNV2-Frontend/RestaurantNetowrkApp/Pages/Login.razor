@@ -64,7 +64,7 @@
 	{
 		//string jsonString = JsonSerializer.Serialize(model);
 		//Log.Debug($"login jsonString: {jsonString}");
-		HttpResponseMessage response = await httpClient.PostAsJsonAsync("http://fsd05rnv.eastus.cloudapp.azure.com:5191/api/auth/login", model);
+		HttpResponseMessage response = await httpClient.PostAsJsonAsync("http://localhost:5191/api/auth/login", model);
 		if (response.IsSuccessStatusCode == true)
 		{
 			await SessionStorageAccessor.SetValueAsync("userEmail", model.userName);
