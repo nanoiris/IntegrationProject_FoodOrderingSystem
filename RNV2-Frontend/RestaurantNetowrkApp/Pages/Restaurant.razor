@@ -2,10 +2,15 @@
 @using RestaurantNetowrkApp.Componants
 @inject IJSRuntime JSRuntime
 @using Data.Dto
+@using System.Net.Mime;
 @using System.Net.Http.Json;
 @using Serilog;
 @using RestaurantDaoBase.Models;
 @using System.Text.Json;
+@using System.Text;
+@inject Data.SessionStorageAccessor SessionStorageAccessor
+@inject NavigationManager NavigationManager
+
 
 
 <div class="osahan-restaurant">
@@ -83,7 +88,7 @@
                                         </div>
                                     </div>
                                     <span class="ml-auto">
-                                        <a onclick="addToCart(@menuItem)"
+                                        <a @onclick="() => addToCart(menuItem)"
                                            class="btn btn-outline-secondary btn-sm add-sm-btn">ADD</a>
                                     </span>
                                 @*    <div class="osahan-quantity ml-auto">
@@ -146,10 +151,8 @@
     {
         Log.Debug("Rest:" + restId);
         httpClient.BaseAddress = new Uri("http://localhost:5064/");
-        httpOrder.BaseAddress = new Uri("http://localhost:5275/");
+        //httpOrder.BaseAddress = new Uri("http://localhost:5275/");
 
-        //restaurant = new RestaurantDto();
-        //menuCategories = new List<MenuCategoryDto>();
 
         restaurant = await httpClient.GetFromJsonAsync<RestaurantDto>($"api/restaurant/one/"+ restId);
         menuCategories = (await httpClient.GetFromJsonAsync<List<MenuCategoryDto>>($"api/menucategory/list/" + restId)).ToList();
@@ -159,12 +162,68 @@
 
     private async void addToCart(MenuItemDto menuItem)
     {
-        var userAndStatus = 
-          new {    
-              userName = "u2@gmail.com",
-              status = 0
-          };
-        //HttpResponseMessage response = await httpOrder.GetFromJsonAsync<MenuItemDto>($"api/order/listbyuserandstatus");
+        string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
+        if (userEmail == null)
+        {
+            string msg = "Please login to make an order";
+            NavigationManager.NavigateTo($"/Account/Login/{msg}");
+        }
+        else
+        {
+            // check if this user has an unpaid order in this restaurant
+
+            string str = JsonSerializer.Serialize(
+             new {
+                 userName = userEmail,
+                 status = 0
+             }
+           );
+            var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri("http://localhost:5275/api/order/listbyuserandstatus"),
+                    Content = new StringContent(str, Encoding.UTF8, MediaTypeNames.Application.Json /* or "application/json" in older versions */),
+                };
+
+
+            var response = await httpOrder.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                var orders = (await response.Content.ReadFromJsonAsync<List<OrderDto>>()).ToList();
+                bool newCart = true;
+                if (orders.Count > 0)
+                {
+                    foreach(var order in orders)
+                    {
+                        if(order.RestaurantId == restId)
+                        {
+                            // this user already has an order unpaid in this restaurant, show it
+                            newCart = false;
+                            // cart order
+                            break;
+
+                        }
+                    }
+                }
+                if (newCart == true)
+                {
+                    // this user dosn't have an order unpaid in this restaurant, create a new order with status "cart"
+                    var cart = new
+                    {
+                        email = userEmail,
+                        menuItem = menuItem,
+                        restaurantId = restId,
+                        restaurantName = restaurant.Name,
+                    };
+                    response = await httpOrder.PostAsJsonAsync("http://localhost:5275/api/cart/newone", cart);
+                }
+            }
+            else
+            {
+                throw new ApplicationException("Failed to get order");
+            }
+        }     
+
     }
 
 }

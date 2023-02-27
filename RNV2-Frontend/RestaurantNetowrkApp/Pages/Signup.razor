@@ -95,7 +95,8 @@
 
         if (response.IsSuccessStatusCode)
         {
-            NavigationManager.NavigateTo("/Account/Login");
+            string msg = "Register succeed! Please Login";
+            NavigationManager.NavigateTo($"/Account/Login/{msg}");
         }
         else
         {
