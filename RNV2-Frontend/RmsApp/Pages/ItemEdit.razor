@@ -107,7 +107,7 @@ else
 {
     new TabPath { Title = "Home", Path = "/" },
     new TabPath { Title = "Item", Path = "/Item" },
-    new TabPath { Title = "Edit", Path = "/Item/Edit" },
+    new TabPath { Title = "Edit", Path = "/Item/Edit/{categoryId}/{itemId}" },
 };
     public ItemEditDto Item { get; set; }
     public string restaurantId = Constants.RestaurantId; 

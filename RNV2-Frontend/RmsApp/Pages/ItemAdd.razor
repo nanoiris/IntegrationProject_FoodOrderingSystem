@@ -80,8 +80,8 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
     public List<TabPath> Paths = new List<TabPath>
     {
         new TabPath { Title = "Home", Path = "/" },
-        new TabPath { Title = "Menu Item", Path = "/menu-item" },
-        new TabPath { Title = "Add", Path = "/menu-item/add" },
+        new TabPath { Title = "Menu Item", Path = "/item" },
+        new TabPath { Title = "Add", Path = "/item/add" },
     };
 
     [Inject]
@@ -115,7 +115,7 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
     }
     private async Task AddMenuItem()
     {
-        string restaurantId = "9d6e2f6c34ee4b31aa747ba29714e5bd";
+        string restaurantId = Constants.RestaurantId;
         var newItem = new ItemAddDto 
         {
             Name = NewItemName,

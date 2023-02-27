@@ -41,8 +41,8 @@ else
     public List<TabPath> Paths = new List<TabPath>
         {
         new TabPath { Title = "Home", Path = "/" },
-        new TabPath { Title = "Category", Path = "/categoryList" },
-        new TabPath { Title = "Edit", Path = "/categoryEdit" },
+        new TabPath { Title = "Category", Path = "/category" },
+        new TabPath { Title = "Edit", Path = "/category/Edit/{categoryId}" },
         };
     [Parameter]
     public string categoryId { get; set; }
