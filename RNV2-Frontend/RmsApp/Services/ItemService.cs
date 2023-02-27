@@ -29,7 +29,7 @@ namespace RmsApp.Services
         public ItemService(HttpClient httpClient, IFlashMessageService flashMessageService)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(Constants.AzureRestUri);
+            _httpClient.BaseAddress = new Uri(Constants.RestUri);
             _flashMessageService = flashMessageService;
         }
 
@@ -61,11 +61,11 @@ namespace RmsApp.Services
                 Console.WriteLine("add menu, after post");
                 if (response.IsSuccessStatusCode)
                 {
-                    _flashMessageService.SuccessMessage = "Menu item added successfully.";
+                    _flashMessageService.SuccessMessage = "Menu item added successfully...";
                 }
                 else
                 {
-                    _flashMessageService.FailureMessage = "Failed to add the menu item.";
+                    _flashMessageService.FailureMessage = "Failed to add the menu item...";
                 }
             }
             catch (Exception ex)
@@ -86,6 +86,7 @@ namespace RmsApp.Services
             {
                 throw new ArgumentException("Item ID cannot be null or empty.", nameof(itemId));
             }
+            Console.WriteLine("get item service...");
             var response = await _httpClient.GetAsync($"api/menu/one/{categoryId}/{itemId}");
             if (response.IsSuccessStatusCode)
             {
@@ -99,7 +100,7 @@ namespace RmsApp.Services
 
         public async Task<List<CategoryDto>> ListCategoryAsync(string restaurantId)
         {
-            Console.WriteLine("Enter CategoryListService Log...");
+            Console.WriteLine("Enter Category List Service Log...");
             Categories = new List<CategoryDto>();
             HttpResponseMessage response = await _httpClient.GetAsync($"api/MenuCategory/List/{restaurantId}");
             if (response.IsSuccessStatusCode)
@@ -120,6 +121,8 @@ namespace RmsApp.Services
             {
                 Console.WriteLine("start edit menu...");
                 var multipartContent = new MultipartFormDataContent();
+                multipartContent.Add(new StringContent(menuItem.Id), "id");
+                Console.WriteLine("ID is: " + menuItem.Id);
                 multipartContent.Add(new StringContent(menuItem.Name), "Name");
                 Console.WriteLine("name is: " + menuItem.Name);
                 multipartContent.Add(new StringContent(menuItem.Description), "Description");
@@ -136,32 +139,22 @@ namespace RmsApp.Services
                 img.Headers.ContentType = new MediaTypeHeaderValue(menuItem.UploadImg.ContentType);
                 multipartContent.Add(content: img, "UploadImg", fileName: menuItem.UploadImg.Name);
                 // above are the 3 line for attach images 
-                var response = await _httpClient.PutAsJsonAsync($"api/menu/updateone", multipartContent);
+                var response = await _httpClient.PutAsJsonAsync($"api/menu/updatedone", multipartContent);
                 Console.WriteLine("edit menu, after PUT");
                 if (response.IsSuccessStatusCode)
                 {
-                    _flashMessageService.SuccessMessage = "Menu item update successfully.";
+                    _flashMessageService.SuccessMessage = "Menu item update successfully...";
                 }
                 else
                 {
-                    _flashMessageService.FailureMessage = "Failed to update the menu item.";
+                    _flashMessageService.FailureMessage = "Failed to update the menu item...";
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                _flashMessageService.FailureMessage = "Failed to update the menu item.";
+                _flashMessageService.FailureMessage = "Failed to update the menu item...";
             }
-            // if (menuItemDto == null)
-            // {
-            //     throw new ArgumentNullException(nameof(menuItemDto));
-            // }
-            // var response = await _httpClient.PutAsJsonAsync($"api/menu/updateone", menuItemDto);
-            // if (!response.IsSuccessStatusCode)
-            // {
-            //     Console.WriteLine("Failed to update menu item with ID {MenuItemId}. StatusCode: {StatusCode}", menuItemDto.Id, response.StatusCode);
-            //     throw new ApplicationException("Failed to update menu item.");
-            // }
         }
 
         public async Task DeleteItemAsync(string categoryId, string id)

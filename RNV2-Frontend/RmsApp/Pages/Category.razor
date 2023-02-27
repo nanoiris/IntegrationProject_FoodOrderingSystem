@@ -80,7 +80,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        logger.LogInformation("OnInitializedAsync");
+        logger.LogInformation("category list OnInitializedAsync");
         Categories = (await CategoryService.ListCategoryAsync(restaurantId)).ToList();
         
     } 
