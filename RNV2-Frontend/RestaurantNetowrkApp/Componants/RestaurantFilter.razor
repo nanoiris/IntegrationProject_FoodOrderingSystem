@@ -1,7 +1,9 @@
-﻿<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+﻿@using Data.Dto;
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <EditForm Model="model" class="modal-content">
             <div class="modal-header align-items-center">
                 <h5 class="modal-title" id="exampleModalLabel">Filter</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -12,7 +14,7 @@
                 <div class="osahan-filter">
                     <div class="filter">
                         <div class="filters-card border-bottom">
-                            <div class="filters-card-header" id="headingTwo">
+@*                            <div class="filters-card-header" id="headingTwo">
                                 <h6 class="mb-0">
                                     <a href="#" class="btn-link p-3" data-toggle="collapse"
                                        data-target="#collapsetwo" aria-expanded="true"
@@ -21,42 +23,30 @@
                                         <i class="feather-chevron-down float-right"></i>
                                     </a>
                                 </h6>
-                            </div>
+                            </div>*@
                             <div class="filters-card-body pb-3 card-shop-filters">
-                                <form class="filters-search px-3">
+                                <div class="filters-search p-3">
                                     <div class="form-group mb-2 position-relative">
                                         <i class="feather-search"></i>
-                                        <input type="text" class="form-control" placeholder="Start typing to search...">
+                                        <input type="text" class="form-control" @bind-value="model.searchKey" placeholder="Start typing to search...">
                                     </div>
-                                </form>
-                                <div class="custom-control custom-checkbox p-0">
-                                    <input type="checkbox" class="custom-control-input" id="cb6">
                                 </div>
-                                <div class="custom-control custom-checkbox p-0">
-                                    <input type="checkbox" class="custom-control-input" id="cb7">
-                                </div>
-                                <div class="custom-control custom-checkbox p-0">
-                                    <input type="checkbox" class="custom-control-input" id="cb8">
-                                </div>
-                                <div class="custom-control custom-checkbox p-0">
-                                    <input type="checkbox" class="custom-control-input" id="cb9">
-                                </div>
-                                <div class="custom-control custom-checkbox p-0">
-                                    <input type="checkbox" class="custom-control-input" id="cb10">
-                                </div>
-                                <div class="custom-control custom-checkbox p-0">
-                                    <input type="checkbox" class="custom-control-input" id="cb11">
-                                </div>
-                                <div class="custom-control custom-checkbox p-0">
-                                    <input type="checkbox" class="custom-control-input" id="cb12">
-                                </div>
-                                <div class="custom-control custom-checkbox p-0">
-                                    <input type="checkbox" class="custom-control-input" id="cb13">
-                                </div>
-                                <div class="custom-control custom-checkbox p-0">
-                                    <input type="checkbox" class="custom-control-input" id="cb14">
-                                </div>
-                                <div class="mt-1 px-3"><a href="#" class="link">See all</a></div>
+                                @foreach(var restCategory in restCategories)
+                                {
+                                    <div class="custom-control border-bottom px-0 custom-checkbox">
+                                        <input 
+                                            type="radio" 
+                                            name="CategoryKey" 
+                                            class="custom-control-input" 
+                                            id="@restCategory.Name" 
+                                            value="@restCategory.Id"
+                                            checked= "@(model.categoryid == restCategory.Id)"
+                                            @onchange = "() => model.categoryid = restCategory.Id"
+                                            />
+                                        <label class="custom-control-label py-3 w-100 px-3" for="@restCategory.Name">@restCategory.Name</label>
+                                    </div>
+                                }
+                                
                             </div>
                         </div>
                     </div>
@@ -73,9 +63,18 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </EditForm>
     </div>
 </div>
 @code {
+    [Parameter]
+    public List<RestCategoryDto> restCategories { get; set; }
 
+    private class searchModel
+    {
+        public string searchKey { get; set; }
+        public string categoryid { get; set; }
+    }
+
+    private searchModel model = new searchModel();
 }
