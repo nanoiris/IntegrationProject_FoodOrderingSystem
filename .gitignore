@@ -398,3 +398,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 !RestaurantDaoBase/bin/Release/net7.0/publish/
+.appsettings.json
+Migrations/*
