@@ -1,0 +1,27 @@
+﻿@page "/accept/{delyId}/{deliveryman}"
+@using RestaurantDaoBase.Models;
+@using System.Net.Http;
+@using System.Net.Http.Json;
+@using RestaurantDaoBase;
+@using Serilog;
+@inject NavigationManager NavigationManager
+
+@code {
+
+    [Parameter]
+    public string deliveryman { get; set; }
+    [Parameter]
+    public string delyId { get; set; }
+
+    public HttpClient httpClient = new HttpClient();
+    protected override async Task OnInitializedAsync()
+    {       
+        httpClient.BaseAddress = new Uri("http://localhost:5175/");
+        var response = (await httpClient.PutAsJsonAsync<bool>($"api/delivery/Accept/" + delyId + "/" + deliveryman,true));
+        if (response.IsSuccessStatusCode == true)
+        {
+            //Log.Debug("render start");
+            NavigationManager.NavigateTo("/accepted", forceLoad: true);
+        }
+    }
+}
