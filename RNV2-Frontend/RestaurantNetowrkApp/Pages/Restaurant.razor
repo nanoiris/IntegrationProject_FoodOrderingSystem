@@ -133,11 +133,13 @@
     bool firstRender = true;
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (FeaturedMenuItems.Count != 0)
         {
             await JSRuntime.InvokeAsync<object>("restaurantSlick");
-            firstRender = false;
+            //firstRender = false;
         }
+        await base.OnAfterRenderAsync(firstRender);
+
     }
 
     public RestaurantDto restaurant = new RestaurantDto();
