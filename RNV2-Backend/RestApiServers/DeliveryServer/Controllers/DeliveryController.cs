@@ -25,7 +25,7 @@ namespace DeliveryServer.Controllers
         }
 
         [HttpGet("{deliveryMan}/{status}")]
-        public Task<List<Delivery>> ByDeliveryManAndStatus(string deliveryMan,DeliveryStatusEnum status)
+        public Task<List<Delivery>> ByDeliveryManAndStatus(string deliveryMan, DeliveryStatusEnum status)
         {
             return service.ListDeliveriesByStatus(deliveryMan, status);
         }
@@ -45,7 +45,7 @@ namespace DeliveryServer.Controllers
         [HttpGet("{restaurantId}/{email}/{status}")]
         public Task<List<Delivery>> Search(string restaurantId, string email, DeliveryStatusEnum status)
         {
-            return service.Search(restaurantId,email, status);
+            return service.Search(restaurantId, email, status);
         }
 
         [HttpGet("{restaurantId}/{email}")]
@@ -55,7 +55,7 @@ namespace DeliveryServer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> NewOne([FromBody]Delivery model)
+        public async Task<IActionResult> NewOne([FromBody] Delivery model)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace DeliveryServer.Controllers
         }
 
         [HttpPut("{id}/{status}")]
-        public async Task<IActionResult> DeliveryStatus(string id,DeliveryStatusEnum status)
+        public async Task<IActionResult> DeliveryStatus(string id, DeliveryStatusEnum status)
         {
             var result = await service.UpdateDeliveryStatus(id, status);
             return Ok(new AppResult("", result));
@@ -76,7 +76,7 @@ namespace DeliveryServer.Controllers
         [HttpPut("{id}/{deliveryMan}")]
         public async Task<IActionResult> Accept(string id, string deliveryMan)
         {
-            var result = await service.Accept(id,deliveryMan);
+            var result = await service.Accept(id, deliveryMan);
             return Ok(new AppResult("", result));
         }
 
@@ -95,6 +95,13 @@ namespace DeliveryServer.Controllers
         public async Task<IActionResult> Reject(string id, string deliveryMan)
         {
             var result = await service.Reject(id, deliveryMan);
+            return Ok(new AppResult("", result));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Pickup(string id)
+        {
+            var result = await service.Pickup(id);
             return Ok(new AppResult("", result));
         }
 

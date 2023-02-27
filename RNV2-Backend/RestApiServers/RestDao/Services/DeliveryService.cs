@@ -164,6 +164,23 @@ namespace RestaurantDao.Services
             }
         }
 
+        public async Task<bool> Pickup(string deliveryId)
+        {
+            using (var ctx = new DeliveryContext())
+            {
+                var row = await ctx.Deliveries.FindAsync(deliveryId);
+                if (row == null) return false;
+                //if (row.Status != DeliveryStatusEnum.Accept && row.Status != DeliveryStatusEnum.Assigned)
+                if (row.Status != DeliveryStatusEnum.Accept)
+                    return false;
+
+                row.Status = DeliveryStatusEnum.PickedUp;
+                row.PickupTime = DateTime.Now;
+                var result = await ctx.SaveChangesAsync();
+                return result == 1 ? true : false;
+            }
+        }
+
         public async Task<bool> Assign(AssignForm form)
         {
             using (var ctx = new DeliveryContext())
