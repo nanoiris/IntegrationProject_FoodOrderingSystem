@@ -103,7 +103,7 @@ namespace RestaurantDao.Services
                     return ctx.Deliveries.Take(20).Where(x => x.Restaurant.Id == restaurantId && x.CustomerName.Contains(email))
                         .ToListAsync();
             }
-        } 
+        }
         public async Task<bool> UpdateDeliveryStatus(string deliveryId, DeliveryStatusEnum newStatus)
         {
             using (var ctx = new DeliveryContext())
@@ -122,11 +122,11 @@ namespace RestaurantDao.Services
             using (var ctx = new DeliveryContext())
             {
                 var row = await ctx.Deliveries.FindAsync(deliveryId);
-                if(row == null) return false;
-                if (row.Status != DeliveryStatusEnum.Pending)
+                if (row == null) return false;
+                if (row.Status != DeliveryStatusEnum.Pending && row.Status != DeliveryStatusEnum.Assigned)
                     return false;
 
-                row.DeliveryMan= deliveryMan;
+                row.DeliveryMan = deliveryMan;
                 row.AcceptTime = DateTime.Now;
                 row.Status = DeliveryStatusEnum.Accept;
                 var result = await ctx.SaveChangesAsync();
@@ -153,11 +153,29 @@ namespace RestaurantDao.Services
             {
                 var row = await ctx.Deliveries.FindAsync(deliveryId);
                 if (row == null) return false;
-                if (row.Status != DeliveryStatusEnum.Accept && row.Status != DeliveryStatusEnum.Assigned)
+                //if (row.Status != DeliveryStatusEnum.Accept && row.Status != DeliveryStatusEnum.Assigned)
+                if (row.Status != DeliveryStatusEnum.PickedUp)
                     return false;
 
                 row.Status = DeliveryStatusEnum.Completed;
-                row.DeliveryTime= DateTime.Now;
+                row.DeliveryTime = DateTime.Now;
+                var result = await ctx.SaveChangesAsync();
+                return result == 1 ? true : false;
+            }
+        }
+
+        public async Task<bool> Pickup(string deliveryId)
+        {
+            using (var ctx = new DeliveryContext())
+            {
+                var row = await ctx.Deliveries.FindAsync(deliveryId);
+                if (row == null) return false;
+                //if (row.Status != DeliveryStatusEnum.Accept && row.Status != DeliveryStatusEnum.Assigned)
+                if (row.Status != DeliveryStatusEnum.Accept)
+                    return false;
+
+                row.Status = DeliveryStatusEnum.PickedUp;
+                row.PickupTime = DateTime.Now;
                 var result = await ctx.SaveChangesAsync();
                 return result == 1 ? true : false;
             }

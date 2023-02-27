@@ -48,7 +48,7 @@
                             <i class="feather-archive"></i>Details
                         </a>
                          <br>
-                        <a a href="/Order/Details/@item.Id">
+                        <a a href="/accept/@item.Id/@item.DeliveryMan">
                             <i class="feather-airplay"></i>Accept
                         </a>
                 </td>        
@@ -67,7 +67,6 @@
     public HttpClient httpClient = new HttpClient();
     protected override async Task OnInitializedAsync()
     {
-        //Log.Debug("render start");
         httpClient.BaseAddress = new Uri("http://localhost:5175/");
         restDelivery = new List<Delivery>();
         restDelivery = (await httpClient.GetFromJsonAsync<List<Delivery>>($"api/delivery/ActiveList")).ToList();

@@ -1,0 +1,27 @@
+﻿@page "/complete/{delyId}"
+@using RestaurantDaoBase.Models;
+@using System.Net.Http;
+@using System.Net.Http.Json;
+@using RestaurantDaoBase;
+@using Serilog;
+@inject NavigationManager NavigationManager
+
+@code {
+    
+    [Parameter]
+    public string delyId { get; set; }
+
+    public HttpClient httpClient = new HttpClient();
+    protected override async Task OnInitializedAsync()
+    {
+        httpClient.BaseAddress = new Uri("http://localhost:5175/");
+        var response = (await httpClient.PutAsJsonAsync<bool>($"api/delivery/Complete/" + delyId, true));
+        if (response.IsSuccessStatusCode)
+        {
+            //Log.Debug("render start");
+            NavigationManager.NavigateTo("/completed", forceLoad: true);
+        }
+        else
+            NavigationManager.NavigateTo("/pickedup", forceLoad: true);
+    }
+}

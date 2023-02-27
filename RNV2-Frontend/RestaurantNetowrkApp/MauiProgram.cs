@@ -4,6 +4,7 @@ using RestaurantNetowrkApp.Services;
 using RestaurantNetowrkApp.Services.IServices;
 using Serilog;
 using Serilog.Events;
+using System.Net.NetworkInformation;
 
 namespace RestaurantNetowrkApp;
 
@@ -24,15 +25,16 @@ public static class MauiProgram
 
         builder.Services.AddMauiBlazorWebView();
 
-		//builder.Services.AddHttpClient<IRestaurantService, RestaurantService>(client =>
-		//{
-		//	client.BaseAddress = new Uri("https://localhost:5064/");
-		//});
+        //builder.Services.AddHttpClient<IRestaurantService, RestaurantService>(client =>
+        //{
+        //    client.BaseAddress = new Uri("https://localhost:5064/");
+        //});
 
-		builder.Services.AddScoped<SessionStorageAccessor>();
+        builder.Services.AddScoped<SessionStorageAccessor>();
+
 
 #if DEBUG
-		builder.Services.AddBlazorWebViewDeveloperTools();
+        builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
 #endif
         builder.Logging.AddSerilog(dispose: true);
