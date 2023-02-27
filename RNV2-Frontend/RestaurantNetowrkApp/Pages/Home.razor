@@ -42,7 +42,7 @@
             {
                 <div class="cat-item px-1 py-3">
                     <a class="d-block text-center" href="">
-                        <img src="img/rest/@category.Logo" class="img-fluid mb-2 shadow">
+                        <img src="http://fsd05rnv.eastus.cloudapp.azure.com:5000/img/share/@category.Logo" class="img-fluid mb-2 shadow">
                         <p class="m-0 small">@category.Name</p>
                     </a>
                 </div>
@@ -88,21 +88,21 @@
        
     </div>
 </div>
-<RestaurantFilter />
+<RestaurantFilter restCategories="@restCategories" />
 <NavMenuFooter />
 
 @code {
     [Parameter]
     public string msg{ get; set; }
 
-    bool firstRender = true;
+    //bool firstRender = true;
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await JSRuntime.InvokeAsync<object>("homeSlick");
-            firstRender = false;
+            //firstRender = false;
         }
 
     }
@@ -116,7 +116,7 @@
     protected override async Task OnInitializedAsync()
     {
         Log.Debug("render start");
-        httpClient.BaseAddress = new Uri("http://localhost:5064/");
+        httpClient.BaseAddress = new Uri("http://fsd05rnv.eastus.cloudapp.azure.com:5064/");
 
         restCategories = (await httpClient.GetFromJsonAsync<List<RestCategoryDto>>($"api/restcategory/list")).ToList();  
         trendingRests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/listweeklytrends")).ToList();

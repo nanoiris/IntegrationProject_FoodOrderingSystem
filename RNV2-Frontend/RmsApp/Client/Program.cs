@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using RmsApp.Services;
 using RmsApp;
 using Microsoft.Extensions.Logging;
+using Blazored.LocalStorage;
+
 
 namespace RmsApp
 {
@@ -30,7 +32,13 @@ namespace RmsApp
             {
                 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
             });
+            // builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
+            // {
+            //     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+            // });
             builder.Services.AddFlashMessageService();
+            builder.Services.AddBlazoredLocalStorage();
+
 
             var host = builder.Build();
             // builder.Logging.ClearProviders();
