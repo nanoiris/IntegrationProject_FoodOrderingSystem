@@ -133,13 +133,13 @@ namespace RmsApp.Services
                 Console.WriteLine("categoryId is: " + menuItem.CategoryId);
                 multipartContent.Add(new StringContent(menuItem.IsFeatured.ToString()), "IsFeatured");
                 Console.WriteLine("is featured is: " + menuItem.IsFeatured);
-                Console.WriteLine(menuItem.UploadImg?.Name);
+                Console.WriteLine("uploadimg is: " + menuItem.UploadImg?.Name);
                 // below are the 3 line for attach images 
                 var img = new StreamContent(menuItem.UploadImg?.OpenReadStream());
                 img.Headers.ContentType = new MediaTypeHeaderValue(menuItem.UploadImg.ContentType);
                 multipartContent.Add(content: img, "UploadImg", fileName: menuItem.UploadImg.Name);
                 // above are the 3 line for attach images 
-                var response = await _httpClient.PutAsJsonAsync($"api/menu/updatedone", multipartContent);
+                var response = await _httpClient.PutAsync($"api/menu/updatedone", multipartContent);
                 Console.WriteLine("edit menu, after PUT");
                 if (response.IsSuccessStatusCode)
                 {
