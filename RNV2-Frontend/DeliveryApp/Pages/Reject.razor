@@ -16,12 +16,13 @@
     public HttpClient httpClient = new HttpClient();
     protected override async Task OnInitializedAsync()
     {
-        httpClient.BaseAddress = new Uri("http://localhost:5175/");
+        //httpClient.BaseAddress = new Uri("http://localhost:5175/");
+        httpClient.BaseAddress = new Uri("http://ec2-18-214-61-45.compute-1.amazonaws.com:5175/");
         var response = (await httpClient.PutAsJsonAsync<bool>($"api/delivery/Reject/" + delyId + "/" + deliveryman, true));
         if (response.IsSuccessStatusCode == true)
         {
             //Log.Debug("render start");
-            NavigationManager.NavigateTo("/home", forceLoad: true);
+            NavigationManager.NavigateTo("/assigned", forceLoad: true);
         }
     }
 }

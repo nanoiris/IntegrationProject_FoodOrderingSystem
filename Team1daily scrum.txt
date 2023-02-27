@@ -445,9 +445,10 @@ todo: - make order implement
 
 2023/02/27 Monday Wenzhe
 1. Done / not done since last scrum:
-
+Setup cloud env. for demo
 2. To do until next Scrum:
-
+show the demo
+work on OSS client
 3. Need assistance / figure things out
 
 2023/02/27 Zibin 
