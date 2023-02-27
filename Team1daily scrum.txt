@@ -423,3 +423,38 @@ DMS web api
 continue DMS web API 
 3. Need assistance / figure things out
 
+=============================================================
+2023/02/27 Monday Yi 
+1. Done / not done since last scrum:
+put RMS on cloud
+test RMS on cloud 
+2. To do until next Scrum:
+fix edit menu item bugs 
+finish item edit page
+finish profile edit page 
+3. Need assistance / figure things out
+
+2023/02/27 Monday Xiao Pei
+1. Done / not done since last scrum:
+-finish Register/Login/Logout  
+-add custom flash message & sessionstorage  
+-fix slick javascript invoke bug
+2. To do until next Scrum:
+todo: - make order implement
+3. Need assistance / figure things out
+
+2023/02/27 Monday Wenzhe
+1. Done / not done since last scrum:
+Setup cloud env. for demo
+2. To do until next Scrum:
+show the demo
+work on OSS client
+3. Need assistance / figure things out
+
+2023/02/27 Zibin 
+1. Done / not done since last scrum:
+finish all the status change at delivery order   
+2. To do until next Scrum:
+work on sign up page
+3. Need assistance / figure things out
+
