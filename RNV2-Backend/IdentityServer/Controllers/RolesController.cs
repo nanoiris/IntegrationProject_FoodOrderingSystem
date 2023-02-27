@@ -33,14 +33,29 @@ namespace IdentityServer.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddOne([FromForm] AddRoleViewModel model)
+        public IdentityRole? AddOne([FromForm] AddRoleViewModel model)
         {
             logger.LogInformation("Enter add role");
             if (ModelState.IsValid)
             {
-                return Ok(roleService.AddRole(model.Name));
+               var result = roleService.AddRole(model.Name);
+               return result;
+                
             }
-            return BadRequest("Some properties are not valid");
+            return null;
+        }
+
+        [HttpPut]
+        public IActionResult UpdateOne([FromForm] UpdateRoleViewModel model)
+        {
+            logger.LogInformation("Enter update role");
+            if (ModelState.IsValid)
+            {
+                var result = roleService.UpdateRole(model.Id, model.Name);
+
+                return Ok(roleService.UpdateRole(model.Id,model.Name));
+            }
+            return BadRequest(new AppResult("Some properties are not valid",false));
         }
 
         [HttpDelete("{id}")]
@@ -48,7 +63,11 @@ namespace IdentityServer.Controllers
         {
             logger.LogInformation("Enter Delete Role ById");
             var result = roleService.DeleteRole(id);
-            return Ok(result);
+            if(result.IsSuccess == true)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
     }    
 }

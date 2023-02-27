@@ -1,22 +1,61 @@
-﻿<div class="btn-group">
+﻿@inject Data.SessionStorageAccessor SessionStorageAccessor;
+
+<div class="btn-group">
     <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="feather-menu"></i>
     </button>
     <div class="dropdown-menu dropdown-menu-right">
         <a class="dropdown-item" href=""><i class="feather-home mr-2"></i> Homepage</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="/Account/Login"><i class="feather-user mr-2"></i>Login</a>
-        <a class="dropdown-item" href="/Account/Signup"><i class="feather-edit-2 mr-2"></i>Register</a>
-        <a class="dropdown-item" href="forgot_password.html"><i class="feather-lock mr-2"></i>Forgot Password</a>
-        <a class="dropdown-item" href="/Account/Profile/1"><i class="feather-user mr-2"></i> Profile</a>
+        @if (!islogin)
+        {
+            <a class="dropdown-item" href="/Account/Login"><i class="feather-user mr-2"></i>Login</a>
+            <a class="dropdown-item" href="/Account/Signup"><i class="feather-edit-2 mr-2"></i>Register</a>
+        }
+        @if (islogin)
+        {
+            <a class="dropdown-item" @onclick="logout"><i class="feather-user mr-2"></i>Logout</a>
+            <a class="dropdown-item" href="forgot_password.html"><i class="feather-lock mr-2"></i>Forgot Password</a>
+            <a class="dropdown-item" href="/Account/Profile/1"><i class="feather-user mr-2"></i> Profile</a>  
+        }
+           
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="/Restaurant/Trending"><i class="feather-trending-up mr-2"></i> Trending</a>
-        <a class="dropdown-item" href="/Order/Review/1"><i class="feather-shopping-bag mr-2"></i> Checkout</a>
-        <a class="dropdown-item" href="/Order/Checkout/1"><i class="feather-credit-card mr-2"></i> Payment</a>
+        @if (islogin)
+        {
+            <a class="dropdown-item" href="/Order/Review/1"><i class="feather-shopping-bag mr-2"></i> Checkout</a>
+            <a class="dropdown-item" href="/Order/Checkout/1"><i class="feather-credit-card mr-2"></i> Payment</a>
+        }
     </div>
 
 </div>
 
 @code {
+    [Parameter]
+    public EventCallback<string> showMsg { get; set; }
 
+    private bool islogin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
+        if (userEmail == null)
+        {
+            islogin = false;
+        }
+        else
+        {
+            islogin = true;
+        }
+    }
+
+    private async void logout()
+    {
+        HttpClient httpClient = new HttpClient();
+        var response = await httpClient.GetAsync("http://localhost:5191/api/auth/logout");
+        await SessionStorageAccessor.RemoveAsync("userEmail");
+        islogin = false;
+        await InvokeAsync(() => StateHasChanged());
+        showMsg.InvokeAsync("Log out secceed!");
+    }
 }

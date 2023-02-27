@@ -13,7 +13,7 @@ namespace IdentityServer.Services
             this.roleManager = roleManager;
         }
 
-        public AppResult AddRole(string name)
+        public IdentityRole? AddRole(string name)
         {
             AppResult appResult = new AppResult($"Add the new role(name={name} successfully",true);
 
@@ -26,7 +26,28 @@ namespace IdentityServer.Services
                 .GetAwaiter().GetResult();
             if (!result.Succeeded)
             {
-                appResult = new AppResult("OssService.AddRole : cannot add the new role", false);
+                //appResult = new AppResult("OssService.AddRole : cannot add the new role", false);
+                //appResult.Errors = result.Errors.Select(x => x.Description);
+                return null;
+            }
+            return roleManager.FindByNameAsync(name).GetAwaiter().GetResult();
+        }
+
+        public AppResult UpdateRole(string id,string name)
+        {
+            AppResult appResult = new AppResult($"Update the role(name={name} successfully", true);
+
+            IdentityRole row = roleManager.FindByIdAsync(id)
+                .GetAwaiter().GetResult();
+            if(row == null)
+            {
+                return new AppResult("OssService.UpdateRole :no this role", false);
+            }
+            row.Name = name;
+            var result = roleManager.UpdateAsync(row).GetAwaiter().GetResult();
+            if (!result.Succeeded)
+            {
+                appResult = new AppResult("OssService.UpdateRole : cannot add the new role", false);
                 appResult.Errors = result.Errors.Select(x => x.Description);
             }
             return appResult;
