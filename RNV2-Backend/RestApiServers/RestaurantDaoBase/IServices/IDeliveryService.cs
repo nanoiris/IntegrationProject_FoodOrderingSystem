@@ -24,6 +24,7 @@ namespace RestaurantDaoBase.IServices
         public Task<bool> Reject(string deliveryId, string deliveryMan);
         public Task<bool> Pending(string deliveryId);
         public Task<bool> Complete(string deliveryId);
+        public Task<bool> Pickup(string deliveryId);
         public Task<bool> Assign(AssignForm form);
     }
 }
