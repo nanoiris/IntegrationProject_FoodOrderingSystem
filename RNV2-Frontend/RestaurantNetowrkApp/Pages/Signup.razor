@@ -91,7 +91,7 @@
         img.Headers.ContentType = new MediaTypeHeaderValue(user.UploadImg.ContentType);
         multipartContent.Add(content: img, "UploadImg", fileName: user.UploadImg.Name);
 
-        HttpResponseMessage response = await httpClient.PostAsync("http://localhost:5191/api/auth/register", multipartContent);
+        HttpResponseMessage response = await httpClient.PostAsync("http://fsd05rnv.eastus.cloudapp.azure.com:5191/api/auth/register", multipartContent);
 
         if (response.IsSuccessStatusCode)
         {
