@@ -12,11 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityServer.Migrations
 {
     [DbContext(typeof(AppCtx))]
-<<<<<<<< Updated upstream:RNV2-Backend/IdentityServer/Migrations/20230224201708_CreateDatabase.Designer.cs
-    [Migration("20230224201708_CreateDatabase")]
-========
+
     [Migration("20230224204459_CreateDatabase")]
->>>>>>>> Stashed changes:RNV2-Backend/IdentityServer/Migrations/20230224204459_CreateDatabase.Designer.cs
     partial class CreateDatabase
     {
         /// <inheritdoc />

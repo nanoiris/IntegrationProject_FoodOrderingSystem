@@ -79,6 +79,7 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
         <input type="file" OnChange="@OnFileChange"/>
         @* <img src="@Item.Logo" width="50px" height="50px" /> *@
          <img src="@(Item.Logo != null ? $"/img/{Item.Logo}" : null)" width="100px" height="100px"/>
+          <img src="@(Item.Logo != null ? $"fsd05rnv.eastus.cloudapp.azure.com:5000/img/share/{Item.Logo}" : null)" width="100px" height="100px"/>
         </div>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>

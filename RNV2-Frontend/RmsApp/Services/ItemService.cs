@@ -29,7 +29,7 @@ namespace RmsApp.Services
         public ItemService(HttpClient httpClient, IFlashMessageService flashMessageService)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("http://localhost:5064/");
+            _httpClient.BaseAddress = new Uri(Constants.AzureRestUri);
             _flashMessageService = flashMessageService;
         }
 
