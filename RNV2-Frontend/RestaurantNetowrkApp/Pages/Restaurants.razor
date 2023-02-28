@@ -27,20 +27,20 @@
      </div>
 </div>
 
-<RestaurantFilter />
+@*<RestaurantFilter />*@
 <NavMenuFooter />
 
 @code{
     public List<RestaurantDto> allRests { get; set; }
 
-    public HttpClient httpClient = new HttpClient();
+    public HttpClient httpRest = new HttpClient();
 
     protected override async Task OnInitializedAsync()
     {
-        httpClient.BaseAddress = new Uri("http://fsd05rnv.eastus.cloudapp.azure.com:5064/");
+        httpRest.BaseAddress = new Uri(Data.Constants.RestUri);
 
         allRests = new List<RestaurantDto>();
 
-        allRests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/list")).ToList();
+        allRests = (await httpRest.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/list")).ToList();
     }
 }

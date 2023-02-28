@@ -80,22 +80,22 @@
                                 <div class="p-3 border-bottom gold-members d-flex">
                                     <div class="media">
                                         <div class="mr-3 font-weight-bold text-danger ml-1">
-                                            <img src="img/rest/@menuItem.Logo" width="40px" height="40px">
+                                            <img src="@(Data.Constants.imgUrl+@menuItem.Logo)" width="40px" height="40px">
                                         </div>
                                         <div class="media-body">
                                             <h6 class="mb-1">@menuItem.Name </h6>
                                             <p class="text-muted mb-0">$@menuItem.Price</p>
                                         </div>
                                     </div>
-                                    <span class="ml-auto">
+                                    <span class="ml-auto" id=@("add" + menuItem.Id)>
                                         <a @onclick="() => addToCart(menuItem)"
                                            class="btn btn-outline-secondary btn-sm add-sm-btn">ADD</a>
                                     </span>
-                                @*    <div class="osahan-quantity ml-auto">
+                                    <div class="osahan-quantity ml-auto" style="display:none" id=@("quantity" + menuItem.Id)>
                                         <input type="button" value="-" class="minus">
-                                        <input type="text" name="quantity" value="1" title="Qty" class="qty" size="4">
+                                        <input type="text" id=@("iptQty" + menuItem.Id) name="quantity" value="1" title="Qty" class="qty" size="4">
                                         <input type="button" value="+" class="plus">
-                                    </div>*@
+                                    </div>
                                 </div>
                             }
                         </div>
@@ -130,35 +130,39 @@
     [Parameter]
     public string restId { get; set; }
 
-    bool firstRender = true;
-    protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (FeaturedMenuItems.Count != 0)
-        {
-            await JSRuntime.InvokeAsync<object>("restaurantSlick");
-            //firstRender = false;
-        }
-        await base.OnAfterRenderAsync(firstRender);
-
-    }
+    private bool render = true;
+    private OrderDto orderCart = null;
 
     public RestaurantDto restaurant = new RestaurantDto();
     public List<MenuCategoryDto> menuCategories = new List<MenuCategoryDto>();
     public List<MenuItemDto> FeaturedMenuItems = new List<MenuItemDto>();
 
-    public HttpClient httpClient = new HttpClient();
+    public HttpClient httpRest = new HttpClient();
     private HttpClient httpOrder = new HttpClient();
+
+    private string orderBaseHttp = Data.Constants.OrderUri;
 
     protected override async Task OnInitializedAsync()
     {
         Log.Debug("Rest:" + restId);
-        httpClient.BaseAddress = new Uri("http://localhost:5064/");
-        //httpOrder.BaseAddress = new Uri("http://localhost:5275/");
+        httpRest.BaseAddress = new Uri(Data.Constants.RestUri);
+        httpOrder.BaseAddress = new Uri(Data.Constants.OrderUri);
 
+        restaurant = await httpRest.GetFromJsonAsync<RestaurantDto>($"api/restaurant/one/"+ restId);
+        menuCategories = (await httpRest.GetFromJsonAsync<List<MenuCategoryDto>>($"api/menucategory/list/" + restId)).ToList();
+        FeaturedMenuItems = (await httpRest.GetFromJsonAsync<List<MenuItemDto>>($"api/menucategory/featuredlist/{restId}")).ToList();
+        getCart();
+    }
 
-        restaurant = await httpClient.GetFromJsonAsync<RestaurantDto>($"api/restaurant/one/"+ restId);
-        menuCategories = (await httpClient.GetFromJsonAsync<List<MenuCategoryDto>>($"api/menucategory/list/" + restId)).ToList();
-        FeaturedMenuItems = (await httpClient.GetFromJsonAsync<List<MenuItemDto>>($"api/menucategory/featuredlist/{restId}")).ToList();
+    //invoke javascript for slick
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (FeaturedMenuItems.Count != 0 && render)
+        {
+            await JSRuntime.InvokeAsync<object>("restaurantSlick");
+            //firstRender = false;
+        }
+        await base.OnAfterRenderAsync(firstRender);
 
     }
 
@@ -169,63 +173,73 @@
         {
             string msg = "Please login to make an order";
             NavigationManager.NavigateTo($"/Account/Login/{msg}");
+            render = false;
         }
         else
         {
-            // check if this user has an unpaid order in this restaurant
+            if (orderCart == null)
+            {
+                var cart = new
+                {
+                    email = userEmail,
+                    menuItem = menuItem,
+                    restaurantId = restId,
+                    restaurantName = restaurant.Name,
+                };
+                var response = await httpOrder.PostAsJsonAsync("http://localhost:5275/api/cart/newone", cart);
+            }
 
-            string str = JsonSerializer.Serialize(
-             new {
-                 userName = userEmail,
-                 status = 0
-             }
-           );
+
+        }     
+
+    }
+
+    // check if this user has an unpaid order in this restaurant
+    private async void getCart()
+    {
+        string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
+
+        if (userEmail != null)
+        {
+            string requestBody = JsonSerializer.Serialize(
+                new
+                {
+                    userName = userEmail,
+                    status = 0,
+                    restaurantId = restId
+                }
+            );
+
             var request = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = new Uri("http://localhost:5275/api/order/listbyuserandstatus"),
-                    Content = new StringContent(str, Encoding.UTF8, MediaTypeNames.Application.Json /* or "application/json" in older versions */),
+                    RequestUri = new Uri(orderBaseHttp + "api/order/search"),
+                    Content = new StringContent(requestBody, Encoding.UTF8, "application/json"),
                 };
 
+            Log.Debug("request uri:"+ request.RequestUri.ToString());
+            Log.Debug("request content:" + (await request.Content.ReadAsStringAsync()));
 
-            var response = await httpOrder.SendAsync(request);
-            if (response.IsSuccessStatusCode)
-            {
-                var orders = (await response.Content.ReadFromJsonAsync<List<OrderDto>>()).ToList();
-                bool newCart = true;
-                if (orders.Count > 0)
-                {
-                    foreach(var order in orders)
-                    {
-                        if(order.RestaurantId == restId)
-                        {
-                            // this user already has an order unpaid in this restaurant, show it
-                            newCart = false;
-                            // cart order
-                            break;
+            HttpResponseMessage response = await httpOrder.SendAsync(request);
+            response.EnsureSuccessStatusCode();
 
-                        }
-                    }
-                }
-                if (newCart == true)
-                {
-                    // this user dosn't have an order unpaid in this restaurant, create a new order with status "cart"
-                    var cart = new
-                    {
-                        email = userEmail,
-                        menuItem = menuItem,
-                        restaurantId = restId,
-                        restaurantName = restaurant.Name,
-                    };
-                    response = await httpOrder.PostAsJsonAsync("http://localhost:5275/api/cart/newone", cart);
-                }
-            }
-            else
-            {
-                throw new ApplicationException("Failed to get order");
-            }
+            var responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            Log.Debug(responseBody);
+
+            var orders = JsonSerializer.Deserialize<List<OrderDto>>(responseBody);
+
+            orderCart = orders.FirstOrDefault(x => x.RestaurantId == restId);
+            showCart();
+
         }     
+    }
 
+    private async void showCart()
+    {
+        foreach (var orderItem in orderCart.ItemList)
+        {
+            await JSRuntime.InvokeAsync<object>("showItemInCart", orderItem.Item.Id, orderItem.Qty.ToString());
+        }
     }
 
 }
