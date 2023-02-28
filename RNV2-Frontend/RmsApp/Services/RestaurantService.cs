@@ -9,10 +9,11 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using RestaurantDaoBase.Models;
+using RmsApp.Dtos;
 using RmsApp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Components;
+using System.Net.Http.Headers;
 
 namespace RmsApp.Services
 {
@@ -26,47 +27,80 @@ namespace RmsApp.Services
         public RestaurantService(HttpClient httpClient, IFlashMessageService flashMessageService)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(Constants.AzureRestUri);
+            _httpClient.BaseAddress = new Uri(Constants.RestUri);
             _flashMessageService = flashMessageService;
         }
 
-        public Restaurant Restaurant { get; set; }
+        public RestaurantDto Restaurant { get; set; }
 
-        public async Task<Restaurant?> GetOneRestaurantAsync(string id)
+        public async Task<RestaurantDto?> GetOneRestaurantAsync(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentException("Restaurant ID cannot be null or empty.", nameof(id));
-            }
             var response = await _httpClient.GetAsync($"api/restaurant/one/{id}");
+            Console.WriteLine("rest id is" + id);
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<Restaurant>();
+                try
+                {
+                    Console.WriteLine("test");
+                    return await response.Content.ReadFromJsonAsync<RestaurantDto>();
+
+                }
+                catch (JsonException ex)
+                {
+                    // Console.WriteLine("Failed to deserialize response: {ErrorMessage}", ex.Message);
+                    return null;
+                }
             }
-            Console.WriteLine("Failed to get restaurant with ID {RestaurantId}. StatusCode: {StatusCode}", id, response.StatusCode);
+            Console.WriteLine("Failed to get restaurant with ID {id}. StatusCode: {StatusCode}");
+
             return null;
         }
 
 
-        public async Task<Restaurant?> UpdateRestaurantAsync(RestaurantForm form)
+
+        public async Task UpdateRestaurantAsync(RestaurantDto restaurant)
         {
-            if (form == null)
+            try
             {
-                throw new ArgumentNullException(nameof(form));
+                Console.WriteLine("start edit menu...");
+                var multipartContent = new MultipartFormDataContent();
+                multipartContent.Add(new StringContent(restaurant.Id), "id");
+                multipartContent.Add(new StringContent(restaurant.Name), "Name");
+                multipartContent.Add(new StringContent(restaurant.Description), "Description");
+                multipartContent.Add(new StringContent(restaurant.PhoneNo), "PhoneNo");
+                multipartContent.Add(new StringContent(restaurant.Address.Street), "Street");
+                multipartContent.Add(new StringContent(restaurant.Address.City), "City");
+                multipartContent.Add(new StringContent(restaurant.Address.State), "State");
+                multipartContent.Add(new StringContent(restaurant.Address.PostalCode), "PostalCode");
+                multipartContent.Add(new StringContent(restaurant.Address.Country), "Country");
+                multipartContent.Add(new StringContent(restaurant.CategoryId), "CategoryId");
+                multipartContent.Add(new StringContent(restaurant.Email), "email");
+                multipartContent.Add(new StringContent(restaurant.IsFeatured.ToString()), "IsFeatured");
+                Console.WriteLine("is featured is: " + restaurant.IsFeatured);
+                Console.WriteLine("uploadimg is: " + restaurant.UploadImg?.Name);
+                // below are the 3 line for attach images 
+                var img = new StreamContent(restaurant.UploadImg?.OpenReadStream());
+                img.Headers.ContentType = new MediaTypeHeaderValue(restaurant.UploadImg.ContentType);
+                multipartContent.Add(content: img, "UploadImg", fileName: restaurant.UploadImg.Name);
+                // above are the 3 line for attach images 
+                var response = await _httpClient.PutAsync($"api/restaurant/updatedone", multipartContent);
+                Console.WriteLine("update rest, after PUT");
+                if (response.IsSuccessStatusCode)
+                {
+                    _flashMessageService.SuccessMessage = "rest update successfully...";
+                }
+                else
+                {
+                    _flashMessageService.FailureMessage = "Failed to update the rest...";
+                }
             }
-
-            var response = await _httpClient.PutAsJsonAsync($"api/restaurant/updatedone", form);
-            if (!response.IsSuccessStatusCode)
+            catch (Exception ex)
             {
-                Console.WriteLine("Failed to update restaurant with ID {RestaurantId}. StatusCode: {StatusCode}", form.Id, response.StatusCode);
-                throw new ApplicationException("Failed to update restaurant.");
+                Console.WriteLine(ex.Message);
+                _flashMessageService.FailureMessage = "Failed to update the menu item...";
             }
-
-            return await response.Content.ReadFromJsonAsync<Restaurant>();
         }
 
 
     }
-
-
 }
