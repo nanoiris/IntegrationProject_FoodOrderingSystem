@@ -483,6 +483,9 @@ RMS edit restaurant profile
 
 2023/02/28 Tuesday Zibin 
 1. Done / not done since last scrum:
+change to AWS hosted
+work on sign up and login in
 2. To do until next Scrum:
+continute sign up an login in
 3. Need assistance / figure things out
 
