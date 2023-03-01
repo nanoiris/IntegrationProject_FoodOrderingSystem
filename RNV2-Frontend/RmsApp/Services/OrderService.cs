@@ -1,41 +1,62 @@
-using System;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using RmsApp.Dtos;
-using RmsApp.Services;
+// using System;
+// using System.Linq;
+// using System.Threading.Tasks;
+// using System.Collections.Generic;
+// using System.Net.Http;
+// using System.Text;
+// using System.Text.Json;
+// using RmsApp.Dtos;
+// using RmsApp.Services;
+// using System.Diagnostics;
+// using System.Net.Http.Json;
+// using Microsoft.Extensions.Logging;
+// using Microsoft.AspNetCore.Components;
+// using RestaurantDaoBase.Enums;
 
-namespace RmsApp.Services
-{
-    public class OrderService : IOrderService
-    {
-        private readonly HttpClient _httpClient;
+// namespace RmsApp.Services
+// {
+//     public class OrderService : IOrderService
+//     {
+//         private readonly HttpClient _httpClient;
+//         private readonly ILogger _logger;
+//         private readonly IFlashMessageService _flashMessageService;
 
-        public OrderService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
+//         public OrderService(HttpClient httpClient, IFlashMessageService flashMessageService)
+//         {
+//             _httpClient = httpClient;
+//             _httpClient.BaseAddress = new Uri(Constants.RestUri);
+//             _flashMessageService = flashMessageService;
+//         }
 
-        // public asyc Task<IEnumerable<OrderListDto>> ListActiveOrderAsync(int restaurantId)
-        // {
-        //     return await JsonSerializer.DeserializeAsync<IEnumerable<OrderListDto>>(
-        //         await _httpClient.GetStreamAsync("api/restaurant/1/employee"),
-        //         new JsonSerializerOptions
-        //         {
-        //             PropertyNameCaseInsensitive = true
-        //         });
+//         public Task<List<OrderViewDto>> ListCategoryAsync()
+//         {
+//             throw new NotImplementedException();
+//         }
 
-        // }
-        // Task<OrderDetailDto> FindOrderByIdAsync(int restaurantId, int orderId);
-        // Task UpdateOrderStatus(int restaurantId, int orderId, OrderStatusEnum newStatus);
-        // Task CancelOrderAsync(int restaurantId, int orderId, OrderStatusEnum newStatus);
+//         public async Task<List<OrderDto>> ListOrderAsync(string restaurantId, StatusEnum status)
+//         {
+//             List<OrderViewDto> orders = new List<OrderViewDto>();
+//             try
+//             {
+//                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/orders/list-by-restaurant-and-status", new RestAndStatusViewModel { RestaurantId = restaurantId, Status = status });
+//                 if (response.IsSuccessStatusCode)
+//                 {
+//                     orders = await response.Content.ReadFromJsonAsync<List<OrderViewDto>>();
+//                 }
+//                 else
+//                 {
+//                     _logger.LogError("Failed to get orders. Status code: {0}", response.StatusCode);
+//                 }
+//             }
+//             catch (Exception ex)
+//             {
+//                 _logger.LogError("Failed to get orders. Error: {0}", ex.Message);
+//             }
 
-    }
+//             return orders;
+//         }
+
+//     }
 
 
-}
+// }
