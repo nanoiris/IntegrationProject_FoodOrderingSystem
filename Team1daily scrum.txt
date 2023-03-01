@@ -504,7 +504,11 @@ RMS view order list
 
 2023/03/01 Wednesday  Xiao Pei
 1. Done / not done since last scrum:
+- show/hide between add and cart
+- increase & decrease quantity
 2. To do until next Scrum:
+- change price
+- checkout
 3. Need assistance / figure things out
 
 2023/03/01 Wednesday  Wenzhe
