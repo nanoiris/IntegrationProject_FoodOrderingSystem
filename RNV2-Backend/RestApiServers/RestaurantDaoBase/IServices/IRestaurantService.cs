@@ -23,7 +23,8 @@ namespace RestaurantDaoBase.IServices
 
         public Task<RestCategory?> FindCategory(string categoryId);
         public Task<bool> DeleteCategory(string categoryId);
-        public Task<bool> AddCategory(RestCategory category);
+        public Task<AppResult> AddCategory(RestCategory category);
         public Task<bool> UpdateCategory(RestCategory categor);
+        
     }
 }

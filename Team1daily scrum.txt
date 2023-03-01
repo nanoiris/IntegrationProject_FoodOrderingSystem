@@ -497,7 +497,9 @@ continute sign up an login in
 =============================================================
 2023/03/01 Wednesday Yi 
 1. Done / not done since last scrum:
+RMS edit restaurant 
 2. To do until next Scrum:
+RMS view order list 
 3. Need assistance / figure things out
 
 2023/03/01 Wednesday  Xiao Pei
@@ -512,7 +514,9 @@ continute sign up an login in
 
 2023/03/01 Wednesday  Zibin 
 1. Done / not done since last scrum:
+finished sign up pages
 2. To do until next Scrum:
+work on login in pages
 3. Need assistance / figure things out
 
 =============================================================

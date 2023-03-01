@@ -7,21 +7,21 @@ namespace RestaurantDao.Services
 {
     public partial class RestaurantService : IRestaurantService
     {
-        public async Task<bool> AddCategory(RestCategory category)
+        public async Task<AppResult> AddCategory(RestCategory category)
         {
             using (var ctx = new RestaurantContext())
             {
                var result = ctx.RestCategories.Where(x => x.Name == category.Name).CountAsync()
                     .GetAwaiter().GetResult();
                if (result > 0)
-                    return false;
+                    return new AppResult("The category name already exists",false);
                category.Id = Guid.NewGuid().ToString("N");
                //category.PartionKey = "Restaurant";
                ctx.Add(category);
                result = await ctx.SaveChangesAsync();
                if (result == 1)
-                    return true;
-                return false;
+                    return new AppResult(category.Id, true); ;
+                return new AppResult($"Add category failed,result = {result.ToString()}", false);
             }
         }
 

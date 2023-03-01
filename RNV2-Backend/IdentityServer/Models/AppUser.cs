@@ -28,6 +28,8 @@ namespace IdentityServer.Models
         [MaxLength(20)]
         public string? PostCode { get; set; }
 
+        public UserStatusEnum Status { get; set; }
+
         [NotMapped]
         public string? Role { get; set; }
     }

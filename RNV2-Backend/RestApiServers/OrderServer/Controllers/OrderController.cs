@@ -41,7 +41,7 @@ namespace OrderServer.Controllers
             return service.ListActiveOrder();
         }
 
-        [HttpGet]
+        [HttpPost]
         public Task<List<Order>> ListByUserAndStatus([FromBody]UserAndStatusViewModel model)
         {
             return service.ListOrderByUserAndStatus(model.UserName, model.Status);
@@ -62,7 +62,7 @@ namespace OrderServer.Controllers
             }
             return BadRequest(new AppResult("Cannot create the new cart", false));
         }
-        [HttpGet]
+        [HttpPost]
         public Task<List<Order>>? ListByRestaurantAndStatus([FromBody]RestAndStatusViewModel model)
         {
             if (ModelState.IsValid)
@@ -72,7 +72,7 @@ namespace OrderServer.Controllers
             return null;
         }
 
-        [HttpGet]
+        [HttpPost]
         public Task<List<Order>>? Search([FromBody] RestEmailAndStatusViewModel model)
         {
             if (ModelState.IsValid)
@@ -82,7 +82,7 @@ namespace OrderServer.Controllers
             return null;
         }
         
-        [HttpGet]
+        [HttpPost]
         public Task<List<Order>>? SearchWithoutStatus([FromBody] RestAndEmailViewModel model)
         {
             if (ModelState.IsValid)

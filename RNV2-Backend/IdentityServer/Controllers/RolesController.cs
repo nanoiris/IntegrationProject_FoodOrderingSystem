@@ -33,16 +33,18 @@ namespace IdentityServer.Controllers
         }
 
         [HttpPost]
-        public IdentityRole? AddOne([FromForm] AddRoleViewModel model)
+        public IActionResult AddOne([FromForm] AddRoleViewModel model)
         {
             logger.LogInformation("Enter add role");
             if (ModelState.IsValid)
             {
-               var result = roleService.AddRole(model.Name);
-               return result;
-                
+               AppResult result = roleService.AddRole(model.Name);
+                if (result.IsSuccess)
+                    return Ok(result);
+                else
+                    return BadRequest(result);   
             }
-            return null;
+            return BadRequest(new AppResult("Some properties are not valid", false));
         }
 
         [HttpPut]
