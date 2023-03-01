@@ -27,7 +27,7 @@ namespace RmsApp.Services
         public CategoryService(HttpClient httpClient, IFlashMessageService flashMessageService)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(Constants.AzureRestUri);
+            _httpClient.BaseAddress = new Uri(Constants.RestUri);
 
             _flashMessageService = flashMessageService;
         }

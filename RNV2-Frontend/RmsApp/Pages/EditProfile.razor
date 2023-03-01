@@ -4,7 +4,8 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @using RmsApp.Services
-@using RestaurantDaoBase.Models
+@using RmsApp.Dtos
+@inject IFlashMessageService FlashMessageService
 
 
 
@@ -13,58 +14,60 @@
 @if (restaurant != null)
 {
     <h2>@restaurant.Name</h2>
-    <EditForm Model="restaurant" >
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+    <form Model="restaurant" @onsubmit="UpdateRestaurant">
         <div class="row">
             <div class="col-md-6">
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label>Name</label>
                     <InputText class="form-control" @bind-Value="restaurant.Name" />
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label>Description</label>
                     <InputText class="form-control" @bind-Value="restaurant.Description" />
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label>Phone Number</label>
                     <InputText class="form-control" @bind-Value="restaurant.PhoneNo" />
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label>Email</label>
                     <InputText class="form-control" @bind-Value="restaurant.Email" />
                 </div>
+                 <div class="form-group mb-3">
+                    <label>Restaurant Cover Logo</label>
+                    <InputFile OnChange="OnFileChange" />
+                      <img src="@(restaurant.Logo != null ? $"/img/{restaurant.Logo}" : null)" width="100px" height="100px"/>
+                </div>
             </div>
             <div class="col-md-6">
-                <div class="form-group">
-                    <label>Address</label>
+                  @if (restaurant.Address != null)
+                {
+                    <div class="form-group mb-3">
+                        <label>Address</label>
                     <div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label>Street</label>
                             <InputText class="form-control" @bind-Value="restaurant.Address.Street" />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label>City</label>
                             <InputText class="form-control" @bind-Value="restaurant.Address.City" />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label>State</label>
                             <InputText class="form-control" @bind-Value="restaurant.Address.State" />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label>Postal Code</label>
                             <InputText class="form-control" @bind-Value="restaurant.Address.PostalCode" />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label>Country</label>
                             <InputText class="form-control" @bind-Value="restaurant.Address.Country" />
                         </div>
                     </div>
-                </div>
-                @* <div class="form-group">
-                    <label>Is Featured</label>
-                    <InputCheckbox @bind-Value="restaurant.IsFeatured" />
-                </div> *@
+                </div> 
+                }
                 @* <div class="form-group">
                     <label>Category</label>
                     <InputSelect class="form-control" @bind-Value="restaurant.CategoryId">
@@ -74,34 +77,63 @@
                         }
                     </InputSelect>
                 </div> *@
-                <div class="form-group">
-                    <label>Logo</label>
-                    @* <InputFile OnChange="HandleFileSelected" /> *@
-                </div>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
             </div>
         </div>
-    </EditForm>
+    </form>
 }
 else
 {
-    <p>Loading...</p>
+    <p>No Restaurant Data</p>
 }
 
 @code {
     @* [Parameter]
     public string id { get; set; } *@
-    private Restaurant restaurant;
+    private RestaurantDto restaurant;
+    
     [Inject]
     public IRestaurantService RestaurantService { get; set; }
 
+     private IBrowserFile UploadImg { get; set; }
+
+     private async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        UploadImg = e.File;
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        @* var id = int.Parse(Regex.Match(NavigationManager.Uri, @"\d+$").Value); *@
         string id = Constants.RestaurantId; 
         restaurant = await RestaurantService.GetOneRestaurantAsync(id);
+    }
 
-        @* categories = await GetRestCategoryAsync(); *@
+    private async Task UpdateRestaurant()
+    {
+        var newRestaurant = new RestaurantDto
+        { 
+            Id = restaurant.Id,
+            Name = restaurant.Name,
+            Email = restaurant.Email,
+            Description = restaurant.Description,
+            PhoneNo = restaurant.PhoneNo,
+            CategoryId = restaurant.CategoryId,
+            Address = restaurant.Address, 
+            UploadImg = UploadImg
+        }; 
+        
+        if (UploadImg != null)
+        {
+            var imgContent = new StreamContent(UploadImg.OpenReadStream());
+            imgContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(UploadImg.ContentType);
+        }
+    
+        await RestaurantService.UpdateRestaurantAsync(newRestaurant);
+        
+        FlashMessageService.SuccessMessage = "updated restaurant successfully.";
+        FlashMessageService.DurationInSeconds = 5;
+        await FlashMessageService.ClearMessagesAsync();
+        @* NavigationManager.NavigateTo("/item"); *@
     }
 
 

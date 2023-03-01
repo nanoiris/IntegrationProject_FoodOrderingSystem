@@ -458,3 +458,102 @@ finish all the status change at delivery order   
 work on sign up page
 3. Need assistance / figure things out
 
+=============================================================
+2023/02/28 Tuesday Yi 
+1. Done / not done since last scrum:
+RMS edit menu done 
+2. To do until next Scrum:
+RMS edit restaurant profile 
+3. Need assistance / figure things out
+
+2023/02/28 Tuesday Xiao Pei
+1. Done / not done since last scrum:
+- set constant, easilly change between local and cloud service & image
+- create new order
+2. To do until next Scrum:
+- change order quantity
+- checkout
+3. Need assistance / figure things out
+
+2023/02/28 Tuesday Wenzhe
+1. Done / not done since last scrum:
+- show the demo
+- fix issues of web api
+- work on OSS
+2. To do until next Scrum:
+- fix issues of web api
+-work on OSS
+3. Need assistance / figure things out
+
+2023/02/28 Tuesday Zibin 
+1. Done / not done since last scrum:
+change to AWS hosted
+work on sign up and login in
+2. To do until next Scrum:
+continute sign up an login in
+3. Need assistance / figure things out
+
+
+=============================================================
+2023/03/01 Wednesday Yi 
+1. Done / not done since last scrum:
+RMS edit restaurant 
+2. To do until next Scrum:
+RMS view order list 
+3. Need assistance / figure things out
+
+2023/03/01 Wednesday  Xiao Pei
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/01 Wednesday  Wenzhe
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/01 Wednesday  Zibin 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+=============================================================
+2023/03/02 Thursday Yi 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/02 Thursday  Xiao Pei
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/02 Thursday Wenzhe
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/02 Thursday  Zibin 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+=============================================================
+2023/03/03 Friday Yi 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/03 Friday  Xiao Pei
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/03 Friday Wenzhe
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/03 Friday  Zibin 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
