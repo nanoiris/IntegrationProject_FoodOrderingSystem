@@ -52,7 +52,16 @@ namespace IdentityServer.Controllers
                 if (appUser != null)
                 {
                     string token = tokenService.GenerateToken(appUser, configuration);
-                    response = Ok(new { token = token,userName = appUser.Email,logo = appUser.Logo,role = appUser.Role });
+                    var result = new
+                    {
+                        token = token,
+                        userName = appUser.Email,
+                        logo = appUser.Logo,
+                        role = appUser.Role,
+                        restaurantId = appUser.RestaurantId,
+                        restaurantName = appUser.RestaurantName
+                    };
+                    response = Ok(result);
                 }
             }
             return response;

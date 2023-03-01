@@ -5,7 +5,7 @@ using System.Data;
 
 namespace IdentityServer.Services
 {
-    public class UserService : IUserService
+    public partial class UserService : IUserService
     {
         private readonly UserManager<AppUser> userManager;
         private readonly SignInManager<AppUser> signInManager;
@@ -21,7 +21,9 @@ namespace IdentityServer.Services
             AppUser appUser = await userManager.FindByEmailAsync(model.UserName);
             if (appUser == null)
                 return null;
-
+            if(appUser.Status != UserStatusEnum.active) 
+                return null;
+            
             var result = await userManager.CheckPasswordAsync(appUser, model.Password);
             if (!result == true)
                 return null;
@@ -47,6 +49,7 @@ namespace IdentityServer.Services
                 Email = model.Email,
                 UserName = model.Email,
                 Logo = model.Logo,
+                Status = UserStatusEnum.active
                 //RestaurantId = model.RestaurantId,
                 //RestaurantName = model.RestaurantName
             };
@@ -75,11 +78,11 @@ namespace IdentityServer.Services
             }
             return new AppResult("", true);
         }
-        public Task<AppUser>? FindUserById(string id)
+        public Task<AppUser> FindUserById(string id)
         {
             return userManager.FindByIdAsync(id);
         }
-        public Task<AppUser>? FindUserByEmail(string email)
+        public Task<AppUser> FindUserByEmail(string email)
         {
             return userManager.FindByEmailAsync(email);
         }

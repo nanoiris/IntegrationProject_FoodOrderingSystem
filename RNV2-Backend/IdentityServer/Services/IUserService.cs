@@ -13,5 +13,7 @@ namespace IdentityServer.Services
         Task<AppResult> UpdateUser(UpdateUserViewModel model);
         Task<AppResult> ResetPassword(string email,string password,string confirmPassword);
         Task<List<AppUser>>? ListRestaurantUsers(string restaurantId);
+        Task<AppResult> UpdateUserStatus(string email,UserStatusEnum status);
+
     }
 }
