@@ -42,7 +42,7 @@
             {
                 <div class="cat-item px-1 py-3">
                     <a class="d-block text-center" href="">
-                        <img src="img/rest/@category.Logo" class="img-fluid mb-2 shadow">
+                        <img src="@(Data.Constants.imgUrl +category.Logo)" class="img-fluid mb-2 shadow">
                         <p class="m-0 small">@category.Name</p>
                     </a>
                 </div>
@@ -70,7 +70,7 @@
         <div class="px-3 pt-4 pb-3 title d-flex align-items-center">
             <h6 class="m-0 font-weight-bold">Most popular</h6>
             <a class="font-weight-bold ml-auto" href="/Restaurant/ListAll">
-                26 places <i class="feather-chevrons-right"></i>
+                View all <i class="feather-chevrons-right"></i>
             </a>
         </div>
 
@@ -119,7 +119,7 @@
     protected override async Task OnInitializedAsync()
     {
         Log.Debug("render start");
-        httpClient.BaseAddress = new Uri("http://localhost:5064/");
+        httpClient.BaseAddress = new Uri(Data.Constants.RestUri);
 
         restCategories = (await httpClient.GetFromJsonAsync<List<RestCategoryDto>>($"api/restcategory/list")).ToList();  
         trendingRests = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/listweeklytrends")).ToList();

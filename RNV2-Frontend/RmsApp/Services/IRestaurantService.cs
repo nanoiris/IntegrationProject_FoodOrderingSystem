@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestaurantDaoBase.Models;
+using RmsApp.Dtos;
 
 namespace RmsApp.Services
 {
     public interface IRestaurantService
     {
-        Task<Restaurant?> GetOneRestaurantAsync(string id);
-        Task<Restaurant?> UpdateRestaurantAsync(RestaurantForm form);
+        Task<RestaurantDto?> GetOneRestaurantAsync(string id);
+        Task UpdateRestaurantAsync(RestaurantDto restaurant);
 
     }
 }
