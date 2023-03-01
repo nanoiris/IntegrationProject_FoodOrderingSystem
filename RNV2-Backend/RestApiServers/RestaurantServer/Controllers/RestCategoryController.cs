@@ -13,7 +13,7 @@ namespace RestaurantServer.Controllers
         private readonly ILogger<RestCategoryController> logger;
         private readonly IRestaurantService service;
         private readonly IFileService fileService;
-        public RestCategoryController(ILogger<RestCategoryController> logger, IRestaurantService service,IFileService fileService)
+        public RestCategoryController(ILogger<RestCategoryController> logger, IRestaurantService service, IFileService fileService)
         {
             this.logger = logger;
             this.service = service;
@@ -23,22 +23,23 @@ namespace RestaurantServer.Controllers
         [HttpGet]
         public Task<List<RestCategory>> List()
         {
-             return service.ListCategory();
+            return service.ListCategory();
         }
 
         [HttpPost]
         public async Task<IActionResult> NewOne([FromForm] RestCategory category)
         {
+            logger.LogInformation($"Enter RestCategoryController.NewOne {category.Name}");
             if (ModelState.IsValid)
             {
-                if(category.UploadImg != null)
+                if (category.UploadImg != null)
                 {
                     try
                     {
                         category.Logo = fileService.SaveFile(category.UploadImg);
                         category.UploadImg = null;
                     }
-                    catch(Exception ex) 
+                    catch (Exception ex)
                     {
                         logger.LogInformation(ex.Message);
                         return BadRequest(new AppResult("NewOne : The file cannot be saved", false));
@@ -48,16 +49,16 @@ namespace RestaurantServer.Controllers
                 try
                 {
                     var result = await service.AddCategory(category);
-                    if (result == true)
-                        return Ok(new AppResult("", true));
+                    if (result.IsSuccess == true)
+                        return Ok(result);
                     else
                     {
                         if (category.Logo != null)
                             fileService.DeleteFile(category.Logo);
-                        return BadRequest(new AppResult("", false));
+                        return BadRequest(result);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.LogInformation(ex.Message);
                     if (category.Logo != null)
@@ -110,7 +111,7 @@ namespace RestaurantServer.Controllers
                         fileService.DeleteFile(category.Logo);
                     return BadRequest(new AppResult("", false));
                 }
-                    
+
             }
             return BadRequest(new AppResult("Some properties are not correct", false));
         }
@@ -121,13 +122,13 @@ namespace RestaurantServer.Controllers
             RestCategory? category = await service.FindCategory(id);
             if (category == null)
                 return BadRequest(new AppResult($"No rest category(id={id}", false));
-            if(category.Logo != null)
+            if (category.Logo != null)
             {
                 try
                 {
                     fileService.DeleteFile(category.Logo);
                 }
-                catch(Exception ex) 
+                catch (Exception ex)
                 {
                     logger.LogInformation(ex.Message);
                     return BadRequest(new AppResult(ex.Message, false));
