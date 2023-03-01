@@ -42,10 +42,16 @@ window.showItemInCart = (itemId,qty) => {
     var quantityStr = "quantity".concat(itemId);
     var iptQtyStr = "iptQty".concat(itemId);
     var addDiv = document.getElementById(addStr);
-    addDiv.style.display = "none";
-    var quantityDiv = document.getElementById(quantityStr);
-    quantityDiv.style.display = "flex";
     var iptQty = document.getElementById(iptQtyStr);
-    iptQty.value = qty;
+    var quantityDiv = document.getElementById(quantityStr);
+    if (qty == 0) {
+        addDiv.style.display = "flex";
+        quantityDiv.style.display = "none";
+    } else {
+        addDiv.style.display = "none";  
+        iptQty.value = qty;   
+        quantityDiv.style.display = "flex";
 
+    }
+    
 }

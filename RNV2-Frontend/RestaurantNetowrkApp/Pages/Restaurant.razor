@@ -92,9 +92,9 @@
                                            class="btn btn-outline-secondary btn-sm add-sm-btn">ADD</a>
                                     </span>
                                     <div class="osahan-quantity ml-auto" style="display:none" id=@("quantity" + menuItem.Id)>
-                                        <input type="button" value="-" class="minus">
+                                        <input type="button" value="-" class="minus" @onclick="() => decrease(menuItem.Id)">
                                         <input type="text" id=@("iptQty" + menuItem.Id) name="quantity" value="1" title="Qty" class="qty" size="4">
-                                        <input type="button" value="+" class="plus">
+                                        <input type="button" value="+" class="plus" @onclick="() => increase(menuItem.Id)">
                                     </div>
                                 </div>
                             }
@@ -168,7 +168,8 @@
 
     private async void addToCart(MenuItemDto menuItem)
     {
-        string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
+        //string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
+        string userEmail = "u2@gmail.com";
         if (userEmail == null)
         {
             string msg = "Please login to make an order";
@@ -177,7 +178,25 @@
         }
         else
         {
-            if (orderCart == null)
+            //if current user already have an unpaid order in current restaurant, update this order(orderCart)
+            if (orderCart != null)
+            {
+                var orderItem = new
+                {
+                    id = menuItem.Id,
+                    name = menuItem.Name,
+                    description = menuItem.Description,
+                    isFeatured = menuItem.IsFeatured,
+                    price = menuItem.Price,
+                    logo = menuItem.Logo,
+                    categoryId = menuItem.CategoryId,
+                };
+                render = false;
+                var response = await httpOrder.PutAsJsonAsync($"api/cart/dishaddedtocart/{orderCart.Id}", orderItem);
+                getCart();
+            }
+            //if current user dosn't have an unpaid order in current restaurant, create new order
+            else
             {
                 var cart = new
                 {
@@ -186,60 +205,91 @@
                     restaurantId = restId,
                     restaurantName = restaurant.Name,
                 };
-                var response = await httpOrder.PostAsJsonAsync("http://localhost:5275/api/cart/newone", cart);
+                render = false;
+                var response = await httpOrder.PostAsJsonAsync("api/cart/newone", cart);
+                getCart();
             }
-
-
         }     
 
+    }
+
+    private async void increase(string menuItemId)
+    {
+        string orderId = orderCart.Id;
+        List<OrderItemDto> orderItems = orderCart.ItemList;
+        string orderItemId = orderItems.FirstOrDefault(x => x.Item.Id == menuItemId).Id;
+        render = false;
+        var response =await httpOrder.PutAsync($"api/cart/increaseqty/{orderId}/{orderItemId}", null);
+        getCart();
+    }
+
+    private async void decrease(string menuItemId)
+    {
+        string orderId = orderCart.Id;
+        List<OrderItemDto> orderItems = orderCart.ItemList;
+        string orderItemId = orderItems.FirstOrDefault(x => x.Item.Id == menuItemId).Id;
+        render = false;
+        var response = await httpOrder.PutAsync($"api/cart/decreaseqty/{orderId}/{orderItemId}", null);
+        getCart();
     }
 
     // check if this user has an unpaid order in this restaurant
     private async void getCart()
     {
-        string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
+        //string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
+        string userEmail = "u2@gmail.com";
 
         if (userEmail != null)
         {
-            string requestBody = JsonSerializer.Serialize(
+            //string requestBody = JsonSerializer.Serialize(
+            //    new
+            //    {
+            //        userName = userEmail,
+            //        status = 0,
+            //        restaurantId = restId
+            //    }
+            //);
+
+            //var request = new HttpRequestMessage
+            //    {
+            //        Method = HttpMethod.Get,
+            //        RequestUri = new Uri(orderBaseHttp + "api/order/search"),
+            //        Content = new StringContent(requestBody, Encoding.UTF8, "application/json"),
+            //    };
+
+            //Log.Debug("request uri:"+ request.RequestUri.ToString());
+            //Log.Debug("request content:" + (await request.Content.ReadAsStringAsync()));
+
+            //HttpResponseMessage response = await httpOrder.SendAsync(request);
+            //response.EnsureSuccessStatusCode();
+
+            //var responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            //Log.Debug(responseBody);
+
+            //var orders = JsonSerializer.Deserialize<List<OrderDto>>(responseBody);
+
+            //orderCart = orders.FirstOrDefault(x => x.RestaurantId == restId);
+
+            var requestBody =
                 new
                 {
-                    userName = userEmail,
+                    email = userEmail,
                     status = 0,
                     restaurantId = restId
-                }
-            );
-
-            var request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Get,
-                    RequestUri = new Uri(orderBaseHttp + "api/order/search"),
-                    Content = new StringContent(requestBody, Encoding.UTF8, "application/json"),
                 };
-
-            Log.Debug("request uri:"+ request.RequestUri.ToString());
-            Log.Debug("request content:" + (await request.Content.ReadAsStringAsync()));
-
-            HttpResponseMessage response = await httpOrder.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-
+            HttpResponseMessage response = await httpOrder.PostAsJsonAsync("api/order/search", requestBody);
             var responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            Log.Debug(responseBody);
-
             var orders = JsonSerializer.Deserialize<List<OrderDto>>(responseBody);
-
-            orderCart = orders.FirstOrDefault(x => x.RestaurantId == restId);
-            showCart();
-
+            if( orders.Count != 0)
+            {
+                orderCart = orders[0];
+                foreach (var orderItem in orderCart.ItemList)
+                {
+                    await JSRuntime.InvokeAsync<object>("showItemInCart", orderItem.Item.Id, orderItem.Qty.ToString());
+                }
+            }
         }     
     }
 
-    private async void showCart()
-    {
-        foreach (var orderItem in orderCart.ItemList)
-        {
-            await JSRuntime.InvokeAsync<object>("showItemInCart", orderItem.Item.Id, orderItem.Qty.ToString());
-        }
-    }
 
 }
