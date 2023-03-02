@@ -538,7 +538,10 @@ work on login in pages
 
 2023/03/02 Thursday Wenzhe
 1. Done / not done since last scrum:
+- Fix bugs and add new api for backend
+- add login and logout  on OssApp
 2. To do until next Scrum:
+- continue to work on OssApp
 3. Need assistance / figure things out
 
 2023/03/02 Thursday  Zibin 
