@@ -28,7 +28,6 @@ namespace RmsApp.Services
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(Constants.RestUri);
-
             _flashMessageService = flashMessageService;
         }
 
@@ -46,7 +45,7 @@ namespace RmsApp.Services
             }
             else
             {
-                _logger.LogError("Failed to get categories. Status code: {0}", response.StatusCode);
+                Console.WriteLine("Failed to get categories. Status code: {0}", response.StatusCode);
             }
 
             return Categories;
@@ -75,7 +74,7 @@ namespace RmsApp.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while adding category.");
+                Console.WriteLine(ex.Message, "Error while adding category.");
                 _flashMessageService.FailureMessage = "Failed to add the category.";
             }
         }
@@ -90,7 +89,7 @@ namespace RmsApp.Services
             {
                 return await response.Content.ReadFromJsonAsync<CategoryDto>();
             }
-            _logger.LogError("Failed to get category with ID {CategoryId}. StatusCode: {StatusCode}", categoryId, response.StatusCode);
+            Console.WriteLine("Failed to get category with ID {CategoryId}. StatusCode: {StatusCode}", categoryId, response.StatusCode);
             throw new ApplicationException("Failed to get category.");
         }
 
@@ -104,7 +103,7 @@ namespace RmsApp.Services
             var response = await _httpClient.PutAsJsonAsync($"api/menucategory/updatedone/{categoryDto.Id}", categoryDto);
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogError("Failed to update category with ID {CategoryId}. StatusCode: {StatusCode}", categoryDto.Id, response.StatusCode);
+                Console.WriteLine("Failed to update category with ID {CategoryId}. StatusCode: {StatusCode}", categoryDto.Id, response.StatusCode);
                 throw new ApplicationException("Failed to update category.");
             }
         }
@@ -117,7 +116,7 @@ namespace RmsApp.Services
             var response = await _httpClient.DeleteAsync($"api/menucategory/deletedone/{categoryId}");
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogError("Failed to delete category with ID {CategoryId}. StatusCode: {StatusCode}", categoryId, response.StatusCode);
+                Console.WriteLine("Failed to delete category with ID {CategoryId}. StatusCode: {StatusCode}", categoryId, response.StatusCode);
                 throw new ApplicationException("Failed to delete category.");
             }
         }

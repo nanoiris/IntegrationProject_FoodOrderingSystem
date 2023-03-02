@@ -1,7 +1,122 @@
 ﻿@page "/order"
 
-<PageTitle>Orders</PageTitle>
+@using RmsApp.Services
+@using RmsApp.Dtos
+@using RestaurantDaoBase.Enums
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using Microsoft.Extensions.Logging
+@inject ILogger<CategoryService> logger
+@inject IFlashMessageService FlashMessageService
 
-@code{
-    
+<ul class="breadcrumb breadcrumb-gray">
+    @foreach (var path in Paths)
+    {
+        <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
+    }
+</ul>
+
+@if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @FlashMessageService.SuccessMessage
+    </div>
+}
+else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
+{
+    <div class="alert alert-danger">
+        @FlashMessageService.FailureMessage
+    </div>
+}
+
+<h2>Take-Away Orders</h2>
+@if (TakeAwayOrders != null && TakeAwayOrders.Any())
+{
+    <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
+        <thead class="text-danger font-weight-bold">
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in TakeAwayOrders)
+            {
+                <tr>
+                    <td>@order.id</td>
+                    <td>@order.UserName</td>
+                    <td>@order.Status</td>
+                    <td><a class="btn btn-icon-only btn-pill btn-primary" href="/order/edit/@order.id"><i class="fa fa-pen"></i></a></td>
+                    <td><a class="btn btn-icon-only btn-pill btn-primary" href="/order/delete/@order.id"><i class="fa fa-trash"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No take-away orders found.</p>
+}
+
+<h2>Delivery Orders</h2>
+@if (DeliveryOrders != null && DeliveryOrders.Any())
+{
+    <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
+        <thead class="text-danger font-weight-bold">
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in DeliveryOrders)
+            {
+                <tr>
+                    <td>@order.id</td>
+                    <td>@order.UserName</td>
+                    <td>@order.Status</td>
+                    <td><a class="btn btn-icon-only btn-pill btn-primary" href="/order/edit/@order.id"><i class="fa fa-pen"></i></a></td>
+                    <td><a class="btn btn-icon-only btn-pill btn-primary" href="/order/delete/@order.id"><i class="fa fa-trash"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No delivery orders found.</p>
+}
+
+@code {
+    public List<TabPath> Paths = new List<TabPath>
+    {
+        new TabPath { Title = "Home", Path = "/" },
+        new TabPath { Title = "Order", Path = "/order" },
+    };
+    public List<OrderListDto> Orders { get; set; }
+public string restaurantId = Constants.RestaurantId;
+public int status = (int)StatusEnum.Paid;
+
+[Inject]
+public IOrderService OrderService { get; set; }
+
+public List<OrderListDto> TakeAwayOrders { get; set; }
+public List<OrderListDto> DeliveryOrders { get; set; }
+
+protected override async Task OnInitializedAsync()
+{
+    logger.LogInformation("order list OnInitializedAsync");
+    Orders = await OrderService.ListOrderAsync(restaurantId, status);
+
+    TakeAwayOrders = Orders.Where(o => o.IsDelivery == false).ToList();
+    DeliveryOrders = Orders.Where(o => o.IsDelivery == true).ToList();
+}
+
+
 }
