@@ -533,6 +533,8 @@ work on login in pages
 
 2023/03/02 Thursday  Xiao Pei
 1. Done / not done since last scrum:
+- dynamically show menu & cart & payment footer
+- fix slick bug
 2. To do until next Scrum:
 3. Need assistance / figure things out
 

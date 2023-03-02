@@ -97,12 +97,11 @@
 @code {
     [Parameter]
     public string msg{ get; set; }
-
     //bool firstRender = true;
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
-        if (restCategories.Count != 0 && trendingRests.Count !=0)
+        if (restCategories.Count != 0 && trendingRests.Count !=0 )
         {
             await JSRuntime.InvokeAsync<object>("homeSlick");
             //firstRender = false;

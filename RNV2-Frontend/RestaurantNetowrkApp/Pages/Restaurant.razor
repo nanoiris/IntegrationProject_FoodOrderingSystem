@@ -106,24 +106,27 @@
         
     </div>
 
-       <div class="fixed-bottom p-3">
-        <a href="/Order/Review/1"
-           class="btn btn-success btn-block btn-lg text-white rounded shadow text-decoration-none d-flex align-items-center shadow">
-            <div class="border-right pr-3">
-                <h4 class="m-0"><i class="feather-shopping-bag" aria-hidden="true"></i></h4>
-            </div>
-            <div class="ml-3 text-left">
-                <p class="mb-0 small text-white-50">5 item</p>
-                <p class="mb-0 font-weight-bold text-white">$235,50.00</p>
-            </div>
-            <div class="ml-auto">
-                <p class="mb-0 text-white">
-                    Proceed to cart
-                    <i class="feather-chevron-right pl-2" aria-hidden="true"></i>
-                </p>
-            </div>
-        </a>
-    </div>
+
+        <div class="fixed-bottom p-3">
+            <a href="/Order/Review/1"
+               class="btn btn-success btn-block btn-lg text-white rounded shadow text-decoration-none d-flex align-items-center shadow">
+                <div class="border-right pr-3">
+                    <h4 class="m-0"><i class="feather-shopping-bag" aria-hidden="true"></i></h4>
+                </div>
+                <div class="ml-3 text-left">
+                <p class="mb-0 small text-white-50 " id="orderItemQty">0 item</p>
+                <p class="mb-0 font-weight-bold text-white" id="subTotal">$0.00</p>
+                </div>
+                <div class="ml-auto">
+                    <p class="mb-0 text-white">
+                        Proceed to cart
+                        <i class="feather-chevron-right pl-2" aria-hidden="true"></i>
+                    </p>
+                </div>
+            </a>
+        </div>
+
+    
 
 </div>
 @code {
@@ -169,7 +172,8 @@
     private async void addToCart(MenuItemDto menuItem)
     {
         //string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
-        string userEmail = "u2@gmail.com";
+        HttpResponseMessage response;
+        string userEmail = "u3@gmail.com";
         if (userEmail == null)
         {
             string msg = "Please login to make an order";
@@ -192,8 +196,7 @@
                     categoryId = menuItem.CategoryId,
                 };
                 render = false;
-                var response = await httpOrder.PutAsJsonAsync($"api/cart/dishaddedtocart/{orderCart.Id}", orderItem);
-                getCart();
+                response = await httpOrder.PutAsJsonAsync($"api/cart/dishaddedtocart/{orderCart.Id}", orderItem);
             }
             //if current user dosn't have an unpaid order in current restaurant, create new order
             else
@@ -206,7 +209,11 @@
                     restaurantName = restaurant.Name,
                 };
                 render = false;
-                var response = await httpOrder.PostAsJsonAsync("api/cart/newone", cart);
+                response = await httpOrder.PostAsJsonAsync("api/cart/newone", cart);
+
+            }
+            if (response.IsSuccessStatusCode)
+            {
                 getCart();
             }
         }     
@@ -217,27 +224,52 @@
     {
         string orderId = orderCart.Id;
         List<OrderItemDto> orderItems = orderCart.ItemList;
-        string orderItemId = orderItems.FirstOrDefault(x => x.Item.Id == menuItemId).Id;
+        OrderItemDto orderItem = orderItems.FirstOrDefault(x => x.Item.Id == menuItemId);
+        string orderItemId = orderItem.Id;
         render = false;
         var response =await httpOrder.PutAsync($"api/cart/increaseqty/{orderId}/{orderItemId}", null);
-        getCart();
+        if (response.IsSuccessStatusCode)
+        {
+            orderItem.Qty++;
+            await JSRuntime.InvokeAsync<object>("showItemInCart", menuItemId, orderItem.Qty);
+            orderCart = await httpOrder.GetFromJsonAsync<OrderDto>($"api/order/one/{orderId}");
+            await JSRuntime.InvokeAsync<object>("showTotal", orderCart.ItemList.Count().ToString(), orderCart.SubTotal.ToString());
+
+        }
+
     }
 
     private async void decrease(string menuItemId)
     {
         string orderId = orderCart.Id;
         List<OrderItemDto> orderItems = orderCart.ItemList;
-        string orderItemId = orderItems.FirstOrDefault(x => x.Item.Id == menuItemId).Id;
+        OrderItemDto orderItem = orderItems.FirstOrDefault(x => x.Item.Id == menuItemId);
+        string orderItemId = orderItem.Id;
         render = false;
         var response = await httpOrder.PutAsync($"api/cart/decreaseqty/{orderId}/{orderItemId}", null);
-        getCart();
+        if (response.IsSuccessStatusCode){          
+            if(orderItem.Qty == 1)
+            {
+                await JSRuntime.InvokeAsync<object>("changeToAdd", menuItemId);
+            }
+            else
+            {
+                orderItem.Qty--;
+                await JSRuntime.InvokeAsync<object>("showItemInCart", menuItemId, orderItem.Qty);
+            }
+            orderCart = await httpOrder.GetFromJsonAsync<OrderDto>($"api/order/one/{orderId}");
+            await JSRuntime.InvokeAsync<object>("showTotal", orderCart.ItemList.Count().ToString(), orderCart.SubTotal.ToString());
+
+        }
+
     }
 
     // check if this user has an unpaid order in this restaurant
     private async void getCart()
     {
+        Log.Debug("getcart");
         //string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
-        string userEmail = "u2@gmail.com";
+        string userEmail = "u3@gmail.com";
 
         if (userEmail != null)
         {
@@ -278,17 +310,29 @@
                     restaurantId = restId
                 };
             HttpResponseMessage response = await httpOrder.PostAsJsonAsync("api/order/search", requestBody);
+            Log.Debug(response.IsSuccessStatusCode.ToString());
             var responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var orders = JsonSerializer.Deserialize<List<OrderDto>>(responseBody);
             if( orders.Count != 0)
             {
                 orderCart = orders[0];
-                foreach (var orderItem in orderCart.ItemList)
-                {
-                    await JSRuntime.InvokeAsync<object>("showItemInCart", orderItem.Item.Id, orderItem.Qty.ToString());
-                }
+                Log.Debug("get orderCart: " + orderCart.Id);
+                showCart();
+                var qty = orderCart.ItemList.Count().ToString();
+                var subTotal = orderCart.SubTotal.ToString();
+                await JSRuntime.InvokeAsync<object>("showTotal", qty, subTotal);
+
             }
         }     
+    }
+
+    private async void showCart()
+    {
+        Log.Debug("showCart begin");
+        foreach (var orderItem in orderCart.ItemList)
+        {
+            await JSRuntime.InvokeAsync<object>("showItemInCart", orderItem.Item.Id, orderItem.Qty.ToString());
+        }
     }
 
 
