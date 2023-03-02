@@ -546,7 +546,9 @@ work on login in pages
 
 2023/03/02 Thursday  Zibin 
 1. Done / not done since last scrum:
+login in page
 2. To do until next Scrum:
+continute login page/search page
 3. Need assistance / figure things out
 =============================================================
 2023/03/03 Friday Yi 
