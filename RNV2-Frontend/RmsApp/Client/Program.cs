@@ -31,6 +31,10 @@ namespace RmsApp
             {
                 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
             });
+            builder.Services.AddHttpClient<IOrderService, OrderService>(client =>
+            {
+                client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+            });
             // builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
             // {
             //     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);

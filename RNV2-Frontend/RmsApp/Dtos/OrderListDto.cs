@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace RmsApp.Dtos
 {
-    public class OrderViewDto
+    public class OrderListDto
     {
-        public string OrderId { get; set; }
-        public StatusEnum Status { get; set; }
+        public string RestaurantId { get; set; }
+        public string id { get; set; }
+        public int Status { get; set; }
 
     }
 
