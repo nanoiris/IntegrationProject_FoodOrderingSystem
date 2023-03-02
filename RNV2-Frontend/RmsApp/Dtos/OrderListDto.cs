@@ -11,6 +11,10 @@ namespace RmsApp.Dtos
         public string RestaurantId { get; set; }
         public string id { get; set; }
         public int Status { get; set; }
+        public string UserName { get; set; }
+        public decimal? PayTotal { get; set; }
+
+        public bool IsDelivery { get; set; }
 
     }
 
