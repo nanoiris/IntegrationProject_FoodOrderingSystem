@@ -1,0 +1,57 @@
+﻿@page "/UploadLogoDialog/{Id}"
+@using OssApp.Model
+@using OssApp.Services
+@using System.Text.Json
+@inject RestCategoryService service
+@inject Radzen.DialogService dialogService
+
+<div class="row">
+    <div class="col-12" >
+        <RadzenCard Style="width: 100%; overflow: hidden; border: var(--rz-grid-cell-border)" class="rz-shadow-0">
+            <RadzenText TextStyle="TextStyle.Subtitle1" class="rz-pb-4">Single file upload</RadzenText>
+            <RadzenUpload @ref="logo" Auto="false" Url=@UploadUrl Complete=@OnComplete Progress ="@((args) => OnProgress(args, "Logo"))" />
+        </RadzenCard>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <RadzenButton Click="@((args) => dialogService.Close(false))" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" class="me-1" />
+            <RadzenButton Click="@((args) => OnUpload())" Variant="Variant.Flat" Text="OK" Style="width: 120px" />
+        </div>
+    </div>
+</div>
+
+@code {
+    RadzenUpload logo;
+
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string UploadUrl { get; set; }
+
+    [Parameter] public RestCategoryModel row { get; set; }
+
+    int progress;
+    string info;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    void OnUpload()
+    {
+        logo.Upload();
+        //dialogService.Close(false);
+    }
+
+    void OnComplete(UploadCompleteEventArgs args)
+    {
+       var result = JsonSerializer.Deserialize<AppResult>(args.RawResponse);
+       row.Logo = service.buildLogo(result.message);
+       dialogService.Close(false);
+    }
+
+    void OnProgress(UploadProgressArgs args, string name)
+    {
+        this.info = $"% '{name}' / {args.Loaded} of {args.Total} bytes.";
+        this.progress = args.Progress;
+    }
+}

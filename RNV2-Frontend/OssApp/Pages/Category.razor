@@ -1,0 +1,186 @@
+﻿@page "/Category"
+@using OssApp.Model
+@using OssApp.Services
+@inject RestCategoryService service
+@inject DialogService DialogService
+@implements IDisposable
+
+<div class="rz-m-12 m-0">
+    <RadzenBreadCrumb>
+        <RadzenBreadCrumbItem Path="/" Text="Home" />
+        <RadzenBreadCrumbItem Path="/Category" Text="Category" />
+    </RadzenBreadCrumb>
+</div>
+<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" class="mt-2 mb-4" Text="Add New Cateogry" Click="@InsertRow" Disabled=@(rowToInsert != null || rowToUpdate != null) />
+<RadzenDataGrid @ref="myGrid" AllowAlternatingRows="false" AllowFiltering="false" AllowPaging="false" AllowSorting="false" EditMode="DataGridEditMode.Single"
+                Data="@rows" TItem="RestCategoryModel" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow">
+    <Columns>
+        <RadzenDataGridColumn TItem="RestCategoryModel" Property="Logo" Title="Category Logo" Width="280px">
+            <Template Context="row">
+                @if (row.Logo != null)
+                {
+                    <RadzenImage Path="@row.Logo" style="width: 48px; height: 48px; border-radius: 24px; margin-right: 6px;" />
+                }
+                @if (row.Id != null)
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="upload" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => OpenUploadDialog(row))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+                }
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RestCategoryModel" Property="Name" Title="Category Name" Width="200px">
+            <EditTemplate Context="row">
+                <RadzenTextBox @bind-Value="row.Name" Style="width:100%; display: block" Name="Name" />
+                <RadzenRequiredValidator Text="Name is required" Component="Name" Popup="true" />
+            </EditTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RestCategoryModel" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Width="156px">
+            <Template Context="row">
+                <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(row))" @onclick:stopPropagation="true">
+                </RadzenButton>
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(row))" @onclick:stopPropagation="true">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="row">
+                <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(row))">
+                </RadzenButton>
+                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => CancelEdit(row))">
+                </RadzenButton>
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(row))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    RadzenDataGrid<RestCategoryModel> myGrid;
+    List<RestCategoryModel> rows;
+    RestCategoryModel rowToInsert;
+    RestCategoryModel rowToUpdate;
+
+    void Reset()
+    {
+        rowToInsert = null;
+        rowToUpdate = null;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        rows = await service.List();
+    }
+
+    async Task EditRow(RestCategoryModel row)
+    {
+        rowToUpdate = row;
+        await myGrid.EditRow(row);
+    }
+
+    void OnUpdateRow(RestCategoryModel row)
+    {
+        if (row == rowToInsert)
+        {
+            rowToInsert = null;
+        }
+        rowToUpdate = null;
+    }
+
+    async Task SaveRow(RestCategoryModel row)
+    {
+        await myGrid.UpdateRow(row);
+    }
+
+    void CancelEdit(RestCategoryModel row)
+    {
+        if (row == rowToInsert)
+        {
+            rowToInsert = null;
+        }
+        rowToUpdate = null;
+        myGrid.CancelEditRow(row);
+    }
+
+    async Task DeleteRow(RestCategoryModel row)
+    {
+        if (row == rowToInsert)
+        {
+            rowToInsert = null;
+        }
+
+        if (row == rowToUpdate)
+        {
+            rowToUpdate = null;
+        }
+
+        if (rows.Contains(row))
+        {
+            var result = service.DeleteOne(row);
+            if (result == true)
+            {
+                rows.Remove(row);
+                myGrid.Reload();
+            }
+            else
+            {
+                //TODO
+            }
+        }
+        else
+        {
+            myGrid.CancelEditRow(row);
+            await myGrid.Reload();
+        }
+    }
+
+    async Task InsertRow()
+    {
+        rowToInsert = new RestCategoryModel { Name = "" };
+        await myGrid.InsertRow(rowToInsert);
+    }
+
+    void OnCreateRow(RestCategoryModel row)
+    {
+        string id = service.AddNewOne(row);
+        if (id != null)
+        {
+            row.Id = id;
+            rows.Add(row);
+            rowToInsert = null;
+
+        }
+        else
+        {
+            //TODO
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        DialogService.OnOpen += Open;
+        DialogService.OnClose += Close;
+    }
+    public void Dispose()
+    {
+        // The DialogService is a singleton so it is advisable to unsubscribe.
+        DialogService.OnOpen -= Open;
+        DialogService.OnClose -= Close;
+    }
+
+    void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+    {
+        
+    }
+
+    void Close(dynamic result)
+    {
+        
+    }
+
+    async Task OpenUploadDialog(RestCategoryModel row)
+    {
+        string uploadUrl = service.LogoUploadUrl + row.Id;
+        await DialogService.OpenAsync<UploadLogoDialog>($"Restaurant Logo Dialog",
+              new Dictionary<string, object>() { { "Id", row.Id }, { "UploadUrl", uploadUrl }, { "row", row } },
+              new DialogOptions() { Width = "700px", Height = "512px", Resizable = false, Draggable = false });
+    }
+}

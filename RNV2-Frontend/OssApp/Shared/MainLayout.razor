@@ -1,0 +1,70 @@
+﻿@inherits LayoutComponentBase
+@using OssApp.Services;
+@inject AuthService authService
+@inject NavigationManager navManager
+
+<RadzenDialog />
+
+<RadzenLayout style="height: 100vh">
+    <RadzenHeader>
+        <ChildContent>
+            <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0px">
+                <RadzenColumn Size="1">
+                    <img src="/images/logo.png" style="width: 30px; height: 30px" class="m-2" />
+                </RadzenColumn>
+                <RadzenColumn Size="8">
+                    @if (AuthService.IsLoggedIn)
+                    {
+                        <OssHeaderNav />
+                    }
+                </RadzenColumn>
+                <RadzenColumn Size="2">
+                    @if (AuthService.IsLoggedIn)
+                    {
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+                            @if (AuthService.User.Logo != null)
+                            {
+                                <img src="@AuthService.User.Logo" class="oss-avatar" />
+                            }
+                            <div>@AuthService.User.UserName</div>
+                        </RadzenStack>
+                    }
+                </RadzenColumn>
+                <RadzenColumn Size="1">
+                    @if (AuthService.IsLoggedIn)
+                    {
+                        <RadzenButton Click=@(args => OnLogout()) Text="Logout" ButtonStyle="ButtonStyle.Secondary" />
+                    }
+                    else
+                    {
+                        <RadzenButton Click=@(args => OnLogin()) Text="Login" ButtonStyle="ButtonStyle.Secondary" />
+                    }
+                </RadzenColumn>
+            </RadzenRow>
+        </ChildContent>
+    </RadzenHeader>
+    <RadzenBody>
+        <div class="rz-p-4">
+            @Body
+        </div>
+    </RadzenBody>
+    <RadzenFooter>
+        <div class="py-3 py-md-4" style="padding: var(--rz-panel-menu-item-padding);">
+            <RadzenText Text="OssApp v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+            <RadzenText Text="Copyright Ⓒ 2023" TextStyle="Radzen.Blazor.TextStyle.Caption" class="mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+        </div>
+    </RadzenFooter>
+</RadzenLayout>
+
+@code {
+    private void OnLogout()
+    {
+        authService.Logout();
+        navManager.NavigateTo("Login");
+    }
+
+    private void OnLogin()
+    {
+        navManager.NavigateTo("Login");
+    }
+}
