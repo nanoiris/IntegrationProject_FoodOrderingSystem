@@ -562,7 +562,10 @@ continue login
 
 2023/03/03 Friday  Xiao Pei
 1. Done / not done since last scrum:
+-finish order review page  
+- start my order page
 2. To do until next Scrum:
+- finish my orders page
 3. Need assistance / figure things out
 
 2023/03/03 Friday Wenzhe
