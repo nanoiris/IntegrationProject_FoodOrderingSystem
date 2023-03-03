@@ -1,7 +1,12 @@
 ﻿@page "/home";
+@page "/home/{msg}"
 @using DeliveryApp.Componants
 
 <div class="osahan-home-page">
+        @if (msg != null)
+    {
+        <p class="py-2 pl-2 bg-warning">@msg</p>
+    }
     <div class="shadow p-3 homepage-osahan-header bg-white">
         <div class="title d-flex align-items-center "> 
  <img src="img/logo_web1.png" class="img-fluid" />
@@ -64,6 +69,7 @@
 
 
 @code {
-
+    [Parameter]
+    public string msg { get; set; }
 }
 
