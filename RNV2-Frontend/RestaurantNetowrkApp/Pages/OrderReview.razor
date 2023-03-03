@@ -1,13 +1,17 @@
-﻿@page "/Order/Review/1"
-@using RestaurantNetowrkApp.Componants
-@inject IJSRuntime JSRuntime
+﻿@page "/Order/Review/{orderId}"
+@using RestaurantNetowrkApp.Componants;
+@using Data.Dto;
+@using Services;
+@inject IJSRuntime JSRuntime;
+@inject OrderService orderService;
+@inject RestService restService;
 
 
 
 <div class="osahan-checkout">
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
         <div class="d-flex align-items-center">
-            <a class="font-weight-bold text-dark text-back text-decoration-none " href="Restaurant/1">
+            <a class="font-weight-bold text-dark text-back text-decoration-none " href="Restaurant/@rest.Id">
                 <i class="feather-chevron-left"></i>
             </a>
             <span class="ml-3 h6 mb-0">Order</span>
@@ -18,20 +22,34 @@
         <div class="d-flex align-items-center mb-3 osahan-cart-item-profile bg-white shadow p-3">
             <img alt="osahan" src="img/starter1.jpg" class="mr-3 rounded-circle img-fluid">
             <div class="osahan-cart-item-profile-body">
-                <h6 class="mb-1 font-weight-bold pt-1">The Chatori Street</h6>
-                <p class="mb-0 small text-muted"><i class="feather-map-pin"></i> Ramdaspeth, Nagpur, Maharashtra</p>
+                <h6 class="mb-1 font-weight-bold pt-1">@rest.Name</h6>
+                <p class="mb-0 small text-muted"><i class="feather-map-pin"></i> @rest.Address.Street , @rest.Address.City</p>
+                <p class="mb-0 small text-muted"><i class="feather-phone-call"></i> @rest.PhoneNo</p>
             </div>
         </div>
         <div class="bg-white shadow mb-3">
-            <OrderItem />
-            <OrderItem />
-            <OrderItem />
-            <OrderItem />
-            <OrderItem />
-            <OrderItem />        
+            @foreach(var orderItem in order.ItemList)
+            {
+                <div class="gold-members d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                    <div class="media align-items-center">
+                        <div class="media-body">
+                            <p class="m-0">@orderItem.Item.Name</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="osahan-quantity" id=@("quantity" + orderItem.Id)>
+                            <input type="button" value="-" class="minus" @onclick="() => decrease(orderItem.Id)">
+                            <input type="text" name="quantity" value="@orderItem.Qty" title="Qty" class="qty" size="4" id=@orderItem.Id >
+                            <input type="button" value="+" class="plus" @onclick="() => increase(orderItem.Id)">
+                        </div>
+                        <p class="text-gray mb-0 float-right ml-2 text-muted small">$@(orderItem.Qty * orderItem.Item.Price)</p>
+                    </div>
+                </div>
+            }
+    
         </div>
        <div class="pb-5">
-            <PaymentDetails />
+            <PaymentDetails Subtotal = "@order.SubTotal" Total = "@order.PayTotal"/>
        </div>
         
 
@@ -42,8 +60,8 @@
                     <h4 class="m-0"><i class="feather-shopping-bag" aria-hidden="true"></i></h4>
                 </div>
                 <div class="ml-3 text-left">
-                    <p class="mb-0 small text-white-50">5 item</p>
-                    <p class="mb-0 font-weight-bold text-white">$235,50.00</p>
+                    <p class="mb-0 small text-white-50">@order.ItemList.Count() item</p>
+                    <p class="mb-0 font-weight-bold text-white">$@order.PayTotal</p>
                 </div>
                 <div class="ml-auto">
                     <p class="mb-0 text-white">PAY <i class="feather-chevron-right pl-2" aria-hidden="true"></i></p>
@@ -55,14 +73,33 @@
 
 
 @code {
-    bool firstRender = true;
-    protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JSRuntime.InvokeAsync<object>("restaurantQuantity");
-            firstRender = false;
-        }
+    [Parameter] public string orderId{ get; set; }
+    private OrderDto order;
+    private RestaurantDto rest;
 
+    protected override async Task OnInitializedAsync()
+    {
+        order = orderService.getOrderById(orderId);
+        rest = restService.GetRestById(order.RestaurantId);
     }
+
+    private async void increase(string orderItemId)
+    {
+        var result = await orderService.increaseOrderItem(orderItemId, order.Id);
+        if (result)
+        {
+            order = orderService.getOrderById(orderId);
+            StateHasChanged();
+        }
+    }
+    private async void decrease(string orderItemId)
+    {
+        var result = await orderService.decreaseOrderItem(orderItemId, order.Id);
+        if (result)
+        {
+            order = orderService.getOrderById(orderId);
+            StateHasChanged();
+        }
+    }
+
 }
