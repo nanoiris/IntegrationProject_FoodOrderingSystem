@@ -9,28 +9,33 @@ namespace OssApp;
 
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
-        
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+
         SetupSerilog();
 
         builder
-			.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-			});
-		
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+            });
+
         builder.Services.AddSingleton<AuthService>(service =>
            new AuthService("http://localhost:5191")
         );
         builder.Services.AddScoped<RoleService>(service =>
            new RoleService("http://localhost:5191")
         );
-        builder.Services.AddScoped<RestCategoryService>(service =>
+        
+        builder.Services.AddSingleton<RestCategoryService>(service =>
            new RestCategoryService("http://localhost:5064")
         );
+
+        builder.Services.AddSingleton<RestaurantService>(service =>
+          new RestaurantService("http://localhost:5064")
+       );
 
         builder.Services.AddScoped<DialogService>();
         builder.Services.AddScoped<NotificationService>();
@@ -50,15 +55,15 @@ public static class MauiProgram
         */
         builder.Services.AddMauiBlazorWebView();
 
-     
+
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
         builder.Logging.AddSerilog(dispose: true);
-        
+
         return builder.Build();
-	}
+    }
     private static void SetupSerilog()
     {
         var flushInterval = new TimeSpan(0, 0, 1);

@@ -20,6 +20,7 @@ namespace RestaurantDaoBase.IServices
         public Task<Restaurant?> FindRestaurant(string restaurantId);
         public Task<bool> DeleteRestaurant(string restaurantId);
         public Task<bool> UpdateRestaurant(RestaurantForm form);
+        public Task<bool> UpdateRestaurantLogo(Restaurant model);
 
         public Task<RestCategory?> FindCategory(string categoryId);
         public Task<bool> DeleteCategory(string categoryId);

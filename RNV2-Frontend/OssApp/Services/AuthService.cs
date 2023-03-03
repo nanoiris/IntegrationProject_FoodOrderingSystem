@@ -18,7 +18,11 @@ namespace OssApp.Services
             this.identityServer = identityServer;
             http = new HttpClient();
             http.BaseAddress = new Uri(identityServer);
-            IsLoggedIn = false;
+            IsLoggedIn = true;
+
+            User = new UserModel();
+            User.UserName = "k@a.com";
+            User.Logo = null;
         }
        
         public async Task<bool> Login(string username, string password)

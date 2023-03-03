@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using RestaurantNetowrkApp.Data;
 using RestaurantNetowrkApp.Services;
-using RestaurantNetowrkApp.Services.IServices;
 using Serilog;
 using Serilog.Events;
 using System.Net.NetworkInformation;
+using RestaurantNetowrkApp.Data;
+
 
 namespace RestaurantNetowrkApp;
 
@@ -25,10 +26,21 @@ public static class MauiProgram
 
         builder.Services.AddMauiBlazorWebView();
 
-        //builder.Services.AddHttpClient<IRestaurantService, RestaurantService>(client =>
-        //{
-        //    client.BaseAddress = new Uri("https://localhost:5064/");
-        //});
+		//builder.Services.AddHttpClient<IRestaurantService, RestaurantService>(client =>
+		//{
+		//    client.BaseAddress = new Uri("https://localhost:5064/");
+		//});
+
+		builder.Services.AddSingleton<AuthService>(service =>
+		  new AuthService(Constants.IdentityUri)
+	   );
+		builder.Services.AddScoped<OrderService>(service =>
+		  new OrderService(Constants.OrderUri)
+	   );
+        builder.Services.AddScoped<RestService>(service =>
+          new RestService(Constants.RestUri)
+       );
+
 
         builder.Services.AddScoped<SessionStorageAccessor>();
 

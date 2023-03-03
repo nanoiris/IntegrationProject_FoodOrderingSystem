@@ -1,4 +1,4 @@
-﻿using RestaurantDaoBase.Models;
+﻿using OssApp.Model;
 using Serilog;
 using System.Net.Http.Json;
 
@@ -14,12 +14,16 @@ namespace OssApp.Services
             this.server = server;
             http = new HttpClient();
             http.BaseAddress = new Uri(server);
-
-            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            if(AuthService.User != null)
+              http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
         }
 
         public async Task<List<T>> List(string listUrl)
         {
+            /*
+            if(AuthService.User != null)
+                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            */
             var response = await http.GetAsync(listUrl);
             List<T> rows = null;
             if (response.IsSuccessStatusCode)
@@ -44,6 +48,10 @@ namespace OssApp.Services
 
         public bool DeleteOne(string url)
         {
+            /*
+             if(AuthService.User != null)
+                 http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+             */
             Log.Debug($"RestService.DeleteOne {url}");
             var response = http.DeleteAsync(url).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
@@ -53,26 +61,38 @@ namespace OssApp.Services
             return false;
         }
 
-        public bool UpdateOne(string url, MultipartFormDataContent content)
+        public string UpdateOne(string url, MultipartFormDataContent content)
         {
+            /*
+            if(AuthService.User != null)
+                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            */
             var response = http.PutAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
-                return true;
+                var result = response.Content.ReadFromJsonAsync<AppResult>().GetAwaiter().GetResult();
+                if (result.isSuccess)
+                {
+                    return result.message;
+                }
             }
-            return false;
+            return null;
         }
         public string AddNewOne(string url, MultipartFormDataContent content)
         {
+            /*
+            if(AuthService.User != null)
+                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            */
             Log.Debug($"Enter RestService : AddNewOne : {url}");
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
                 Log.Debug("Add new one succefully");
                 var result = response.Content.ReadFromJsonAsync<AppResult>().GetAwaiter().GetResult();
-                if (result.IsSuccess)
+                if (result.isSuccess)
                 {
-                    return result.Message;
+                    return result.message;
                 }
             }
             return null;

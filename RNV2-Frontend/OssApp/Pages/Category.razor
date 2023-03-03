@@ -82,7 +82,9 @@
         {
             rowToInsert = null;
         }
+
         rowToUpdate = null;
+        service.UpdateOne(row);
     }
 
     async Task SaveRow(RestCategoryModel row)

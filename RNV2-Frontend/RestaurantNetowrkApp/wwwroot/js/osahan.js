@@ -37,21 +37,39 @@ window.restaurantQuantity = () => {
     $('.minus').on('click', function () { if ($(this).next().val() > 1) { if ($(this).next().val() > 1) $(this).next().val(+$(this).next().val() - 1); } });
 }
 
-window.showItemInCart = (itemId,qty) => {
+window.showItemInCart = (itemId, qty) => {
+
     var addStr = "add".concat(itemId);
     var quantityStr = "quantity".concat(itemId);
     var iptQtyStr = "iptQty".concat(itemId);
+
     var addDiv = document.getElementById(addStr);
     var iptQty = document.getElementById(iptQtyStr);
     var quantityDiv = document.getElementById(quantityStr);
-    if (qty == 0) {
-        addDiv.style.display = "flex";
-        quantityDiv.style.display = "none";
-    } else {
-        addDiv.style.display = "none";  
-        iptQty.value = qty;   
-        quantityDiv.style.display = "flex";
 
-    }
-    
+    addDiv.style.display = "none";  
+    iptQty.value = qty;   
+    quantityDiv.style.display = "flex";
+   
 }
+
+window.changeToAdd = (itemId) => {
+    var addStr = "add".concat(itemId);
+    var quantityStr = "quantity".concat(itemId);
+
+    var addDiv = document.getElementById(addStr);
+    var quantityDiv = document.getElementById(quantityStr);
+
+    addDiv.style.display = "flex";
+    quantityDiv.style.display = "none";
+}
+
+window.showTotal = (qty, subTotal) => {
+    //var s1 = qty.concat(" item");
+    //var s2 = "$".concat(subTotal);
+    document.getElementById("orderItemQty").textContent = qty.concat(" item");
+    document.getElementById("subTotal").textContent = "$".concat(subTotal);
+}
+//window.showQty = (qty,orderId) => {
+//    document.getElementById(orderId).textContent = qty.concat(" item");
+//}

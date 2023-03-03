@@ -1,4 +1,12 @@
 ﻿@page "/Restaurant"
+@using OssApp.Model
+@using OssApp.Services
+@inject RestaurantService service
+@inject RestCategoryService restCateService
+@inject DialogService DialogService
+@implements IDisposable
+
+<EventConsole @ref=console />
 
 <div class="rz-m-12 m-0">
     <RadzenBreadCrumb>
@@ -7,3 +15,227 @@
     </RadzenBreadCrumb>
 </div>
 
+<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" class="mt-2 mb-4" Text="Add New Cateogry" Click="@InsertRow" Disabled=@(rowToInsert != null || rowToUpdate != null) />
+<RadzenDataGrid @ref="myGrid" AllowAlternatingRows="false" AllowFiltering="false" AllowPaging="false" AllowSorting="false" EditMode="DataGridEditMode.Single"
+                Data="@rows" TItem="RestaurantForm" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow">
+    <Columns>
+        <RadzenDataGridColumn TItem="RestaurantForm" Property="Logo" Title="Logo" Width="60px">
+            <Template Context="row">
+                @if (row.Logo != null)
+                {
+                    <RadzenImage Path="@row.Logo" style="width: 48px; height: 48px; border-radius: 24px; margin-right: 6px;" />
+                }
+                @if (row.Id != null)
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="upload" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => OpenUploadDialog(row))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+                }
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RestaurantForm" Property="Name" Title="Name" Width="160px">
+            <EditTemplate Context="row">
+                <RadzenTextBox @bind-Value="row.Name" Style="width:100%; display: block" Name="Name" />
+                <RadzenRequiredValidator Text="Name is required" Component="Name" Popup="true" />
+            </EditTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RestaurantForm" Property="IsFeatured" Title="Featured" Width="60px">
+            <Template Context="row">
+                <RadzenSwitch @bind-Value="row.IsFeatured" Disabled="true" />
+            </Template>
+            <EditTemplate Context="row">
+                 <RadzenSwitch @bind-Value="row.IsFeatured" />
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="RestaurantForm" Property="CategoryName" Title="Category" Width="160px">
+            <EditTemplate Context="row">
+                <RadzenDropDown @bind-Value="row.CategoryId" Data="@categories" TextProperty="Name" ValueProperty="Id" Style="width:100%; display: block;" />
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="RestaurantForm" Property="Description" Title="Description" Width="160px">
+            <EditTemplate Context="row">
+                <RadzenTextBox @bind-Value="row.Description" Style="width:100%; display: block" Name="Description" />
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="RestaurantForm" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Width="156px">
+            <Template Context="row">
+                <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(row))" @onclick:stopPropagation="true">
+                </RadzenButton>
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(row))" @onclick:stopPropagation="true">
+                </RadzenButton>
+                <RadzenButton Icon="more" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditAdress(row))" @onclick:stopPropagation="true">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="row">
+                <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(row))">
+                </RadzenButton>
+                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => CancelEdit(row))">
+                </RadzenButton>
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(row))">
+                </RadzenButton>
+                <RadzenButton Icon="more" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditAdress(row))" @onclick:stopPropagation="true">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+
+    EventConsole console;
+
+    RadzenDataGrid<RestaurantForm> myGrid;
+    List<RestaurantForm> rows;
+    RestaurantForm rowToInsert;
+    RestaurantForm rowToUpdate;
+
+    IEnumerable<RestCategoryModel> categories;
+
+    void Reset()
+    {
+        rowToInsert = null;
+        rowToUpdate = null;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await restCateService.List();
+        service.BuildCateDict(categories);
+        rows = await service.List();
+    }
+
+    async Task EditRow(RestaurantForm row)
+    {
+        rowToUpdate = row;
+        await myGrid.EditRow(row);
+    }
+
+    async Task EditAdress(RestaurantForm row)
+    {
+        rowToUpdate = row;
+        await myGrid.EditRow(row);
+    }
+
+    void OnFeaturedChange(RestaurantForm row)
+    {
+        row.IsFeatured = !row.IsFeatured;
+    }
+
+    void OnUpdateRow(RestaurantForm row)
+    {
+        if (row == rowToInsert)
+        {
+            rowToInsert = null;
+        }
+
+        rowToUpdate = null;
+        service.UpdateOneMain(row);
+        console.Log(row.CategoryId);
+    }
+
+    async Task SaveRow(RestaurantForm row)
+    {
+        await myGrid.UpdateRow(row);
+    }
+
+    void CancelEdit(RestaurantForm row)
+    {
+        if (row == rowToInsert)
+        {
+            rowToInsert = null;
+        }
+        rowToUpdate = null;
+        myGrid.CancelEditRow(row);
+    }
+
+    async Task DeleteRow(RestaurantForm row)
+    {
+        if (row == rowToInsert)
+        {
+            rowToInsert = null;
+        }
+
+        if (row == rowToUpdate)
+        {
+            rowToUpdate = null;
+        }
+
+        if (rows.Contains(row))
+        {
+            var result = service.DeleteOne(row);
+            if (result == true)
+            {
+                rows.Remove(row);
+                myGrid.Reload();
+            }
+            else
+            {
+                //TODO
+            }
+        }
+        else
+        {
+            myGrid.CancelEditRow(row);
+            await myGrid.Reload();
+        }
+    }
+
+    async Task InsertRow()
+    {
+        var category = categories?.FirstOrDefault();
+        var cateId = "0";
+        if (category != null)
+            cateId = category.Id;
+        rowToInsert = new RestaurantForm 
+          { Name = "",CategoryId = cateId,IsFeatured = false };
+        await myGrid.InsertRow(rowToInsert);
+    }
+
+    void OnCreateRow(RestaurantForm row)
+    {
+        string id = service.AddNewOne(row);
+        if (id != null)
+        {
+            row.Id = id;
+            rows.Add(row);
+            rowToInsert = null;
+
+        }
+        else
+        {
+            //TODO
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        DialogService.OnOpen += Open;
+        DialogService.OnClose += Close;
+    }
+    public void Dispose()
+    {
+        // The DialogService is a singleton so it is advisable to unsubscribe.
+        DialogService.OnOpen -= Open;
+        DialogService.OnClose -= Close;
+    }
+
+    void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+    {
+
+    }
+
+    void Close(dynamic result)
+    {
+
+    }
+
+    async Task OpenUploadDialog(RestaurantForm row)
+    {
+        string uploadUrl = service.LogoUploadUrl + row.Id;
+        await DialogService.OpenAsync<UploadLogoDialog>($"Restaurant Logo Dialog",
+              new Dictionary<string, object>() { { "Id", row.Id }, { "UploadUrl", uploadUrl }, { "row", row } },
+              new DialogOptions() { Width = "700px", Height = "512px", Resizable = false, Draggable = false });
+    }
+}

@@ -533,6 +533,8 @@ work on login in pages
 
 2023/03/02 Thursday  Xiao Pei
 1. Done / not done since last scrum:
+- dynamically show menu & cart & payment footer
+- fix slick bug
 2. To do until next Scrum:
 3. Need assistance / figure things out
 
@@ -553,12 +555,17 @@ continute login page/search page
 =============================================================
 2023/03/03 Friday Yi 
 1. Done / not done since last scrum:
+started login 
 2. To do until next Scrum:
+continue login 
 3. Need assistance / figure things out
 
 2023/03/03 Friday  Xiao Pei
 1. Done / not done since last scrum:
+-finish order review page  
+- start my order page
 2. To do until next Scrum:
+- finish my orders page
 3. Need assistance / figure things out
 
 2023/03/03 Friday Wenzhe

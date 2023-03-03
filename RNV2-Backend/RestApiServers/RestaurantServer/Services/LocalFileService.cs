@@ -16,7 +16,18 @@ namespace RestaurantServer.Services
         {
             string fullFilePath = $"{dirPath}\\{fileName}";
 
-            File.Delete(fullFilePath);
+            try
+            {
+                File.Delete(fullFilePath);
+            }
+            catch (Exception ex)
+            {
+                return new AppResult
+                {
+                    Message = ex.Message,
+                    IsSuccess = false,
+                };
+            }
             return new AppResult
             {
                 Message = "File is deleted successfully",
