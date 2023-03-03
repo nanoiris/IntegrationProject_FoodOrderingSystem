@@ -81,24 +81,45 @@ namespace RestaurantNetowrkApp.Services
 
         public async Task<OrderItemDto> increase(string menuItemId, OrderDto orderCart)
         {
-            OrderItemDto orderItem = new OrderItemDto();
-            string orderId = orderCart.Id;
+            OrderItemDto orderItem = new OrderItemDto();           
             List<OrderItemDto> orderItems = orderCart.ItemList;
             orderItem = orderItems.FirstOrDefault(x => x.Item.Id == menuItemId);
             string orderItemId = orderItem.Id;
-            var response = await http.PutAsync($"api/cart/increaseqty/{orderId}/{orderItemId}", null);
+            string orderId = orderCart.Id;
+            await increaseOrderItem(orderItemId, orderId);
             return orderItem;
+        }
+
+        public async Task<bool> increaseOrderItem(string orderItemId, string orderId)
+        {
+            var response = await http.PutAsync($"api/cart/increaseqty/{orderId}/{orderItemId}", null);
+            if(response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+
         }
 
         public async Task<OrderItemDto> decrease(string menuItemId, OrderDto orderCart)
         {
-            OrderItemDto orderItem = new OrderItemDto();
-            string orderId = orderCart.Id;
+            OrderItemDto orderItem = new OrderItemDto();          
             List<OrderItemDto> orderItems = orderCart.ItemList;
             orderItem = orderItems.FirstOrDefault(x => x.Item.Id == menuItemId);
             string orderItemId = orderItem.Id;
-            var response = await http.PutAsync($"api/cart/decreaseqty/{orderId}/{orderItemId}", null);
+            string orderId = orderCart.Id;
+            await decreaseOrderItem(orderItemId, orderId);
             return orderItem;
+        }
+        public async Task<bool> decreaseOrderItem(string orderItemId, string orderId)
+        {
+            var response = await http.PutAsync($"api/cart/decreaseqty/{orderId}/{orderItemId}", null);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+
         }
 
         public OrderDto getOrderById(string id)

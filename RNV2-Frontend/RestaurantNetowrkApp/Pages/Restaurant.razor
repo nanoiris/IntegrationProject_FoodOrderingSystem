@@ -2,16 +2,11 @@
 @using RestaurantNetowrkApp.Componants
 @inject IJSRuntime JSRuntime
 @using Data.Dto
-@using System.Net.Mime;
-@using System.Net.Http.Json;
 @using Serilog;
-@using Data.Dto;
 @using Data.model;
-@using System.Text.Json;
-@using System.Text;
+@using Services;
 @inject Data.SessionStorageAccessor SessionStorageAccessor
 @inject NavigationManager NavigationManager
-@using Services;
 @inject RestService restService;
 @inject OrderService orderService;
 
@@ -106,32 +101,29 @@
                     </div>
                 </div>
             }
-         }
-        
+         }       
     </div>
 
-
-        <div class="fixed-bottom p-3">
-            <a href="/Order/Review/1"
-               class="btn btn-success btn-block btn-lg text-white rounded shadow text-decoration-none d-flex align-items-center shadow">
-                <div class="border-right pr-3">
-                    <h4 class="m-0"><i class="feather-shopping-bag" aria-hidden="true"></i></h4>
-                </div>
-                <div class="ml-3 text-left">
-                <p class="mb-0 small text-white-50 " id="orderItemQty">0 item</p>
-                <p class="mb-0 font-weight-bold text-white" id="subTotal">$0.00</p>
-                </div>
-                <div class="ml-auto">
-                    <p class="mb-0 text-white">
-                        Proceed to cart
-                        <i class="feather-chevron-right pl-2" aria-hidden="true"></i>
-                    </p>
-                </div>
-            </a>
-        </div>
+    <div class="fixed-bottom p-3">
+        <a @onclick = "goOrderReview"
+            class="btn btn-success btn-block btn-lg text-white rounded shadow text-decoration-none d-flex align-items-center shadow">
+            <div class="border-right pr-3">
+                <h4 class="m-0"><i class="feather-shopping-bag" aria-hidden="true"></i></h4>
+            </div>
+            <div class="ml-3 text-left">
+            <p class="mb-0 small text-white-50 " id="orderItemQty">0 item</p>
+            <p class="mb-0 font-weight-bold text-white" id="subTotal">$0.00</p>
+            </div>
+            <div class="ml-auto">
+                <p class="mb-0 text-white">
+                    Proceed to cart
+                    <i class="feather-chevron-right pl-2" aria-hidden="true"></i>
+                </p>
+            </div>
+        </a>
+    </div>
 
     
-
 </div>
 @code {
     [Parameter]
@@ -287,4 +279,8 @@
         }      
     }
 
+    private void goOrderReview()
+    {
+        NavigationManager.NavigateTo($"/Order/Review/{orderCart.Id}");
+    }
 }
