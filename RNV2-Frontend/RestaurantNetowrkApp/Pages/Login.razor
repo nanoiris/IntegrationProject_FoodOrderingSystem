@@ -1,12 +1,10 @@
 ﻿@page "/Account/Login"
 @page "/Account/Login/{msg}"
-@using Data.Dto;
-@using System.Net.Http;
-@using System.Net.Http.Json;
-@using System.Net.Http.Headers;
 @using Serilog;
 @inject NavigationManager NavigationManager
 @inject Data.SessionStorageAccessor SessionStorageAccessor
+@using Services;
+@inject AuthService authService
 
 
 <div class="login-page ">
@@ -58,14 +56,12 @@
 	}
 
 	private signupModel model = new signupModel();
-	private HttpClient httpClient = new HttpClient();
 
 	private async Task LoginPost()
 	{
-		//string jsonString = JsonSerializer.Serialize(model);
-		//Log.Debug($"login jsonString: {jsonString}");
-		HttpResponseMessage response = await httpClient.PostAsJsonAsync(Data.Constants.IdentityUri + "api/auth/login", model);
-		if (response.IsSuccessStatusCode == true)
+		var result =  await authService.Login(model.userName, model.password);
+ 
+		if (result)
 		{
 			await SessionStorageAccessor.SetValueAsync("userEmail", model.userName);
 			string msg = $"Welcome {model.userName}! Login secceed.";
