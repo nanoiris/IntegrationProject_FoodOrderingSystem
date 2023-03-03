@@ -1,7 +1,6 @@
 ﻿using OssApp.Model;
 using System.Net.Http.Json;
 using Serilog;
-using RestaurantDaoBase.Models;
 
 namespace OssApp.Services
 {
@@ -29,11 +28,13 @@ namespace OssApp.Services
             return base.DeleteOne($"{BaseUrl}/{role.Id}");
         }
 
-        public bool UpdateOne(RoleModel role)
+        public string UpdateOne(RoleModel row)
         {
+            if (string.IsNullOrEmpty(row.Name))
+                return null;
             var multipartContent = new MultipartFormDataContent();
-            multipartContent.Add(new StringContent(role.Name), "Name");
-            multipartContent.Add(new StringContent(role.Id), "Id");
+            multipartContent.Add(new StringContent(row.Name), "Name");
+            multipartContent.Add(new StringContent(row.Id), "Id");
 
             return base.UpdateOne(BaseUrl, multipartContent);
         }

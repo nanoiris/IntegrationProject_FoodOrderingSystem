@@ -58,10 +58,4 @@
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="RestaurantDaoBase">
-        <HintPath>..\..\IntegrationProject_FoodOrderingSystem\RNV2-Backend\RestApiServers\RestaurantDaoBase\bin\Release\net7.0\RestaurantDaoBase.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
 </Project>

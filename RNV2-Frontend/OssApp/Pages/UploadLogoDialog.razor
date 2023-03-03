@@ -2,7 +2,6 @@
 @using OssApp.Model
 @using OssApp.Services
 @using System.Text.Json
-@inject RestCategoryService service
 @inject Radzen.DialogService dialogService
 
 <div class="row">
@@ -26,7 +25,7 @@
     [Parameter] public string Id { get; set; }
     [Parameter] public string UploadUrl { get; set; }
 
-    [Parameter] public RestCategoryModel row { get; set; }
+    [Parameter] public LogoModel row { get; set; }
 
     int progress;
     string info;
@@ -39,13 +38,12 @@
     void OnUpload()
     {
         logo.Upload();
-        //dialogService.Close(false);
-    }
+     }
 
     void OnComplete(UploadCompleteEventArgs args)
     {
        var result = JsonSerializer.Deserialize<AppResult>(args.RawResponse);
-       row.Logo = service.buildLogo(result.message);
+       row.Logo = Utils.BuildLogoPath(result.message);
        dialogService.Close(false);
     }
 

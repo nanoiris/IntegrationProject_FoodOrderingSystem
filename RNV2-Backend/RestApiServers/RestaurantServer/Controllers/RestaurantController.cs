@@ -117,8 +117,10 @@ namespace RestaurantServer.Controllers
                 var result = await service.UpdateRestaurant(form);
                 if (result == true)
                 {
-                    fileService.DeleteFile(oldOne.Logo);
-                    return Ok(new AppResult("", true));
+                    if(oldOne.Logo != null)
+                        fileService.DeleteFile(oldOne.Logo);
+                    return form.CategoryId != null ? Ok(new AppResult(form.CategoryId, true))
+                        : Ok(new AppResult("", true));
                 }
                 else
                 {

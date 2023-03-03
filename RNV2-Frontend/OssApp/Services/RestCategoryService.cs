@@ -1,7 +1,6 @@
 ﻿using Microsoft.Maui.Controls;
 using OssApp.Model;
 using Radzen.Blazor;
-using RestaurantDaoBase.Models;
 using Serilog;
 using System.Net.Http.Json;
 
@@ -26,10 +25,6 @@ namespace OssApp.Services
             return result;
         }
 
-        public string buildLogo(string fileName)
-        {
-            return Utils.BuildLogoPath(fileName);
-        }
         public string AddNewOne(RestCategoryModel row)
         {
 
@@ -44,5 +39,16 @@ namespace OssApp.Services
        {
           return base.DeleteOne($"{BaseUrl}/DeletedOne/{row.Id}");
        }
+        public string UpdateOne(RestCategoryModel row)
+        {
+            if (string.IsNullOrEmpty(row.Name))
+                return null;
+
+            var content = new MultipartFormDataContent();
+            content.Add(new StringContent(row.Id), "Id");
+            content.Add(new StringContent(row.Name), "Name");
+
+            return base.UpdateOne($"{BaseUrl}/UpdatedOne", content);
+        }
     }
 }

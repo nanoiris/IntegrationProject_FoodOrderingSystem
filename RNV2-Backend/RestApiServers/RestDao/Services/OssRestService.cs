@@ -17,12 +17,12 @@ namespace RestaurantDao.Services
             using (var ctx = new RestaurantContext())
             {
                 RestCategory? category = await ctx.RestCategories.FindAsync(form.CategoryId);
-                if (category == null) 
+                if (category == null)
                 {
                     Console.WriteLine("The category is not right");
                     return false;
                 }
-                    
+
 
                 Restaurant newOne = new Restaurant();
                 newOne.Id = Guid.NewGuid().ToString("N");
@@ -43,7 +43,7 @@ namespace RestaurantDao.Services
                 if (address.Street != null && address.City != null && address.State != null)
                     newOne.Address = address;
 
-                newOne.CategoryId = category.Id; 
+                newOne.CategoryId = category.Id;
                 ctx.Restaurants.Add(newOne);
                 var result = await ctx.SaveChangesAsync();
                 if (result == 1)
@@ -96,9 +96,9 @@ namespace RestaurantDao.Services
                     if (category == null)
                         return false;
                 }
-                
-                if(form.Name != null) 
-                  row.Name = form.Name;
+
+                if (form.Name != null)
+                    row.Name = form.Name;
                 if (form.Email != null)
                     row.Email = form.Email;
                 if (form.Description != null)
@@ -108,14 +108,14 @@ namespace RestaurantDao.Services
                     row.IsFeatured = form.IsFeatured;
 
                 if (form.Logo != null)
-                   row.Logo = form.Logo;
+                    row.Logo = form.Logo;
 
                 if (form.PhoneNo != null)
                     row.PhoneNo = form.PhoneNo;
-                
+
                 Address address = new Address();
-                if(form.Street != null)
-                  address.Street = form.Street;
+                if (form.Street != null)
+                    address.Street = form.Street;
                 if (form.City != null)
                     address.City = form.City;
                 if (form.State != null)
@@ -124,10 +124,10 @@ namespace RestaurantDao.Services
                     address.Country = form.Country;
                 if (form.PostalCode != null)
                     address.PostalCode = form.PostalCode;
-                
-                if(address.Street != null && address.City != null && address.State != null)
-                   row.Address = address;
-                
+
+                if (address.Street != null && address.City != null && address.State != null)
+                    row.Address = address;
+
                 row.CategoryId = category.Id;
 
                 var result = await ctx.SaveChangesAsync();
@@ -136,5 +136,18 @@ namespace RestaurantDao.Services
                 return false;
             }
         }
+        public async Task<bool> UpdateRestaurantLogo(Restaurant model)
+        {
+            using (var ctx = new RestaurantContext())
+            {
+                var row = await ctx.Restaurants.FindAsync(model.Id);
+                if (row == null)
+                    return false;
+                row.Logo= model.Logo;
+                var result = await ctx.SaveChangesAsync();
+                return result == 1 ? true : false;
+            }
+        }
     }
+
 }
