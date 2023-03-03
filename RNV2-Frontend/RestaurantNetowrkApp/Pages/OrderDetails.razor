@@ -1,5 +1,8 @@
-﻿@page "/Order/Details/1"
+﻿@page "/Order/Details/{orderId}"
 @using RestaurantNetowrkApp.Componants
+@using Services;
+@using Data.Dto;
+@inject OrderService orderService;
 
 
 <div class="OrderDetails pb-5">
@@ -104,5 +107,11 @@
 </div>
 <NavMenuFooter />
 @code {
+    [Parameter] public string orderId{ get; set; }
+    private OrderDto order;
 
+    protected override async Task OnInitializedAsync()
+    {
+        order = orderService.getOrderById(orderId);
+    }
 }

@@ -10,7 +10,6 @@ using Serilog;
 using RestaurantNetowrkApp.Data.Dto;
 using Microsoft.JSInterop;
 using System.Text.Json;
-using RestaurantDaoBase.Models;
 
 namespace RestaurantNetowrkApp.Services
 {
@@ -18,6 +17,10 @@ namespace RestaurantNetowrkApp.Services
     {
         internal HttpClient http;
         public string server;
+        public enum StatusEnum
+        {
+            Cart = 0, Paid = 1, Accepted = 2, Ready = 3, Completed = 4, Canceled = 5
+        }
 
         public OrderService(string server)
         {
@@ -40,7 +43,6 @@ namespace RestaurantNetowrkApp.Services
 
         public async Task<OrderDto> getCart(string userEmail, string restId)
         {
-            OrderDto orderCart = new OrderDto();
             var requestBody =
                 new
                 {
@@ -53,9 +55,9 @@ namespace RestaurantNetowrkApp.Services
             var orders = JsonSerializer.Deserialize<List<OrderDto>>(responseBody);
             if (orders.Count != 0)
             {
-                orderCart = orders[0];
+                return orders[0];
             }
-            return orderCart;
+            return null;
         }
 
         public async Task<bool> addToCart(MenuItemDto menuItem, OrderDto orderCart)
@@ -125,6 +127,21 @@ namespace RestaurantNetowrkApp.Services
         public OrderDto getOrderById(string id)
         {
             return http.GetFromJsonAsync<OrderDto>($"api/order/one/{id}").Result;
+        }
+
+        public async Task<List<OrderDto>> getOrderByStatus(string userEmail, int status)
+        {
+            var requestBody = new
+            {
+                userName = userEmail,
+                status = status,
+            };
+            var response = await http.PostAsJsonAsync("api/order/ListByUserAndStatus", requestBody);
+            if (response.IsSuccessStatusCode)
+            {
+                return response.Content.ReadFromJsonAsync<List<OrderDto>>().Result;
+            }
+            return null;
         }
     }
 }
