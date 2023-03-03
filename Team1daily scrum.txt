@@ -555,7 +555,9 @@ continute login page/search page
 =============================================================
 2023/03/03 Friday Yi 
 1. Done / not done since last scrum:
+started login 
 2. To do until next Scrum:
+continue login 
 3. Need assistance / figure things out
 
 2023/03/03 Friday  Xiao Pei
