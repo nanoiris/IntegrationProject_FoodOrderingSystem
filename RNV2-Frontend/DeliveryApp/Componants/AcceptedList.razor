@@ -1,8 +1,10 @@
-﻿@using RestaurantDaoBase.Models;
+﻿@using DeliveryApp.Services;
+@using RestaurantDaoBase.Models;
 @using System.Net.Http;
 @using System.Net.Http.Json;
 @using RestaurantDaoBase;
 @using Serilog;
+@inject AuthService authService
 
 <div class="section">
     <nav aria-label="breadcrumb">
@@ -63,19 +65,18 @@
 
 </div>
 @code {
-    [Parameter]
+
     public string deliveryman { get; set; }
-
-
     public List<Delivery> restDelivery { get; set; }
     public HttpClient httpClient = new HttpClient();
+
     protected override async Task OnInitializedAsync()
     {
         //Log.Debug("render start");
         //httpClient.BaseAddress = new Uri("http://localhost:5175/");
         httpClient.BaseAddress = new Uri("http://ec2-18-214-61-45.compute-1.amazonaws.com:5175/");
         restDelivery = new List<Delivery>();
-        deliveryman = "deliveryman1";
+        deliveryman = AuthService.User.UserName;
         restDelivery = (await httpClient.GetFromJsonAsync<List<Delivery>>($"api/delivery/ByDeliveryManAndStatus/" + deliveryman + "/1")).ToList();
     }
 }

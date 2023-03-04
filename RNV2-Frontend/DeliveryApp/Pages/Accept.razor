@@ -1,23 +1,25 @@
-﻿@page "/accept/{delyId}/{deliveryman}"
+﻿@page "/accept/{delyId}"
+@using DeliveryApp.Services;
 @using RestaurantDaoBase.Models;
 @using System.Net.Http;
 @using System.Net.Http.Json;
 @using RestaurantDaoBase;
 @using Serilog;
 @inject NavigationManager NavigationManager
+@inject AuthService authService
 
 @code {
-
-    [Parameter]
-    public string deliveryman { get; set; }
     [Parameter]
     public string delyId { get; set; }
-
+  
+    public string deliveryman { get; set; }
     public HttpClient httpClient = new HttpClient();
+
     protected override async Task OnInitializedAsync()
     {       
         //httpClient.BaseAddress = new Uri("http://localhost:5175/");
         httpClient.BaseAddress = new Uri("http://ec2-18-214-61-45.compute-1.amazonaws.com:5175/");
+        deliveryman = AuthService.User.Name;
         var response = (await httpClient.PutAsJsonAsync<bool>($"api/delivery/Accept/" + delyId + "/" + deliveryman,true));
         if (response.IsSuccessStatusCode == true)
         {

@@ -84,7 +84,7 @@
         var response=await authService.Login(model.userName,model.password);
         if (response)
         {
-            string msg = $"Welcome ! Login secceed.";
+            string msg = $"Welcome {AuthService.User.UserName} ! Login secceed.";
             NavigationManager.NavigateTo($"/home/{msg}");
         }
         else

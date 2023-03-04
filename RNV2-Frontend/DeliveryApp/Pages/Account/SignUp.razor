@@ -1,10 +1,10 @@
 ﻿@page "/Account/Signup"
-@using DeliveryApp.Data.Dto;
 @using System.Net.Http;
 @using System.Net.Http.Json;
 @using System.Net.Http.Headers;
 @using Serilog;
 @using Microsoft.AspNetCore.Http;
+@using DeliveryApp.Data.Dto;
 @inject NavigationManager NavigationManager
 
 
@@ -73,7 +73,7 @@
 </div>
 
 @code {
-    public UserModel user = new UserModel();
+    public RegisterUser user = new RegisterUser();
     private HttpClient httpClient = new HttpClient();
 
     private async Task SignupPost()

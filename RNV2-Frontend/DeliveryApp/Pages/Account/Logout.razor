@@ -1,0 +1,13 @@
+﻿@page "/Account/Logout"
+@using DeliveryApp.Services;
+@inject NavigationManager NavigationManager
+@inject AuthService authService
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        authService.Logout();
+        string msg = $"Logout secceed.";
+        NavigationManager.NavigateTo($"/Account/Login/{msg}"); 
+    }
+}
