@@ -9,5 +9,11 @@ namespace RmsApp.Dtos
         [Required]
         public string Password { get; set; }
 
+        public string Role { get; set; }
+        public string Logo { get; set; }
+        public string Token { get; set; }
+        public string RestaurantId { get; set; }
+        public string RestaurantName { get; set; }
+
     }
 }

@@ -1,5 +1,11 @@
-﻿@page "/Order/Details/1"
+﻿@page "/Order/Details/{orderId}"
 @using RestaurantNetowrkApp.Componants
+@using Services;
+@using Data.Dto;
+@inject OrderService orderService;
+@inject RestService restService;
+@inject RatingService ratingService;
+@inject Data.SessionStorageAccessor sessionStorageAccessor;
 
 
 <div class="OrderDetails pb-5">
@@ -9,35 +15,53 @@
             <span class="ml-3 h6 mb-0">Order Details</span>
         </a>
     </div>
-    <div class="card-header bg-white">
-        <div class="row">
-            <div class="col-6 my-auto">
-                <p class="text-muted"> Order No. <span class="font-weight-bold text-dark"># 123</span></p>
-                <p class="text-muted"> Place On <span class="font-weight-bold text-dark"> 12,Feb 2023</span> </p>
-            </div>
-            <div class="col-5 text-center  my-auto pl-0 pt-sm-4">
-                <img class="img-fluid my-auto align-items-center mb-0 pt-3" src="img/trending1.png" width="115"
-                     height="115">
-                <p></p>
-                <p class="mb-4 pt-0 Glasses">Pizza Club</p>
+    @if(order != null)
+    {
+        <div class="card-header bg-white">
+            <p class="text-muted"># @order.Id</p>
+            <div class="row">
+                <div class="col-6 my-auto">   
+                    <p class="my-2 h3">@order.RestaurantName</p>
+                    <p class="text-muted"> Place On: </p>
+                    <p class="text-muted"> <span class="font-weight-bold text-dark"> @order.CreateTime.ToString("dd MMMM, yyyy")</span> </p>
+                </div>
+                <div class="col-6 text-center  my-auto pl-0 pt-sm-4">
+                    <img class="img-fluid my-auto align-items-center mb-0 pt-3" src="@(Data.Constants.imgUrl+ rest.Logo)" width="115"
+                         height="115">
+                    <p></p>
+                
+                </div>
             </div>
         </div>
-    </div>
+    }
+    
     <div class="shadow bg-white p-3 mb-3 clearfix">
-        <p class="mb-1">6' Cheese <span class="float-right text-dark">$15.90</span></p>
-        <p class="mb-1">Frech Fries <span class="float-right text-dark">$7.90</span></p>
-        <p class="mb-1">Vanila Ice Cream <span class="float-right text-dark">$3.99</span></p>
+        @if(order != null)
+        {
+            @foreach(var orderItem in order.ItemList)
+            {
+                <div class="row mb-1">
+                    <p class="col-8">@orderItem.Item.Name</p>
+                    <p class="col-1">@orderItem.Qty</p>
+                    <p class="col-3 text-right text-dark">$ @orderItem.Item.Price</p>
+                </div>
+            }
+        }       
     </div>
-    <div class="shadow bg-white p-3 mb-3 clearfix">
-        <p class="mb-1">SubTotal <span class="float-right text-dark">$3140</span></p>
-        <p class="mb-1">GST/HST <span class="float-right text-dark">$314</span></p>
-        <p class="mb-1">PST/TST/QST <span class="float-right text-dark">$157</span></p>
-        <p class="mb-1">
-            Delivery Fee<span class="text-info ml-1"><i class="icofont-info-circle"></i></span><span class="float-right text-dark">$10</span>
-        </p>
-        <hr>
-        <h6 class="font-weight-bold mb-0">Total <span class="float-right">$1329</span></h6>
-    </div>
+    @if (order != null)
+    {
+        <div class="shadow bg-white p-3 mb-3 clearfix">
+            <p class="mb-1">SubTotal <span class="float-right text-dark">$@order.SubTotal</span></p>
+            <p class="mb-1">GST/HST <span class="float-right text-dark">$@String.Format("{0:0.00}", (order.SubTotal * (decimal)0.1))</span></p>
+            <p class="mb-1">PST/TST/QST <span class="float-right text-dark">$@String.Format("{0:0.00}", (order.SubTotal * (decimal)0.05))</span></p>
+            <p class="mb-1">
+                Delivery Fee<span class="text-info ml-1"><i class="icofont-info-circle"></i></span><span class="float-right text-dark">$10</span>
+            </p>
+            <hr>
+            <h6 class="font-weight-bold mb-0">Total <span class="float-right">$$@String.Format("{0:0.00}",order.PayTotal)</span></h6>
+        </div>
+    }
+    
     <div class="track mx-2">
         <div class="step active">
             <span class="icon">  <i class="fa fa-check"></i> </span>
@@ -58,24 +82,39 @@
     </div>
    
 </div>
-<div id="ratings-and-reviews"
-     class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
-    <h6 class="mb-0">Rate the Restaurant</h6>
-    <div class="star-rating ml-auto">
-        <div class="d-inline-block h6 m-0">
-            <i class="feather-star text-warning"></i>
-            <i class="feather-star text-warning"></i>
-            <i class="feather-star text-warning"></i>
-            <i class="feather-star text-warning"></i>
-            <i class="feather-star"></i>
-        </div>
-    </div>
-</div>
-<div class="p-3 bg-white shadow-sm">
-    <h6>Rate the Food</h6>
+
+@if(order != null && rest != null)
+{
+    @*--------- rate restaurant---------*@
     <div id="ratings-and-reviews"
-         class=" d-flex align-items-center py-2 clearfix restaurant-detailed-star-rating">
-        <p class="mb-0">6' Cheese</p>
+         class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
+        <h6 class="mb-0">Rate the Restaurant</h6>
+        <Ratings targetId = "@rest.Id" username = "@userEmail" target = "rest" />
+    </div>
+    @*--------- rate foods---------*@
+    <div class="p-3 bg-white shadow-sm">
+        <h6>Rate the Food</h6>
+        @foreach(var orderItem in order.ItemList)
+        {
+        <div id="ratings-and-reviews"
+             class=" d-flex align-items-center py-2 clearfix restaurant-detailed-star-rating">
+            <p class="mb-0">@orderItem.Item.Name</p>
+            <div class="star-rating ml-auto">
+                <div class="d-inline-block h6 m-0">
+                    <i class="feather-star text-warning"></i>
+                    <i class="feather-star text-warning"></i>
+                    <i class="feather-star text-warning"></i>
+                    <i class="feather-star text-warning"></i>
+                    <i class="feather-star"></i>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    @*--------- rate delivery---------*@
+    <div id="ratings-and-reviews"
+         class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
+        <h6 class="mb-0">Rate the Delivery</h6>
         <div class="star-rating ml-auto">
             <div class="d-inline-block h6 m-0">
                 <i class="feather-star text-warning"></i>
@@ -85,24 +124,30 @@
                 <i class="feather-star"></i>
             </div>
         </div>
-    </div>
-    <div id="ratings-and-reviews" class=" d-flex align-items-center  py-2 clearfix restaurant-detailed-star-rating">
-        <p class="mb-0">6' Cheese</p>
-        <div class="star-rating ml-auto">
-            <div class="d-inline-block h6 m-0">
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star"></i>
-            </div>
-        </div>
-    </div>
-</div>
+    </div> 
+}
+
 <div class="py-5">
     <hr />
 </div>
 <NavMenuFooter />
 @code {
+    [Parameter] public string orderId{ get; set; }
+    private OrderDto order ;
+    private RestaurantDto rest = new RestaurantDto();
+    private string userEmail; 
 
+    protected override async Task OnInitializedAsync()
+    {
+        //userEmail = await sessionStorageAccessor.GetValueAsync<string>("userEmail");
+        userEmail = "u3@gmail.com";
+        order = orderService.getOrderById(orderId);
+        rest = restService.GetRestById(order.RestaurantId);
+    }
+
+    //private async Task rateRest(string restId, string username, int value)
+    //{
+    //    var result = await ratingService.rateRestaurant(restId, username, value);
+        
+    //}
 }

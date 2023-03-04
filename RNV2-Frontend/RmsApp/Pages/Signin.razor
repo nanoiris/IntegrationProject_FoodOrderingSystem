@@ -1,63 +1,67 @@
 ﻿@page "/signin"
+@using RmsApp.Services
+@using RmsApp.Dtos
+@inject ILogger<AuthService> logger
+@inject IFlashMessageService FlashMessageService
+@inject NavigationManager NavigationManager
+@inject IAuthService AuthService
 
 <PageTitle>Signin</PageTitle>
 
- <div class="d-flex align-items-center justify-content-center mt-5">
-        <div class="px-5 col-md-6 ">
-          <div class="px-5 col-10 mx-auto">
+<div class="d-flex align-items-center justify-content-center mt-5">
+    <div class="px-5 col-md-6">
+        <div class="px-5 col-10 mx-auto">
             <h2 class="text-dark my-0"><i class="fa fa-utensils text-danger"></i> Restaurant Admin, Welcome! </h2>
             <p class="text-50">Sign in to continue</p>
-                  @* @if (TempData["SuccessMessage"] != null)
-                  {
-                      <div class="alert alert-success">
-                          @TempData["SuccessMessage"]
-                      </div>
-                      <script>
-                          setTimeout(function() {
-                          var flashMessage = document.querySelector('.alert-success');
-                          flashMessage.style.display = 'none';
-                          }, 10000);
-                      </script>
-                  }
-              else if (TempData["FailureMessage"] != null)
-                  {
-                  <div class="alert alert-danger">
-                      @TempData["FailureMessage"]
-                  </div>
-                  <script>
-                      setTimeout(function() {
-                      var flashMessage = document.querySelector('.alert-danger');
-                      flashMessage.style.display = 'none';
-                      }, 10000);
-                  </script>
-                  } *@
-            <form class="mt-5 mb-4" method="post">
-              <div class="form-group mb-3">
-                <label asp-for="Email" class="text-dark">Email</label>
-                <input asp-for="Email" type="text" placeholder="" class="form-control" id="Email" />
-                 <span asp-validation-for="Email" class="text-danger"></span>
-              </div>
-              <div class="form-group mb-3">
-                <label asp-for="Password" class="text-dark">Password</label>
-                <input asp-for="Password" type="password" placeholder="" class="form-control" id="Password" />
-                 <span asp-validation-for="Password" class="text-danger"></span>
-              </div>
-            <div class="text-center">  
-                <button class="btn btn-primary btn-lg btn-block">SIGN IN</button>
-            </div>
-            </form>
-             <br>
-            <div class="d-flex align-items-center justify-content-center">
-              <a asp-action="Signup">
-                @* <p class="text-center m-0">Don't have an account? Sign up</p> *@
-              </a>
-            </div>
-          </div>
+            @if (!AuthService.IsLoggedIn)
+            {
+                <form class="mt-5 mb-4" @onsubmit="async () => await OnSigninAsync()">
+                    <div class="form-group mb-3">
+                        <label class="text-dark">Email</label>
+                        <input type="text" placeholder="" class="form-control" @bind-value="loginModel.UserName"/>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="text-dark">Password</label>
+                        <input type="password" placeholder="" class="form-control" @bind-value="loginModel.Password"/>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">SIGN IN</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <p>You are already logged in.</p>
+            }
+            <br>
         </div>
-      </div>
-
-
+    </div>
+</div>
 
 @code {
     
+
+
+    private LoginDto loginModel = new LoginDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        logger.LogInformation("Sign in OnInitializedAsync");
+    }
+
+    private async Task OnSigninAsync()
+    {
+        bool result = await AuthService.LoginAsync(loginModel.UserName, loginModel.Password);
+        if (result)
+        {
+            FlashMessageService.SuccessMessage = "You have been logged in.";
+            NavigationManager.NavigateTo("/edit");
+        }
+        else
+        {
+            FlashMessageService.FailureMessage = "Login failed. Please try again.";
+        }
+    }
 }

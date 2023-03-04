@@ -1,5 +1,10 @@
 ﻿@page "/"
 @page "/Account/Login/{msg}"
+@using DeliveryApp.Services;
+@using Serilog;
+@inject NavigationManager NavigationManager
+@inject AuthService authService
+
 <div class="login-page">
     @if (msg != null)
     {
@@ -11,26 +16,27 @@
                 <h4 class="text-dark my-0 "><img src="img/2.png" />Restaurant Network Delivery</h4>
            @* <h4 class="text-dark my-0 ">Welcome!</h4>  *@             
                 <p class="text-50">Sign in to continue</p>
-                <form class="mt-5 mb-4" method="post" action="Home">
-                    <div class="form-group">
-                        <label for="Email" class="text-dark">Email</label>
-                        <input type="text" placeholder="" class="form-control" id="Email" />                        
-                    </div>
-                    <div class="form-group">
-                        <label for="Password" class="text-dark">Password</label>
-                        <input type="password" placeholder="" class="form-control" id="Password" />                        
-                    </div>
-                    <div class="or-osahan text-center my-4 border-bottom">
-                        <span>OR</span>
-                    </div>
-                    <div class="mb-3">
-                        <button class="btn btn-lg btn-light btn-block">
-                            <img src="img/search.svg" alt=""> Login with Google
-                        </button>
-                    </div>
-                    <button class="btn btn-primary btn-lg btn-block">SIGN IN</button>
-                </form>              
-                <div class="d-flex align-items-center justify-content-center">
+            <EditForm class="mt-4 " id="signupForm" Model="@model" OnValidSubmit="OnLogin">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <input @bind-value="model.userName" type="text" placeholder="Name" class="form-control" />
+                    <ValidationMessage For="@(() => model.userName)" />
+                </div>
+                <div class="form-group">
+                    <input @bind-value="model.password" type="password" placeholder="Password" class="form-control" />
+                    <ValidationMessage For="@(() => model.password)" />
+                </div>
+                <div class="or-osahan text-center my-4 border-bottom">
+                    <span>OR</span>
+                </div>
+                <div class="mb-3">
+                    <button class="btn btn-lg btn-light btn-block">
+                        <img src="img/search.svg" alt=""> Login with Google
+                    </button>
+                </div>
+                <button class="btn btn-primary btn-lg btn-block mt-5" type="submit">Log in</button>
+            </EditForm>
+            <div class="d-flex align-items-center justify-content-center">
                 <a href="/Account/Signup">
                         <p class="text-center m-0">Don't have an account? Sign up</p>
                     </a>
@@ -44,4 +50,48 @@
     [Parameter]
     public string msg { get; set; }
 
+    private class signupModel
+    {
+        public string userName { get; set; }
+        public string password { get; set; }
+    }
+
+    private signupModel model = new signupModel();
+    private HttpClient httpClient = new HttpClient();
+
+    //private async Task LoginPost()
+    //{
+    //    HttpResponseMessage response = await httpClient.PostAsJsonAsync(Data.Constants.IdentityUri + "api/auth/login", model);
+    //    if (response.IsSuccessStatusCode == true)
+    //    {
+    //        string msg = $"Welcome {model.userName}! Login secceed.";
+    //        NavigationManager.NavigateTo($"/home/{msg}");
+
+    //        authService.User = await response.Content.ReadFromJsonAsync<UserModel>();
+    //        IsLoggedIn = true;
+    //        if (User.Logo != null)
+    //        {
+    //            User.Logo = Utils.BuildLogoPath(User.Logo);
+    //        }
+    //        //return true;
+    //    }
+    //}
+
+    public async Task OnLogin()
+    {
+        Log.Debug(model.userName);
+        Log.Debug(model.password);
+        var response=await authService.Login(model.userName,model.password);
+        if (response)
+        {
+            string msg = $"Welcome ! Login secceed.";
+            NavigationManager.NavigateTo($"/home/{msg}");
+        }
+        else
+        {
+            string msg = $"Login failed.Please try again.";
+            NavigationManager.NavigateTo($"/Account/Login/{msg}");
+        }
+    }
+    
 }

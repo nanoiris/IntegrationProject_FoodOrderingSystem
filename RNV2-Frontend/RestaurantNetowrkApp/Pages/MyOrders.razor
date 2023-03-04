@@ -1,52 +1,9 @@
 ﻿@page "/Order"
-@using RestaurantNetowrkApp.Componants
-
-@*<div class="accordion accordion-flush" id="accordionFlushExample">
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="flush-headingOne">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-orderCart" aria-expanded="false" aria-controls="flush-collapseOne">
-                <i class="feather-shopping-cart mr-2 text-primary mb-0"></i> Cart
-            </button>
-        </h2>
-        <div id="flush-orderCart" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
-        </div>
-    </div>
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="flush-headingTwo">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-OrderPaid" aria-expanded="false" aria-controls="flush-collapseTwo">
-                <i class="feather-package mr-2 text-success mb-0"></i>
-                Paid
-            </button>
-        </h2>
-        <div id="flush-OrderPaid" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
-        </div>
-    </div>
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="flush-headingThree">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-OrderOnProgress" aria-expanded="false" aria-controls="flush-collapseThree">
-                <i class="feather-clock mr-2 text-warning mb-0"></i>
-                On Progress
-            </button>
-        </h2>
-        <div id="flush-OrderOnProgress" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-        </div>
-    </div>
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="flush-headingThree">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-OrderCompleted" aria-expanded="false" aria-controls="flush-collapseThree">
-                <i class="feather-x-circle mr-2 text-danger mb-0"></i>
-                On Progress
-            </button>
-        </h2>
-        <div id="flush-OrderCompleted" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-        </div>
-    </div>
-
-</div>*@
+@using Data.Dto;
+@using Services;
+@using RestaurantNetowrkApp.Componants;
+@inject Data.SessionStorageAccessor SessionStorageAccessor
+@inject OrderService orderService;
 
 <div class="myorders pb-5">
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
@@ -55,92 +12,196 @@
             <span class="ml-3 h6 mb-0">My Orders</span>
         </a>
     </div>
-    <div class="order-body">
-        <div class="pb-3">
-            <div class="p-3 rounded shadow-sm bg-white">
-                <div class="row border-bottom pb-3">
-                    <p class="col-2 text-secondary">#123</p>
-                    <div class="col-4 font-weight-bold">
-                        <a onclick="/Restaurant/1" class="text-dark">
-                            Pizza Club
-                        </a>
-                         <p class="text-secondary">$99.9</p>
-                    </div>                  
-                    <div class="col-4">
-                        <p class="bg-success text-white py-1  px-1 text-center rounded small mb-1">In Cart</p>
+
+    @*----------orders in cart------------------*@
+    <p>
+        <a class="btn btn-primary w-100" data-toggle="collapse" href="#collapseExample" @onclick="@(() => { IsVisibleCart = !IsVisibleCart; })">
+            <i class="feather-shopping-cart mr-2 text-success mb-0"></i> Cart
+        </a>
+    </p> 
+    <div class="collapse @(IsVisibleCart ? "" : "show")">
+        <div class="card card-body">
+            @if(ordersCart != null){
+                @foreach(var order in ordersCart)
+                {               
+                    <div lass="pb-3">
+                        <div class="p-3 rounded shadow-sm bg-white">
+                            <p class="text-secondary">#@order.Id</p>
+                            <div class="row border-bottom pb-3">                             
+                                <div class="col-5 font-weight-bold">
+                                    <a onclick="/Restaurant/1" class="text-dark">
+                                        @order.RestaurantName
+                                    </a>
+                                    <p class="text-secondary">$@order.PayTotal</p>
+                                </div>
+                                <div class="col-5">
+                                    <p class="bg-success text-white py-1  px-1 text-center rounded small mb-1">In Cart</p>
+                                </div>
+                                <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/Details/@order.Id">
+                                    <i class="feather-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>                  
                     </div>
+                }
+            }
+        </div>                
+    </div>
 
-                    <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/Details/1">
-                        <i class="feather-chevron-right"></i>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-        <div class="pb-3">
-            <div class="p-3 rounded shadow-sm bg-white">
-                <div class="row border-bottom pb-3">
-                    <p class="col-2 text-secondary">#123</p>
-                    <div class="col-4 font-weight-bold">
-                        <a onclick="/Restaurant/1" class="text-dark">
-                            Pizza Club
-                        </a>
-                        <p class="text-secondary">$99.9</p>
+    @*----------orders on progress------------------*@
+    <p>
+        <a class="btn btn-primary w-100" data-toggle="collapse" href="#collapseExample" @onclick="@(() => { IsVisibleOnProgress = !IsVisibleOnProgress; })">
+            <i class="feather-clock mr-2 text-warning mb-0"></i>On Progress
+        </a>
+    </p>
+    <div class="collapse @(IsVisibleOnProgress ? "show" : "")">
+        <div class="card card-body">
+            @if (ordersCart != null)
+            {
+                @foreach (var order in ordersPaid)
+                {
+                    <div lass="pb-3">
+                        <div class="p-3 rounded shadow-sm bg-white">
+                            <p class="text-secondary">#@order.Id</p>
+                            <div class="row border-bottom pb-3">
+                                <div class="col-5 font-weight-bold">
+                                    <a onclick="/Restaurant/1" class="text-dark">
+                                        @order.RestaurantName
+                                    </a>
+                                    <p class="text-secondary">$@order.PayTotal</p>
+                                </div>
+                                <div class="col-5">
+                                    <p class="bg-warning text-white py-1 px-1 text-center rounded small mb-1">Paid</p>
+                                </div>
+                                <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/Details/@order.Id">
+                                    <i class="feather-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <p class="bg-success text-white py-1 px-1 mx-auto text-center rounded small mb-1" >Paid</p>
+                }
+                @foreach (var order in ordersAccepted)
+                {
+                    <div lass="pb-3">
+                        <div class="p-3 rounded shadow-sm bg-white">
+                            <p class="text-secondary">#@order.Id</p>
+                            <div class="row border-bottom pb-3">
+                                <div class="col-5 font-weight-bold">
+                                    <a onclick="/Restaurant/1" class="text-dark">
+                                        @order.RestaurantName
+                                    </a>
+                                    <p class="text-secondary">$@order.PayTotal</p>
+                                </div>
+                                <div class="col-5">
+                                    <p class="bg-warning text-white py-1 px-1 text-center rounded small mb-1">Accepted</p>
+                                </div>
+                                <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/Details/@order.Id">
+                                    <i class="feather-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-
-                    <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/Details/1">
-                        <i class="feather-chevron-right"></i>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-        <div class="pb-3">
-            <div class="p-3 rounded shadow-sm bg-white">
-                <div class="row border-bottom pb-3">
-                    <p class="col-2 text-secondary">#123</p>
-                    <div class="col-4 font-weight-bold">
-                        <a onclick="/Restaurant/1" class="text-dark">
-                            Pizza Club
-                        </a>
-                        <p class="text-secondary">$99.9</p>
+                }
+                @foreach (var order in ordersReady)
+                {
+                    <div lass="pb-3">
+                        <div class="p-3 rounded shadow-sm bg-white">
+                            <p class="text-secondary">#@order.Id</p>
+                            <div class="row border-bottom pb-3">
+                                <div class="col-5 font-weight-bold">
+                                    <a onclick="/Restaurant/1" class="text-dark">
+                                        @order.RestaurantName
+                                    </a>
+                                    <p class="text-secondary">$@order.PayTotal</p>
+                                </div>
+                                <div class="col-5">
+                                    <p class="bg-warning text-white py-1 px-1 text-center rounded small mb-1">Ready</p>
+                                </div>
+                                <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/Details/@order.Id">
+                                    <i class="feather-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <p class="bg-success text-white py-1 px-1 text-center rounded small mb-1" >Accept</p>
-                    </div>
-
-                    <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/Details/1">
-                        <i class="feather-chevron-right"></i>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-        <div class="pb-3">
-            <div class="p-3 rounded shadow-sm bg-white">
-                <div class="row border-bottom pb-3">
-                    <p class="col-2 text-secondary">#123</p>
-                    <div class="col-4 font-weight-bold">
-                        <a onclick="/Restaurant/1" class="text-dark">
-                            Pizza Club
-                        </a>
-                        <p class="text-secondary">$99.9</p>
-                    </div>
-                    <div class="col-4">
-                        <p class="bg-warning text-white py-1 px-1 text-center rounded small mb-1" >On progress</p>
-                    </div>
-
-                    <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/Details/1">
-                        <i class="feather-chevron-right"></i>
-                    </a>
-                </div>
-
-            </div>
+                }
+            }
         </div>
     </div>
+
+    @*----------orders completed------------------*@
+    <p>
+        <a class="btn btn-primary w-100" data-toggle="collapse" href="#collapseExample" @onclick="@(() => { IsVisibleCompleted = !IsVisibleCompleted; })">
+            <i class="feather-package mr-2 text-success mb-0"></i>
+            Completed
+        </a>
+    </p>
+    <div class="collapse @(IsVisibleCompleted ? "show" : "")">
+        <div class="card card-body">
+            @if (ordersCart != null)
+            {
+                @foreach (var order in ordersCompleted)
+                {
+                    <div lass="pb-3">
+                        <div class="p-3 rounded shadow-sm bg-white">
+                            <p class="text-secondary">#@order.Id</p>
+                            <div class="row border-bottom pb-3">
+                                <div class="col-5 font-weight-bold">
+                                    <a onclick="/Restaurant/1" class="text-dark">
+                                        @order.RestaurantName
+                                    </a>
+                                    <p class="text-secondary">$@order.PayTotal</p>
+                                </div>
+                                <div class="col-5">
+                                    <p class="bg-warning text-white py-1 px-1 text-center rounded small mb-1">Completed</p>
+                                </div>
+                                <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/Details/@order.Id">
+                                    <i class="feather-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    @*----------orders cancled------------------*@
+    <p>
+        <a class="btn btn-primary w-100" data-toggle="collapse" href="#collapseExample" @onclick="@(() => { IsVisibleCancled = !IsVisibleCancled; })">
+            <i class="feather-x-circle mr-2 text-dark mb-0"></i>
+            Cancled
+        </a>
+    </p>
+    <div class="collapse @(IsVisibleCancled ? "show" : "")">
+        <div class="card card-body">
+            @if (ordersCart != null)
+            {
+                @foreach (var order in ordersCanceled)
+                {
+                    <div lass="pb-3">
+                        <div class="p-3 rounded shadow-sm bg-white">
+                            <p class="text-secondary">#@order.Id</p>
+                            <div class="row border-bottom pb-3">
+                                <div class="col-5 font-weight-bold">
+                                    <a onclick="/Restaurant/1" class="text-dark">
+                                        @order.RestaurantName
+                                    </a>
+                                    <p class="text-secondary">$@order.PayTotal</p>
+                                </div>
+                                <div class="col-5">
+                                    <p class="bg-warning text-white py-1 px-1 text-center rounded small mb-1">Canceled</p>
+                                </div>
+                                <a class="col-2 font-weight-bold text-dark text-back text-decoration-none " href="/Order/Details/@order.Id">
+                                    <i class="feather-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
     <div class="py-3">
         <hr />
     </div>
@@ -149,5 +210,26 @@
 <NavMenuFooter />
 
 @code {
+    private bool IsVisibleCart { get; set; }
+    private bool IsVisibleOnProgress { get; set; }
+    private bool IsVisibleCompleted { get; set; }
+    private bool IsVisibleCancled { get; set; }
+    private List<OrderDto> ordersCart;
+    private List<OrderDto> ordersPaid;
+    private List<OrderDto> ordersAccepted;
+    private List<OrderDto> ordersReady;
+    private List<OrderDto> ordersCompleted;
+    private List<OrderDto> ordersCanceled;
 
+    protected override async Task OnInitializedAsync()
+    {
+        //string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
+        string userEmail = "u3@gmail.com";
+        ordersCart = await orderService.getOrderByStatus(userEmail, 0);
+        ordersPaid = await orderService.getOrderByStatus(userEmail, 1);
+        ordersAccepted = await orderService.getOrderByStatus(userEmail, 2);
+        ordersReady = await orderService.getOrderByStatus(userEmail, 3);
+        ordersCompleted = await orderService.getOrderByStatus(userEmail, 4);
+        ordersCanceled = await orderService.getOrderByStatus(userEmail, 5);
+    }
 }
