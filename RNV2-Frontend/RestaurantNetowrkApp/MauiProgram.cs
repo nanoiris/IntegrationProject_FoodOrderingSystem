@@ -40,6 +40,9 @@ public static class MauiProgram
         builder.Services.AddScoped<RestService>(service =>
           new RestService(Constants.RestUri)
        );
+        builder.Services.AddScoped<RatingService>(service =>
+         new RatingService(Constants.RatingUri)
+      );
 
 
         builder.Services.AddScoped<SessionStorageAccessor>();
