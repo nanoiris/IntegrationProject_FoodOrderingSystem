@@ -1,9 +1,6 @@
 ﻿using IdentityServer.Models;
 using IdentityServer.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Runtime.CompilerServices;
 
 namespace IdentityServer.Controllers
 {
@@ -72,10 +69,10 @@ namespace IdentityServer.Controllers
             if (ModelState.IsValid)
             {
                 if(model.UploadImg != null)
-                    model.Logo = fileService.SaveFile(model.UploadImg, configuration);
+                    model.Logo = fileService.SaveFile(model.UploadImg);
                 var result = await userService.RegisterUser(model);
                 if (!result.IsSuccess && model.Logo != null)
-                   fileService.DeleteFile(model.Logo, configuration);
+                   fileService.DeleteFile(model.Logo);
                 return Ok(result);
             }
             return BadRequest("Some properties are not valid");

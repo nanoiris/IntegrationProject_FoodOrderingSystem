@@ -4,9 +4,7 @@
 @inject RestaurantService service
 @inject RestCategoryService restCateService
 @inject DialogService DialogService
-@implements IDisposable
-
-<EventConsole @ref=console />
+@inject NavigationManager navManager
 
 <div class="rz-m-12 m-0">
     <RadzenBreadCrumb>
@@ -43,11 +41,11 @@
                 <RadzenSwitch @bind-Value="row.IsFeatured" Disabled="true" />
             </Template>
             <EditTemplate Context="row">
-                 <RadzenSwitch @bind-Value="row.IsFeatured" />
+                <RadzenSwitch @bind-Value="row.IsFeatured" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="RestaurantForm" Property="CategoryName" Title="Category" Width="160px">
+        <RadzenDataGridColumn TItem="RestaurantForm" Property="CategoryName" Title="Category" Width="80px">
             <EditTemplate Context="row">
                 <RadzenDropDown @bind-Value="row.CategoryId" Data="@categories" TextProperty="Name" ValueProperty="Id" Style="width:100%; display: block;" />
             </EditTemplate>
@@ -59,7 +57,7 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="RestaurantForm" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Width="156px">
+        <RadzenDataGridColumn TItem="RestaurantForm" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="100px" Title="Action">
             <Template Context="row">
                 <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(row))" @onclick:stopPropagation="true">
                 </RadzenButton>
@@ -79,12 +77,16 @@
                 </RadzenButton>
             </EditTemplate>
         </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RestaurantForm" Title="User" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="60px">
+            <Template Context="row">
+                <RadzenButton Icon="account_box" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => GotoUserPage(row))" @onclick:stopPropagation="true">
+                </RadzenButton>
+            </Template>
+        </RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
 
 @code {
-
-    EventConsole console;
 
     RadzenDataGrid<RestaurantForm> myGrid;
     List<RestaurantForm> rows;
@@ -132,7 +134,6 @@
 
         rowToUpdate = null;
         service.UpdateOneMain(row);
-        console.Log(row.CategoryId);
     }
 
     async Task SaveRow(RestaurantForm row)
@@ -188,8 +189,8 @@
         var cateId = "0";
         if (category != null)
             cateId = category.Id;
-        rowToInsert = new RestaurantForm 
-          { Name = "",CategoryId = cateId,IsFeatured = false };
+        rowToInsert = new RestaurantForm
+            { Name = "", CategoryId = cateId, IsFeatured = false };
         await myGrid.InsertRow(rowToInsert);
     }
 
@@ -208,34 +209,16 @@
             //TODO
         }
     }
-
-    protected override void OnInitialized()
-    {
-        DialogService.OnOpen += Open;
-        DialogService.OnClose += Close;
-    }
-    public void Dispose()
-    {
-        // The DialogService is a singleton so it is advisable to unsubscribe.
-        DialogService.OnOpen -= Open;
-        DialogService.OnClose -= Close;
-    }
-
-    void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
-    {
-
-    }
-
-    void Close(dynamic result)
-    {
-
-    }
-
     async Task OpenUploadDialog(RestaurantForm row)
     {
         string uploadUrl = service.LogoUploadUrl + row.Id;
         await DialogService.OpenAsync<UploadLogoDialog>($"Restaurant Logo Dialog",
               new Dictionary<string, object>() { { "Id", row.Id }, { "UploadUrl", uploadUrl }, { "row", row } },
               new DialogOptions() { Width = "700px", Height = "512px", Resizable = false, Draggable = false });
+    }
+
+    void GotoUserPage(RestaurantForm row)
+    {
+        navManager.NavigateTo($"/User?RestId={row.Id}&RestName={row.Name}&RestLogo={row.Logo}");
     }
 }

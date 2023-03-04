@@ -12,7 +12,7 @@ namespace OssApp.Services
         
         public async Task<List<RoleModel>> List()
         {
-            var result = await this.List(BaseUrl);
+            var result = await base.List(BaseUrl);
             return result;
         }
 

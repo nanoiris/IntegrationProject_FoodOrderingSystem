@@ -25,17 +25,20 @@ public static class MauiProgram
         builder.Services.AddSingleton<AuthService>(service =>
            new AuthService("http://localhost:5191")
         );
-        builder.Services.AddScoped<RoleService>(service =>
+        builder.Services.AddSingleton<RoleService>(service =>
            new RoleService("http://localhost:5191")
         );
-        
+
         builder.Services.AddSingleton<RestCategoryService>(service =>
            new RestCategoryService("http://localhost:5064")
         );
 
         builder.Services.AddSingleton<RestaurantService>(service =>
-          new RestaurantService("http://localhost:5064")
-       );
+           new RestaurantService("http://localhost:5064")
+        );
+        builder.Services.AddSingleton<UserService>(service =>
+           new UserService("http://localhost:5191")
+        );
 
         builder.Services.AddScoped<DialogService>();
         builder.Services.AddScoped<NotificationService>();

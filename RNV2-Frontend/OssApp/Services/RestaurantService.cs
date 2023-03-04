@@ -33,6 +33,14 @@ namespace OssApp.Services
             return result;
         }
 
+        public async Task<RestaurantForm> Find(string id)
+        {
+            var result = await this.FindOne($"{BaseUrl}/One/{id}");
+            if(result != null)
+              result.Logo = Utils.BuildLogoPath(result.Logo);
+            return result;
+        }
+
         public string AddNewOne(RestaurantForm row)
         {
 

@@ -46,6 +46,30 @@ namespace OssApp.Services
             return rows;
         }
 
+        public async Task<T> FindOne(string url)
+        {
+            /*
+            if(AuthService.User != null)
+                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            */
+            var response = await http.GetAsync(url);
+            T row = default(T);
+            if (response.IsSuccessStatusCode)
+            {
+                Log.Debug("RestService.Find");
+                try
+                {
+                    row = response.Content.ReadFromJsonAsync<T>()
+                        .GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug($"RestService.Find : {ex.Message}");
+                }
+            }
+            return row;
+        }
+
         public bool DeleteOne(string url)
         {
             /*
@@ -96,6 +120,22 @@ namespace OssApp.Services
                 }
             }
             return null;
+        }
+        public bool AddNewOneAction(string url, MultipartFormDataContent content)
+        {
+            /*
+            if(AuthService.User != null)
+                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            */
+            Log.Debug($"Enter RestService : AddNewOne : {url}");
+            var response = http.PostAsync(url, content).GetAwaiter().GetResult();
+            if (response.IsSuccessStatusCode)
+            {
+                Log.Debug("Add new one succefully");
+                var result = response.Content.ReadFromJsonAsync<AppResult>().GetAwaiter().GetResult();
+                return result.isSuccess;
+            }
+            return false;
         }
     }
 }

@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-12" >
         <RadzenCard Style="width: 100%; overflow: hidden; border: var(--rz-grid-cell-border)" class="rz-shadow-0">
-            <RadzenText TextStyle="TextStyle.Subtitle1" class="rz-pb-4">Single file upload</RadzenText>
+            <RadzenText TextStyle="TextStyle.Subtitle1" class="rz-pb-4">User Photo upload</RadzenText>
             <RadzenUpload @ref="logo" Auto="false" Url=@UploadUrl Complete=@OnComplete Progress ="@((args) => OnProgress(args, "Logo"))" />
         </RadzenCard>
     </div>

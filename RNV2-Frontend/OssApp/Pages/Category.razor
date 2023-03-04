@@ -3,7 +3,6 @@
 @using OssApp.Services
 @inject RestCategoryService service
 @inject DialogService DialogService
-@implements IDisposable
 
 <div class="rz-m-12 m-0">
     <RadzenBreadCrumb>
@@ -155,29 +154,7 @@
             //TODO
         }
     }
-
-    protected override void OnInitialized()
-    {
-        DialogService.OnOpen += Open;
-        DialogService.OnClose += Close;
-    }
-    public void Dispose()
-    {
-        // The DialogService is a singleton so it is advisable to unsubscribe.
-        DialogService.OnOpen -= Open;
-        DialogService.OnClose -= Close;
-    }
-
-    void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
-    {
-        
-    }
-
-    void Close(dynamic result)
-    {
-        
-    }
-
+    
     async Task OpenUploadDialog(RestCategoryModel row)
     {
         string uploadUrl = service.LogoUploadUrl + row.Id;

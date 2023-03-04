@@ -9,9 +9,15 @@ namespace IdentityServer.Services
 {
     public class LocalFileService : IFileService
     {
-        public AppResult DeleteFile(string fileName, IConfiguration Configuration)
+        private string dirPath;
+
+        public LocalFileService(string dirPath)
         {
-            string dirPath = Configuration["LogoRootPath"];
+            this.dirPath = dirPath;
+        }
+
+        public AppResult DeleteFile(string fileName)
+        {
             string fullFilePath = $"{dirPath}\\{fileName}";
 
             try
@@ -24,10 +30,8 @@ namespace IdentityServer.Services
 
             return new AppResult("", true);
         }
-        public string SaveFile(IFormFile formFile, IConfiguration Configuration)
+        public string SaveFile(IFormFile formFile)
         {
-            string dirPath = Configuration["LogoRootPath"];
-
             string uid = Guid.NewGuid().ToString("N");
             string uploadFileName = formFile.FileName;
             string imgType = uploadFileName.Substring(uploadFileName.LastIndexOf("."));

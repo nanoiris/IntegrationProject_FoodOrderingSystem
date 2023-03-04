@@ -1,5 +1,211 @@
-﻿@page "/User"
-@inject IJSRuntime JS
+﻿@using OssApp.Model
+@using OssApp.Services
+@inject UserService service
+@inject DialogService DialogService
+@page "/User"
 
-<img src="https://pxtoday.blob.core.windows.net/pxtoday/order.png" class="m-2" />
+<EventConsole @ref=console />
 
+<div class="rz-m-12 m-0">
+    <RadzenBreadCrumb>
+        <RadzenBreadCrumbItem Path="/" Text="Home" />
+        <RadzenBreadCrumbItem Path="/Restaurant" Text="Restaurant" />
+        <RadzenBreadCrumbItem Path="/User?RestId={RestId}&RestName={RestName}&RestLogo={RestLogo}" Text="User" />
+    </RadzenBreadCrumb>
+</div>
+<RadzenPanel AllowCollapse="false" class="rz-m-12 m-0">
+    <HeaderTemplate>
+        <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0">
+            <RadzenImage path="@RestLogo" class="rz-mr-5" Style="width:40px;height:40px" /><b>@RestName</b>
+        </RadzenText>
+    </HeaderTemplate>
+    <ChildContent>
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" class="mt-2 mb-4" Text="Add New User" Click="@InsertRow" Disabled=@(rowToInsert != null || rowToUpdate != null) />
+        <RadzenDataGrid @ref="myGrid" AllowAlternatingRows="false" AllowFiltering="false" AllowPaging="false" AllowSorting="false" EditMode="DataGridEditMode.Single"
+                        Data="@rows" TItem="AppUserForm" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow">
+            <Columns>
+                <RadzenDataGridColumn TItem="AppUserForm" Property="Logo" Title="Avatar" Width="60px">
+                    <Template Context="row">
+                        @if (row.Logo != null)
+                        {
+                            <RadzenImage Path="@row.Logo" style="width: 48px; height: 48px; border-radius: 24px; margin-right: 6px;" />
+                        }
+                        @if (row.Id != null)
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="upload" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => OpenUploadDialog(row))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                        }
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AppUserForm" Property="Email" Title="Email" Width="160px">
+                    <EditTemplate Context="row">
+                        <RadzenTextBox @bind-Value="row.Email" Style="width:100%; display: block" Name="Email" />
+                        <RadzenRequiredValidator Text="Email is required" Component="Email" Popup="true" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AppUserForm" Property="Name" Title="Name" Width="80px">
+                    <EditTemplate Context="row">
+                        <RadzenTextBox @bind-Value="row.Name" Style="width:100%; display: block" Name="Name" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AppUserForm" Property="IsActive" Title="Active" Width="60px">
+                    <Template Context="row">
+                        <RadzenSwitch @bind-Value="row.IsActive" Disabled="true" />
+                    </Template>
+                    <EditTemplate Context="row">
+                        <RadzenSwitch @bind-Value="row.IsActive" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AppUserForm" Property="PhoneNumber" Title="Phone No" Width="120px">
+                    <EditTemplate Context="row">
+                        <RadzenMask Mask="(***) ***-****" CharacterPattern="[0-9]" Placeholder="(000) 000-0000" @bind-Value=@row.PhoneNumber Style="width: 100%;" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AppUserForm" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Width="156px">
+                    <Template Context="row">
+                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(row))" @onclick:stopPropagation="true">
+                        </RadzenButton>
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(row))" @onclick:stopPropagation="true">
+                        </RadzenButton>
+                    </Template>
+                    <EditTemplate Context="row">
+                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(row))">
+                        </RadzenButton>
+                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => CancelEdit(row))">
+                        </RadzenButton>
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(row))">
+                        </RadzenButton>
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    </ChildContent>
+</RadzenPanel>
+
+@code {
+    EventConsole console;
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "RestId")]
+    public string RestId { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "RestName")]
+    public string RestName { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "RestLogo")]
+    public string RestLogo { get; set; }
+
+    RadzenDataGrid<AppUserForm> myGrid;
+    List<AppUserForm> rows;
+    AppUserForm rowToInsert;
+    AppUserForm rowToUpdate;
+
+    void Reset()
+    {
+        rowToInsert = null;
+        rowToUpdate = null;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        rows = await service.List(RestId);
+    }
+
+    async Task EditRow(AppUserForm row)
+    {
+        rowToUpdate = row;
+        await myGrid.EditRow(row);
+    }
+
+    void OnUpdateRow(AppUserForm row)
+    {
+        if (row == rowToInsert)
+        {
+            rowToInsert = null;
+        }
+
+        rowToUpdate = null;
+        service.UpdateOneMain(row);
+    }
+
+    async Task SaveRow(AppUserForm row)
+    {
+        await myGrid.UpdateRow(row);
+    }
+
+    void CancelEdit(AppUserForm row)
+    {
+        if (row == rowToInsert)
+        {
+            rowToInsert = null;
+        }
+        rowToUpdate = null;
+        myGrid.CancelEditRow(row);
+    }
+
+    async Task DeleteRow(AppUserForm row)
+    {
+        if (row == rowToInsert)
+        {
+            rowToInsert = null;
+        }
+
+        if (row == rowToUpdate)
+        {
+            rowToUpdate = null;
+        }
+
+        if (rows.Contains(row))
+        {
+            var result = service.DeleteOne(row);
+            if (result == true)
+            {
+                rows.Remove(row);
+                myGrid.Reload();
+            }
+            else
+            {
+                //TODO
+            }
+        }
+        else
+        {
+            myGrid.CancelEditRow(row);
+            await myGrid.Reload();
+        }
+    }
+
+    async Task InsertRow()
+    {
+        rowToInsert = new AppUserForm { Email = "" };
+        await myGrid.InsertRow(rowToInsert);
+    }
+
+    void OnCreateRow(AppUserForm row)
+    {
+        row.RestaurantId = RestId;
+        row.RestaurantName = RestName;
+
+        string id = service.AddNewOne(row);
+        if (id != null)
+        {
+            row.Id = id;
+            rows.Add(row);
+            rowToInsert = null;
+        }
+        else
+        {
+            //TODO
+        }
+    }
+
+    async Task OpenUploadDialog(AppUserForm row)
+    {
+        string uploadUrl = service.LogoUploadUrl + row.Id;
+        console.Log(uploadUrl);
+        await DialogService.OpenAsync<UploadLogoDialog>($"User Logo Dialog",
+              new Dictionary<string, object>() { { "Id", row.Id }, { "UploadUrl", uploadUrl }, { "row", row } },
+              new DialogOptions() { Width = "700px", Height = "512px", Resizable = false, Draggable = false });
+    }
+
+}
