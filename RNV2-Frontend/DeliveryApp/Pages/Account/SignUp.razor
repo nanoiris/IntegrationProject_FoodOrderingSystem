@@ -73,7 +73,7 @@
 </div>
 
 @code {
-    public RegisterUser user = new RegisterUser();
+    public UserModel user = new UserModel();
     private HttpClient httpClient = new HttpClient();
 
     private async Task SignupPost()
@@ -84,6 +84,11 @@
         multipartContent.Add(new StringContent(user.Password), "Password");
         multipartContent.Add(new StringContent(user.ConfirmPassword), "ConfirmPassword");
         multipartContent.Add(new StringContent(user.PhoneNumber), "PhoneNumber");
+        multipartContent.Add(new StringContent(user.Street), "Street");
+        multipartContent.Add(new StringContent(user.City), "City");
+        multipartContent.Add(new StringContent(user.State), "State");
+        multipartContent.Add(new StringContent(user.Country), "Country");
+        multipartContent.Add(new StringContent(user.PostCode), "PostCode");
         multipartContent.Add(new StringContent("DeliveryMan"), "Role");
 
         var img = new StreamContent(user.UploadImg?.OpenReadStream());

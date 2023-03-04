@@ -70,6 +70,3 @@ window.showTotal = (qty, subTotal) => {
     document.getElementById("orderItemQty").textContent = qty.concat(" item");
     document.getElementById("subTotal").textContent = "$".concat(subTotal);
 }
-//window.showQty = (qty,orderId) => {
-//    document.getElementById(orderId).textContent = qty.concat(" item");
-//}

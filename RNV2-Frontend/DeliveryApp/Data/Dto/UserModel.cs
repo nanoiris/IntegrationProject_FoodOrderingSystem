@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DeliveryApp.Data.Dto
 {
-    public class RegisterUser
+    public class UserModel
     {
         [Required]
         [EmailAddress]
@@ -38,5 +38,6 @@ namespace DeliveryApp.Data.Dto
         [MaxLength(20)]
         public string? PostCode { get; set; }
         public string? Role { get; set; }
+        public string Token { get; set; }
     }
 }
