@@ -98,7 +98,7 @@
     @*--------- rate restaurant---------*@
     <div class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
         <h6 class="mb-0">Rate the Restaurant</h6>
-        <Ratings targetId = "@rest.Id" username = "@userEmail" target = "rest" />
+        <Ratings targetId="@rest.Id" username="@userEmail" target="rest" order="@order" />
     </div>
     @*--------- rate foods---------*@
     <div class="p-3 bg-white shadow-sm my-2">
@@ -108,14 +108,14 @@
         <div id="ratings-and-reviews"
              class=" d-flex align-items-center py-2 clearfix restaurant-detailed-star-rating">
             <p class="mb-0">@orderItem.Item.Name</p>
-            <Ratings targetId="@orderItem.Item.Id" username="@userEmail" target="menu" />
+            <Ratings targetId="@orderItem.Item.Id" username="@userEmail" target="menu" order ="@order"/>
         </div>
         }
     </div>
     @*--------- rate delivery---------*@
     <div class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
         <h6 class="mb-0">Rate the Delivery</h6>
-        <Ratings targetId="" username="@userEmail" target="menu" />
+        <Ratings targetId="" username="@userEmail" target="delivery" order="@order" />
     </div> 
 }
 

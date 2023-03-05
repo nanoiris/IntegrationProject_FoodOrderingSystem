@@ -38,6 +38,24 @@ namespace RestaurantNetowrkApp.Services
             return false;
         }
 
+        public async Task<bool> rateMenuItem(string menuItemId, string username, int value,string restId)
+        {
+            var requestBody = new
+            {
+                restaurantId = restId,
+                menuItemId = menuItemId,
+                value = value,
+                createBy = username
+            };
+            var response = await http.PostAsJsonAsync("api/rate/toMenuItem", requestBody);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            Log.Debug($"Rate restaurant failed. menuItemId:{menuItemId}, user:{username}");
+            return false;
+        }
+
         public async Task<string[]> getRatingPercentages(string restId)
         {
             var response = await http.GetAsync($"api/rate/Percentages/{restId}");
