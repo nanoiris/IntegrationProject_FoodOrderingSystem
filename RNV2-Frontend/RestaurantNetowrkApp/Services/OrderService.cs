@@ -143,5 +143,15 @@ namespace RestaurantNetowrkApp.Services
             }
             return null;
         }
+
+        public async Task<bool> cancleOrder(string orderId)
+        {
+            var response = await http.DeleteAsync($"api/order/CanceledOne/{orderId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        } 
     }
 }

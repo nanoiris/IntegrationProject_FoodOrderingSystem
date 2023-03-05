@@ -6,6 +6,7 @@
 @inject RestService restService;
 @inject RatingService ratingService;
 @inject Data.SessionStorageAccessor sessionStorageAccessor;
+@inject NavigationManager navigationManager;
 
 
 <div class="OrderDetails pb-5">
@@ -21,7 +22,7 @@
             <p class="text-muted"># @order.Id</p>
             <div class="row">
                 <div class="col-6 my-auto">   
-                    <p class="my-2 h3">@order.RestaurantName</p>
+                    <p class="my-2 h4">@order.RestaurantName</p>
                     <p class="text-muted"> Place On: </p>
                     <p class="text-muted"> <span class="font-weight-bold text-dark"> @order.CreateTime.ToString("dd MMMM, yyyy")</span> </p>
                 </div>
@@ -41,7 +42,7 @@
             @foreach(var orderItem in order.ItemList)
             {
                 <div class="row mb-1">
-                    <p class="col-8">@orderItem.Item.Name</p>
+                    <p class="col-8 ">@orderItem.Item.Name</p>
                     <p class="col-1">@orderItem.Qty</p>
                     <p class="col-3 text-right text-dark">$ @orderItem.Item.Price</p>
                 </div>
@@ -58,72 +59,63 @@
                 Delivery Fee<span class="text-info ml-1"><i class="icofont-info-circle"></i></span><span class="float-right text-dark">$10</span>
             </p>
             <hr>
-            <h6 class="font-weight-bold mb-0">Total <span class="float-right">$$@String.Format("{0:0.00}",order.PayTotal)</span></h6>
+            <h6 class="font-weight-bold mb-0">Total <span class="float-right">$@String.Format("{0:0.00}",order.PayTotal)</span></h6>
         </div>
     }
+    @if((int)order.Status == 0)
+    {
+        <button class="btn btn-primary text-white" @onclick="()=>cancleOrder(order.Id)">Cancel</button>
+    }
+
+    @if (order.IsDelivery)
+    {
+        <div class="track mx-2">
+            <div class="step active">
+                <span class="icon">  <i class="fa fa-check"></i> </span>
+                <span class="text">Order confirmed</span>
+            </div>
+            <div class="step active">
+                <span class="icon"> <i class="fa fa-user"></i> </span>
+                <span class="text"> Picked by courier</span>
+            </div>
+            <div class="step active">
+                <span class="icon"> <i class="fa fa-truck"></i> </span>
+                <span class="text"> On the way</span>
+            </div>
+            <div class="step">
+                <span class="icon"> <i class="fa fa-box"></i> </span>
+                <span class="text">Complete</span>
+            </div>
+        </div>
+    }
+
     
-    <div class="track mx-2">
-        <div class="step active">
-            <span class="icon">  <i class="fa fa-check"></i> </span>
-            <span class="text">Order confirmed</span>
-        </div>
-        <div class="step active">
-            <span class="icon"> <i class="fa fa-user"></i> </span>
-            <span class="text"> Picked by courier</span>
-        </div>
-        <div class="step active">
-            <span class="icon"> <i class="fa fa-truck"></i> </span>
-            <span class="text"> On the way</span>
-        </div>
-        <div class="step">
-            <span class="icon"> <i class="fa fa-box"></i> </span>
-            <span class="text">Complete</span>
-        </div>
-    </div>
    
 </div>
 
-@if(order != null && rest != null)
+@if(order != null && rest != null && (int)order.Status == 4)
 {
     @*--------- rate restaurant---------*@
-    <div id="ratings-and-reviews"
-         class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
+    <div class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
         <h6 class="mb-0">Rate the Restaurant</h6>
         <Ratings targetId = "@rest.Id" username = "@userEmail" target = "rest" />
     </div>
     @*--------- rate foods---------*@
-    <div class="p-3 bg-white shadow-sm">
+    <div class="p-3 bg-white shadow-sm my-2">
         <h6>Rate the Food</h6>
         @foreach(var orderItem in order.ItemList)
         {
         <div id="ratings-and-reviews"
              class=" d-flex align-items-center py-2 clearfix restaurant-detailed-star-rating">
             <p class="mb-0">@orderItem.Item.Name</p>
-            <div class="star-rating ml-auto">
-                <div class="d-inline-block h6 m-0">
-                    <i class="feather-star text-warning"></i>
-                    <i class="feather-star text-warning"></i>
-                    <i class="feather-star text-warning"></i>
-                    <i class="feather-star text-warning"></i>
-                    <i class="feather-star"></i>
-                </div>
-            </div>
+            <Ratings targetId="@orderItem.Item.Id" username="@userEmail" target="menu" />
         </div>
         }
     </div>
     @*--------- rate delivery---------*@
-    <div id="ratings-and-reviews"
-         class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
+    <div class="bg-white d-flex align-items-center shadow-sm p-3 mb-3 clearfix restaurant-detailed-star-rating">
         <h6 class="mb-0">Rate the Delivery</h6>
-        <div class="star-rating ml-auto">
-            <div class="d-inline-block h6 m-0">
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star text-warning"></i>
-                <i class="feather-star"></i>
-            </div>
-        </div>
+        <Ratings targetId="" username="@userEmail" target="menu" />
     </div> 
 }
 
@@ -145,9 +137,15 @@
         rest = restService.GetRestById(order.RestaurantId);
     }
 
-    //private async Task rateRest(string restId, string username, int value)
-    //{
-    //    var result = await ratingService.rateRestaurant(restId, username, value);
-        
-    //}
+    private async Task cancleOrder(string orderId)
+
+    {
+        var result = await orderService.cancleOrder(orderId);
+        if (result)
+        {
+            string msg = $"Order Cancled Successfully.";
+            navigationManager.NavigateTo($"/{msg}");
+        }
+
+    }
 }
