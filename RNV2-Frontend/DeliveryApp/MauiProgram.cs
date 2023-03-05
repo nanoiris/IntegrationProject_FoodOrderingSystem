@@ -19,6 +19,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<AuthService>(service =>
            new AuthService("http://localhost:5191")
         );
+        builder.Services.AddSingleton<Utils>(service =>
+           new Utils()
+        );
         builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
