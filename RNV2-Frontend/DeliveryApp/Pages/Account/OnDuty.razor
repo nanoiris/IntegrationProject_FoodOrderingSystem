@@ -1,0 +1,29 @@
+﻿@page "/Account/OnDuty"
+@using DeliveryApp.Services;
+@using RestaurantDaoBase.Models;
+@using System.Net.Http;
+@using System.Net.Http.Json;
+@using RestaurantDaoBase;
+@using Serilog;
+@using DeliveryApp.Data;
+@inject NavigationManager NavigationManager
+@inject AuthService authService
+
+@code {
+
+    public string userName { get; set; }
+    public HttpClient httpClient = new HttpClient();
+
+    protected override async Task OnInitializedAsync()
+    {
+        httpClient.BaseAddress = new Uri(Constants.IdentityUri);
+        userName = AuthService.User.UserName;
+        var response = (await httpClient.PutAsJsonAsync<bool>($"api/UserStatus/OnDuty/" + userName,true));
+        if (response.IsSuccessStatusCode == true)
+        {
+            //Log.Debug("render start");
+            string msg = "Change to OnDuty succeed!";
+            NavigationManager.NavigateTo($"/Account/Profile/{msg}", forceLoad: true);
+        }
+    }
+}

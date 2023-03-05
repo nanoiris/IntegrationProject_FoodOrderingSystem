@@ -17,7 +17,7 @@ namespace DeliveryApp.Data
         public const string IdentityUri = baseUri + "5191/";
         public const string DelyUri = baseUri + "5175/";
 
-        public const string imgLocal = "img/dely/";
+        public const string imgLocal = "img/delivery/";
         public const string imgAzureBlob = "https://pxtoday.blob.core.windows.net/pxtoday/";
 
         public const string imgUrl = imgLocal;

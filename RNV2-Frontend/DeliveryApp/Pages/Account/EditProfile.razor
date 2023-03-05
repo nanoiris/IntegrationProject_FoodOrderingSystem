@@ -96,9 +96,9 @@
         deliveryman = AuthService.User.UserName;
         user = (await httpClient.GetFromJsonAsync<RegisterUser>($"api/Ossuser/OneByEmail/" + deliveryman));
         if (user.Logo != null)
+        {
             logo = Utils.BuildLogoPath(user.Logo);
-        else
-            logo = "";
+        }
     }
 
     private async Task EditProfilePut()
@@ -129,12 +129,12 @@
         if (response.IsSuccessStatusCode)
         {
             string msg = "Update Profile succeed!";
-            NavigationManager.NavigateTo($"/Account/Profile/{msg}");
+            NavigationManager.NavigateTo($"/Account/Profile/{msg}", forceLoad: true);
         }
         else
         {
             string msg = "Update Profile failed.Please try again";
-            NavigationManager.NavigateTo($"/Account/EditProfile/{msg}");
+            NavigationManager.NavigateTo($"/Account/EditProfile/{msg}", forceLoad: true);
         }
     }
 
