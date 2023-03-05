@@ -108,7 +108,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         httpClient.BaseAddress =new Uri(Constants.IdentityUri);      
         deliveryman = AuthService.User.UserName;
         user = (await httpClient.GetFromJsonAsync<RegisterUser>($"api/Ossuser/OneByEmail/"+deliveryman));
