@@ -135,10 +135,12 @@ namespace IdentityServer.Controllers
             return BadRequest(new AppResult("", false));
         }
 
+        /*
         [HttpGet]
         public Task<List<AppUser>>? AvaliableDeliveryMan()
         {
             return userService.AvaliableDeliveryManList();
         }
+        */
     }
 }

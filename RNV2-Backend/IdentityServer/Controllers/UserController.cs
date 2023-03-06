@@ -31,12 +31,12 @@ namespace IdentityServer.Controllers
             {
                 AppUser user = await userService.FindUserByEmail(model.Email);
                 if(user == null) 
-                    return Ok(new AppResult("No such a user with the email", false));
+                    return BadRequest(new AppResult("No such a user with the email", false));
                 if (!user.Logo.IsNullOrEmpty())
                 {
                     var appResult = fileService.DeleteFile(user.Logo);
                     if (!appResult.IsSuccess)
-                        return Ok(appResult);
+                        return BadRequest(appResult);
                 }
                 if (model.UploadImg != null)
                     model.Logo = fileService.SaveFile(model.UploadImg);
@@ -44,9 +44,9 @@ namespace IdentityServer.Controllers
                 var result = await userService.UpdateUser(model);
                 if (!result.IsSuccess && model.Logo != null)
                     fileService.DeleteFile(model.Logo);
-                return Ok(result);
+                return result.IsSuccess == true ? Ok(result) : BadRequest(result);
             }
-            return BadRequest("Some properties are not valid");
+            return BadRequest(new AppResult("Some properties are not valid", true));
         }
 
         [HttpPut]
@@ -57,7 +57,7 @@ namespace IdentityServer.Controllers
                 var result = await userService.ResetPassword(model.Email, model.Password, model.ConfirmPassword);
                 return result.IsSuccess == true ? Ok(result) : BadRequest(result);
             }
-            return BadRequest("Some properties are not valid");
+            return BadRequest(new AppResult("Some properties are not valid",true));
         }
     }    
 }

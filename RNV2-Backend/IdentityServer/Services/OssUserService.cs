@@ -110,6 +110,8 @@ namespace IdentityServer.Services
         {
             //userManager.Users.Where(x => x.Status == UserStatusEnum.active
             //&& x.Role)
+            return null;
+            /*
             using (var ctx = new AppCtx())
             {
                 var query = from users in ctx.Users
@@ -119,6 +121,7 @@ namespace IdentityServer.Services
                             on userRoles.RoleId equals roles.Id
                             where users.Status == UserStatusEnum.active
                             && roles.Name == "Delivery"
+                            order by 
                             select new
                             {
                                 Id = users.Id,
@@ -127,6 +130,7 @@ namespace IdentityServer.Services
                 return query.ToListAsync<List<object>>(); ;
 
             }
+            */
         }
 
     }
