@@ -30,11 +30,12 @@ namespace IdentityServer
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            AppCtx.ConnectionString = connectionString;
             builder.Services.AddDbContext<AppCtx>(options =>
             {
                 options.UseSqlServer(connectionString);
             });
-
+            
             builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<AppCtx>().AddDefaultTokenProviders() ;
 

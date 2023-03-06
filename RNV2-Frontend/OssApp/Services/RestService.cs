@@ -1,6 +1,7 @@
 ﻿using OssApp.Model;
 using Serilog;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace OssApp.Services
 {
@@ -20,13 +21,14 @@ namespace OssApp.Services
 
         public async Task<List<T>> List(string listUrl)
         {
+            Log.Debug($"Enter RestService.List : {listUrl}");
             var response = await http.GetAsync(listUrl);
             List<T> rows = null;
             if (response.IsSuccessStatusCode)
             {
-                Log.Debug("RestService.List");
                 try
                 {
+                    //Log.Debug(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
                     rows = response.Content.ReadFromJsonAsync<List<T>>()
                         .GetAwaiter().GetResult();
                 }
@@ -49,7 +51,6 @@ namespace OssApp.Services
             List<T> rows = null;
             if (response.IsSuccessStatusCode)
             {
-                Log.Debug("RestService.List");
                 try
                 {
                     //Log.Debug(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
@@ -73,7 +74,6 @@ namespace OssApp.Services
             T row = default(T);
             if (response.IsSuccessStatusCode)
             {
-                Log.Debug("RestService.Find");
                 try
                 {
                     row = response.Content.ReadFromJsonAsync<T>()
@@ -95,7 +95,6 @@ namespace OssApp.Services
             {
                 return true;
             }
-            Log.Debug($"response {response}");
             return false;
         }
 
@@ -112,13 +111,32 @@ namespace OssApp.Services
             }
             return null;
         }
+        public string UpdateOne(string url, HttpContent content)
+        {
+            Log.Debug($"RestService.UpdateOne {url}");
+            
+            http.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+
+            var response = http.PutAsync(url, content).GetAwaiter().GetResult();
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var result = response.Content.ReadFromJsonAsync<AppResult>(options).GetAwaiter().GetResult();
+                if (result.isSuccess)
+                {
+                    return result.message;
+                }
+            }
+            Log.Debug(response.IsSuccessStatusCode.ToString());
+            return null;
+        }
         public string AddNewOne(string url, MultipartFormDataContent content)
         {
             Log.Debug($"Enter RestService : AddNewOne : {url}");
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
-                Log.Debug("Add new one succefully");
                 var result = response.Content.ReadFromJsonAsync<AppResult>().GetAwaiter().GetResult();
                 if (result.isSuccess)
                 {
@@ -134,7 +152,6 @@ namespace OssApp.Services
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
-                Log.Debug("Add new one succefully");
                 var result = response.Content.ReadFromJsonAsync<AppResult>().GetAwaiter().GetResult();
                 if (result.isSuccess)
                 {
@@ -149,7 +166,6 @@ namespace OssApp.Services
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
-                Log.Debug("Add new one succefully");
                 var result = response.Content.ReadFromJsonAsync<AppResult>().GetAwaiter().GetResult();
                 return result.isSuccess;
             }

@@ -186,6 +186,7 @@ namespace RestaurantDao.Services
 
         public async Task<bool> Assign(AssignForm form)
         {
+            logger.LogInformation("Enter DeliveryService.Assign");
             using (var ctx = new DeliveryContext())
             {
                 var row = await ctx.Deliveries.FindAsync(form.Id);

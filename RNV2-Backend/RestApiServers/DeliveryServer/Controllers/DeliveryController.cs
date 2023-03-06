@@ -71,53 +71,70 @@ namespace DeliveryServer.Controllers
         public async Task<IActionResult> DeliveryStatus(string id, DeliveryStatusEnum status)
         {
             var result = await service.UpdateDeliveryStatus(id, status);
-            return Ok(new AppResult(id, result));
+            if (result == true)
+                return Ok(new AppResult(id, true));
+            return BadRequest(new AppResult("Cannot change the delivery status", false));
         }
 
         [HttpPut("{id}/{deliveryMan}")]
         public async Task<IActionResult> Accept(string id, string deliveryMan)
         {
             var result = await service.Accept(id, deliveryMan);
-            return Ok(new AppResult("", result));
+            if (result == true)
+                return Ok(new AppResult(id, true));
+            return BadRequest(new AppResult("Cannot accept the delivery", false));
         }
 
         [HttpPut]
         public async Task<IActionResult> Assign([FromBody] AssignForm form)
         {
+            logger.LogInformation($"Enter Assign {form.Id}");
             if (ModelState.IsValid)
             {
                 var result = await service.Assign(form);
-                return Ok(new AppResult("", result));
+                if (result == true)
+                {
+                    logger.LogInformation($"Assign {form.Id} successfully");
+                    return Ok(new AppResult(form.Id, true));
+                }
             }
-            return BadRequest(new AppResult("Cannot create the new delivery", false));
+            return BadRequest(new AppResult("Cannot assign the delivery", false));
         }
 
         [HttpPut("{id}/{deliveryMan}")]
         public async Task<IActionResult> Reject(string id, string deliveryMan)
         {
             var result = await service.Reject(id, deliveryMan);
-            return Ok(new AppResult("", result));
+            if (result == true)
+                return Ok(new AppResult(id, true));
+            return BadRequest(new AppResult("Cannot reject the delivery", false));
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Pickup(string id)
         {
             var result = await service.Pickup(id);
-            return Ok(new AppResult("", result));
+            if (result == true)
+                return Ok(new AppResult(id, true));
+            return BadRequest(new AppResult("Cannot pickup the delivery", false));
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Complete(string id)
         {
             var result = await service.Complete(id);
-            return Ok(new AppResult("", result));
+            if (result == true)
+                return Ok(new AppResult(id, true));
+            return BadRequest(new AppResult("Cannot complet the delivery", false));
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Pending(string id)
         {
             var result = await service.Pending(id);
-            return Ok(new AppResult("", result));
+            if (result == true)
+                return Ok(new AppResult(id, true));
+            return BadRequest(new AppResult("Cannot pending the delivery", false));
         }
     }
 }

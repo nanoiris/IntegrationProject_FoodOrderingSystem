@@ -1,6 +1,7 @@
 ﻿using IdentityServer.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace IdentityServer.Services
@@ -106,31 +107,28 @@ namespace IdentityServer.Services
             return appResult;
         }
 
-        public async Task<List<object>>? AvaliableDeliveryManList()
+        public List<object>? AvaliableDeliveryManList()
         {
-            //userManager.Users.Where(x => x.Status == UserStatusEnum.active
-            //&& x.Role)
-            return null;
-            /*
             using (var ctx = new AppCtx())
             {
+                Console.WriteLine($"Enter UserService.AvaliableDeliveryManList");
+
                 var query = from users in ctx.Users
                             join userRoles in ctx.UserRoles
                             on users.Id equals userRoles.UserId
                             join roles in ctx.Roles
                             on userRoles.RoleId equals roles.Id
                             where users.Status == UserStatusEnum.active
-                            && roles.Name == "Delivery"
-                            order by 
+                            && roles.Name == "Delivery" 
                             select new
                             {
                                 Id = users.Id,
                                 Name = users.Name,
+                                Email = users.Email,
+                                Logo = users.Logo
                             };
-                return query.ToListAsync<List<object>>(); ;
-
+                return query.ToList<object>();
             }
-            */
         }
 
     }

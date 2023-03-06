@@ -1,37 +1,69 @@
 ﻿@page "/DeliveryAssignDialog"
+
 @using OssApp.Model
 @using OssApp.Services
-@using System.Text.Json
-@inject Radzen.DialogService dialogService
-<!--
+@inject Radzen.DialogService DialogService
+@inject DeliveryService deliveryService
+@inject UserService userService
+@inject NotificationService NotificationService
+
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                Data="@employees" TItem="Employee" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                Data="@rows" TItem="AppUserModel" LogicalFilterOperator="LogicalFilterOperator.Or">
     <Columns>
-        <RadzenDataGridColumn TItem="Employee" Property="EmployeeID" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn TItem="Employee" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
-            <Template Context="data">
-                <RadzenImage Path="@data.Photo" class="rz-gravatar" />
+        <RadzenDataGridColumn TItem="AppUserModel" Property="Id" Filterable="false" Title="ID" Frozen="true" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="AppUserModel" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
+            <Template Context="row">
+                @if (row.Logo != null)
+                {
+                <RadzenImage Path="@row.Logo" class="rz-gravatar" />
+                }
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Employee" Property="FirstName" Title="First Name" Frozen="true" Width="160px" />
-        <RadzenDataGridColumn TItem="Employee" Property="LastName" Title="Last Name" Width="160px" />
-        <RadzenDataGridColumn TItem="Employee" Property="Title" Title="Job Title" Width="200px" />
-        <RadzenDataGridColumn TItem="Employee" Property="TitleOfCourtesy" Title="Title" Width="120px" />
-        <RadzenDataGridColumn TItem="Employee" Property="BirthDate" Title="Birth Date" FormatString="{0:d}" Width="160px" />
-        <RadzenDataGridColumn TItem="Employee" Property="HireDate" Title="Hire Date" FormatString="{0:d}" Width="160px" />
-        <RadzenDataGridColumn TItem="Employee" Property="Address" Title="Address" Width="200px" />
-        <RadzenDataGridColumn TItem="Employee" Property="City" Title="City" Width="160px" />
-        <RadzenDataGridColumn TItem="Employee" Property="Region" Title="Region" Width="160px" />
-        <RadzenDataGridColumn TItem="Employee" Property="PostalCode" Title="Postal Code" Width="160px" />
-        <RadzenDataGridColumn TItem="Employee" Property="Country" Title="Country" Width="160px" />
-        <RadzenDataGridColumn TItem="Employee" Property="HomePhone" Title="Home Phone" Width="160px" />
-        <RadzenDataGridColumn TItem="Employee" Property="Extension" Title="Extension" Width="160px" />
-        <RadzenDataGridColumn TItem="Employee" Property="Notes" Title="Notes" Width="300px" />
+        <RadzenDataGridColumn TItem="AppUserModel" Property="Name" Title="Name"  />
+        <RadzenDataGridColumn TItem="AppUserModel" Property="Email" Title="Email" />
+        <RadzenDataGridColumn TItem="AppUserModel" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Title="Assign">
+            <Template Context="row">
+                <RadzenButton Icon="assignment_turned_in" ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => OnAssign(row))" @onclick:stopPropagation="true">
+                </RadzenButton>
+            </Template>
+        </RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
--->
-@code {
-    [Parameter] public OrderModel row { get; set; }
 
-    
+@code {
+    [Parameter] public DeliveryModel DeliveryRow { get; set; }
+
+    RadzenDataGrid<AppUserModel> myGrid;
+    List<AppUserModel> rows;
+
+    protected override async Task OnInitializedAsync()
+    {
+        rows = await userService.ListAvaliableDeliveryMan();
+    }
+
+    public async Task OnAssign(AppUserModel row)
+    {
+        var isConfirmed = await DialogService.Confirm($"Are you sure to assign the delivery to {row.Name}?","Delivery",
+           new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (isConfirmed == false)
+            return;
+     
+        var result = deliveryService.Assign(DeliveryRow, AuthService.User.UserName, row.Email);
+        var message = new NotificationMessage();
+        message.Duration = 2500;
+
+        if (result != null)
+        {
+            DeliveryRow.DeliveryMan = row.Email;
+            message.Severity = NotificationSeverity.Success;
+            message.Summary = $"The order({DeliveryRow.Id}) is assign to {row.Name}";
+            DialogService.Close(false);
+        }
+        else
+        {
+            message.Severity = NotificationSeverity.Error;
+            message.Summary = $"Error to assign the delivery({row.Id})";
+        }
+        NotificationService.Notify(message);
+    }
 }
