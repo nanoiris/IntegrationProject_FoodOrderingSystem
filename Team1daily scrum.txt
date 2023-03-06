@@ -606,3 +606,46 @@ continue login
 1. Done / not done since last scrum:
 2. To do until next Scrum:
 3. Need assistance / figure things out
+
+=============================================================
+2023/03/06 Monday Yi 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/06 Monday Xiao Pei
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/06 Monday Wenzhe
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/06 Monday Zibin 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+=============================================================
+2023/03/07 Tuesday Yi 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/07 Tuesday Xiao Pei
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/07 Tuesday Wenzhe
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/03/07 Tuesday Zibin 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
