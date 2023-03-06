@@ -580,3 +580,29 @@ continue login
 2. To do until next Scrum:
 - finish start page
 3. Need assistance / figure things out
+
+2023/05/ Yi 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/05/ Xiao Pei
+1. Done / not done since last scrum:
+- finish my orders page
+- finish order details page
+- rating restaurant & menu
+- edit profile
+2. To do until next Scrum:
+- show delivery status
+- checkout
+3. Need assistance / figure things out
+
+2023/05/ Wenzhe
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
+
+2023/05/ Zibin 
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+3. Need assistance / figure things out
