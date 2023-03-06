@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using RestaurantNetowrkApp.Data.Dto;
 using Serilog;
 using RestaurantNetowrkApp.Data.model;
+using RestaurantDaoBase.Models;
 
 namespace RestaurantNetowrkApp.Services
 {
@@ -57,7 +58,13 @@ namespace RestaurantNetowrkApp.Services
 			multipartContent.Add(new StringContent(user.Password), "Password");
 			multipartContent.Add(new StringContent(user.ConfirmPassword), "ConfirmPassword");
 			multipartContent.Add(new StringContent(user.PhoneNumber), "PhoneNumber");
-			multipartContent.Add(new StringContent("user"), "Role");
+            multipartContent.Add(new StringContent(user.Street), "Street");
+            multipartContent.Add(new StringContent(user.City), "City");
+            multipartContent.Add(new StringContent(user.State), "State");
+            multipartContent.Add(new StringContent(user.Country), "Country");
+            multipartContent.Add(new StringContent(user.PostCode), "PostCode");
+
+            multipartContent.Add(new StringContent("user"), "Role");
 
 			var img = new StreamContent(user.UploadImg?.OpenReadStream());
 			Log.Debug(user.UploadImg.Name);
@@ -75,9 +82,40 @@ namespace RestaurantNetowrkApp.Services
 			return false;
 		}
 
+        public async Task<bool> Update(UserModel user)
+        {
+            var multipartContent = new MultipartFormDataContent();
+            multipartContent.Add(new StringContent(user.Name), "Name");
+            multipartContent.Add(new StringContent(user.UserName), "Email");
+            multipartContent.Add(new StringContent(user.PhoneNumber), "PhoneNumber");
+            multipartContent.Add(new StringContent(user.Street), "Street");
+            multipartContent.Add(new StringContent(user.City), "City");
+            multipartContent.Add(new StringContent(user.State), "State");
+            multipartContent.Add(new StringContent(user.Country), "Country");
+            multipartContent.Add(new StringContent(user.PostCode), "PostCode");
+
+            var img = new StreamContent(user.UploadImg?.OpenReadStream());
+            img.Headers.ContentType = new MediaTypeHeaderValue(user.UploadImg.ContentType);
+            multipartContent.Add(content: img, "UploadImg", fileName: user.UploadImg.Name);
+
+            HttpResponseMessage response = await http.PutAsync("api/User/UpdatedOne", multipartContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            Log.Debug("Update failed,sign up again");
+            return false;
+        }
+
         public void Logout()
         {
             IsLoggedIn = false;
+        }
+
+        public UserModel getUserByEmail(string userEmail)
+        {
+            return http.GetFromJsonAsync<UserModel>($"api/OssUser/OneByEmail/{userEmail}").Result;
         }
     }
 }

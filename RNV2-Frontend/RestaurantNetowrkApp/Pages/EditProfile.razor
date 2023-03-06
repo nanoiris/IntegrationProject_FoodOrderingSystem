@@ -1,55 +1,99 @@
-﻿@page "/Account/EditProfile/1"
+﻿@page "/Account/UpdateProfile/{userEmail}"
+@using Data.model;
+@using Services;
+@inject AuthService authService;
+@inject IJSRuntime JSRuntime;
+@inject NavigationManager navigationManager
 
-<div class="p-4 login-page-form">
+<div class="p-4 update-profile-form">
     <a class="font-weight-bold text-back text-decoration-none d-flex" href="">
         <i class="feather-chevron-left"></i>
         <span class="pl-2">Back</span>
     </a>
-    <h2 class="my-0">Hello Anna!</h2>
+    <h2 class="my-0">Hello @user.Name!</h2>
     <p class="text-50">Edit your profile</p>
-    <form class="mt-4 " id="signupForm" method="post" enctype="multipart/form-data">
+    <EditForm class="mt-4 " id="signupForm" Model="@user" OnValidSubmit="update" enctype="multipart/form-data">
+        <DataAnnotationsValidator />
         <div class="form-group">
-            <input asp-for="Name" type="text" placeholder="Name" class="form-control" id="Name" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+            <label class="text-info pl-2 mt-1 mb-0">Email:</label>
+            <input @bind-value="user.UserName" type="text" class="form-control" id="Email" readonly/>
         </div>
         <div class="form-group">
-            <input asp-for="Email" type="text" placeholder="Email" class="form-control" id="Email" />
-            <span asp-validation-for="Email" class="text-danger"></span>
+            <label class="text-info pl-2 mt-1 mb-0">Name:</label>
+            <input @bind-value="user.Name" type="text" class="form-control" id="Name" />
+            <ValidationMessage For="@(() => user.Name)" />
+        </div>     
+        <div class="form-group">
+            <label class="text-info pl-2 mt-1 mb-0">Mobile Number:</label>
+            <input @bind-value="user.PhoneNumber" type="text"  class="form-control" id="Phone" />
+            <ValidationMessage For="@(() => user.PhoneNumber)" />
         </div>
         <div class="form-group">
-            <input asp-for="PhoneNo" type="text" placeholder="Mobile Number" class="form-control" id="Phone" />
-            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+            <label class="text-info pl-2 mt-1 mb-0">Street:</label>
+            <input @bind-value="user.Street" type="text" class="form-control" id="Street" />
+            <ValidationMessage For="@(() => user.Street)" />
         </div>
         <div class="form-group">
-            <input asp-for="Street" type="text" placeholder="Street" class="form-control" id="Street" />
-            <span asp-validation-for="Street" class="text-danger"></span>
+            <label class="text-info pl-2 mt-1 mb-0">City:</label>
+            <input @bind-value="user.City" type="text" class="form-control" id="City" />
+            <ValidationMessage For="@(() => user.City)" />
         </div>
         <div class="form-group">
-            <input asp-for="City" type="text" placeholder="City" class="form-control" id="City" />
-            <span asp-validation-for="City" class="text-danger"></span>
+            <label class="text-info pl-2 mt-1 mb-0">Province:</label>
+            <input @bind-value="user.State" type="text" class="form-control" id="Province" />
+            <ValidationMessage For="@(() => user.State)" />
         </div>
         <div class="form-group">
-            <input asp-for="Province" type="text" placeholder="Province" class="form-control" id="Province" />
-            <span asp-validation-for="Province" class="text-danger"></span>
+            <label class="text-info pl-2 mt-1 mb-0">Country:</label>
+            <input @bind-value="user.Country" type="text" class="form-control" id="Country" />
+            <ValidationMessage For="@(() => user.Country)" />
         </div>
         <div class="form-group">
-            <input asp-for="Country" type="text" placeholder="Country" class="form-control" id="Country" />
-            <span asp-validation-for="Country" class="text-danger"></span>
+            <label class="text-info pl-2 mt-1 mb-0">Zip:</label>
+            <input @bind-value="user.PostCode" type="text" class="form-control" id="Zip" />
+            <ValidationMessage For="@(() => user.PostCode)" />
         </div>
+
         <div class="form-group">
-            <input asp-for="Zip" type="text" placeholder="Zip" class="form-control" id="Zip" />
-            <span asp-validation-for="Zip" class="text-danger"></span>
-        </div>
-        <div class="form-group mr-3 ">
-            <div class="custom-file  mr-3">
-                <label class="custom-file-label" asp-for="Upload"></label>
-                <input type="file" asp-for="Upload" class="form-control d-none" />
+            <label class="text-info pl-2 mt-1 mb-0">Image:</label>
+            <div class="custom-file">
+                <InputFile class="form-control" OnChange="@onFileChange" @ref="inputFile" />
             </div>
         </div>
 
-        <button class="btn btn-primary btn-lg btn-block mb-2" type="submit">Edit</button>
-    </form>
+        <div class="mx-5 mb-3">
+            <img src="@(Data.Constants.imgUrl + user.Logo)" class="w-50" @ref="previewImageElem" />
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block mb-2" type="submit">Update</button>
+
+    </EditForm>
 </div>
 @code {
+    [Parameter] public string userEmail{ get; set; }
+    private UserModel user;
+    private InputFile? inputFile;
+    private ElementReference previewImageElem;
 
+    protected override async Task OnInitializedAsync()
+    {
+        user = authService.getUserByEmail(userEmail);
+    }
+    private async Task update()
+    {
+        var result = await authService.Update(user);
+        if (result)
+        {
+            string msg = "Update Succeed!";
+            //navigationManager.NavigateTo($"/Account/Profile/{user.UserName}/{msg}");
+            StateHasChanged();
+            navigationManager.NavigateTo($"/{msg}");
+            
+        }
+    }
+    private async Task onFileChange(InputFileChangeEventArgs e)
+    {
+        user.UploadImg = e.File;
+        await JSRuntime.InvokeVoidAsync("previewImage", inputFile!.Element, previewImageElem);
+    }
 }
