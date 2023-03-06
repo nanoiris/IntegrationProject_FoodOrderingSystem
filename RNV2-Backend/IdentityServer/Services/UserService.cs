@@ -53,6 +53,16 @@ namespace IdentityServer.Services
                 //RestaurantId = model.RestaurantId,
                 //RestaurantName = model.RestaurantName
             };
+            if(model.RestaurantId!= null) user.RestaurantId = model.RestaurantId;
+            if(model.RestaurantName != null) user.RestaurantName = model.RestaurantName;
+            if(model.District != null) user.District = model.District;
+            if (model.Street != null) user.Street = model.Street;
+            if (model.City != null) user.City = model.City;
+            if (model.State != null) user.State = model.State;
+            if (model.Country != null) user.Country = model.Country;
+            if (model.PostCode != null) user.PostCode = model.PostCode;
+            if (model.PhoneNumber != null) user.PhoneNumber = model.PhoneNumber;
+
 
             var result = await userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
@@ -103,6 +113,15 @@ namespace IdentityServer.Services
             {
                 user.Role = model.Role;
             }
+            if (model.RestaurantId != null) user.RestaurantId = model.RestaurantId;
+            if (model.RestaurantName != null) user.RestaurantName = model.RestaurantName;
+            if (model.District != null) user.District = model.District;
+            if (model.Street != null) user.Street = model.Street;
+            if (model.City != null) user.City = model.City;
+            if (model.State != null) user.State = model.State;
+            if (model.Country != null) user.Country = model.Country;
+            if (model.PostCode != null) user.PostCode = model.PostCode;
+            if (model.PhoneNumber != null) user.PhoneNumber = model.PhoneNumber;
 
             var result = await userManager.UpdateAsync(user);
             if (!result.Succeeded)

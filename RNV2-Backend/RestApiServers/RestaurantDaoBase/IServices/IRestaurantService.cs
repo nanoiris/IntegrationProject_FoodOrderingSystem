@@ -15,7 +15,7 @@ namespace RestaurantDaoBase.IServices
         public Task<List<Restaurant>> ListWithLimit(int limit);
         public Task<List<Restaurant>> Search(string searchKey, string categoryName);
 
-        public Task<bool> AddRestaurant(RestaurantForm form);
+        public Task<string> AddRestaurant(RestaurantForm form);
         public Task<List<Restaurant>> ListRestaurant();
         public Task<Restaurant?> FindRestaurant(string restaurantId);
         public Task<bool> DeleteRestaurant(string restaurantId);

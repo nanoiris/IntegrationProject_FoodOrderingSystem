@@ -2,6 +2,7 @@
 @inherits LayoutComponentBase
 @using OssApp.Services;
 @inject AuthService authService
+@inject NotificationService NotificationService
 @inject NavigationManager navManager
 
 <RadzenLayout style="height: 100vh">
@@ -16,9 +17,8 @@
                     <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" class="mb-4">
                         Login
                     </RadzenText>
-                    <RadzenTemplateForm Data=@("SimpleLogin") Action="#">
                         <RadzenLogin AllowRegister="false" AllowResetPassword="false" Login=@(args => OnLogin(args, "Simple login")) />
-                    </RadzenTemplateForm>
+                    
                 </RadzenCard>
             </RadzenCard>
         </div>
@@ -26,9 +26,23 @@
 </RadzenLayout>
 
 @code {
-    
-    void OnLogin(LoginArgs args, string name)
+    async Task OnLogin(LoginArgs args, string name)
     {
-        authService.Login(args.Username, args.Password);
+        var result = await authService.Login(args.Username, args.Password);
+        if (result == false)
+        {
+            var message = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Login failed",
+                    Detail = "Error Detail",
+                    Duration = 2500
+                };
+            NotificationService.Notify(message);
+        }
+        else
+        {
+            navManager.NavigateTo("/");
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using IdentityServer.Models;
 using IdentityServer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityServer.Controllers
 {
+    [Authorize(Roles ="Operator")]
     [Route("api/[controller]")]
     [ApiController]
     public class RolesController : ControllerBase

@@ -1,13 +1,15 @@
 ﻿@using Services;
 @inject RatingService ratingService;
 
+@using Data.Dto
+
 <div class="star-rating ml-auto">
     <div class="d-inline-block h6 m-0">
     @if(yellowStars != null)
     {
         @foreach(int i in yellowStars)
         {
-            <i class="feather-star text-warning ml-1" @onclick="() =>rate(target, targetId, username, i)"></i>
+                <i class="feather-star text-warning ml-1" @onclick="() =>rate(target, targetId, username, i)"></i>
 
         }
     }
@@ -15,7 +17,7 @@
     {
         @foreach(int j in blackStarts)
         {
-            <i class="feather-star text-dark ml-1"  @onclick="() =>rate(target, targetId, username, j)"></i>
+                <i class="feather-star text-muted ml-1" @onclick="() =>rate(target, targetId, username, j)"></i>
         }
     }
        
@@ -26,6 +28,7 @@
     [Parameter] public string targetId { get; set; }
     [Parameter] public string username { get; set; }
     [Parameter] public string target { get; set; }
+    [Parameter] public OrderDto order { get; set; }
     private int score = 0;
     private int[] yellowStars;
     private int[] blackStarts;
@@ -41,6 +44,10 @@
         if(target == "rest")
         {
             result = await ratingService.rateRestaurant(targetId, username, value);
+        }
+        else if(target == "menu")
+        {
+            result = await ratingService.rateMenuItem(targetId, username, value, order.RestaurantId);
         }
 
         if (result)
@@ -58,6 +65,10 @@
                 {
                     blackStarts[i-score] = i + 1;
                 }
+            }
+            else
+            {
+                blackStarts = null;
             }
             StateHasChanged();
         }

@@ -1,0 +1,124 @@
+﻿@page "/OrderDetailDialog"
+@using OssApp.Model
+@using OssApp.Services
+@using System.Text.Json
+@inject Radzen.DialogService dialogService
+
+<RadzenTemplateForm Data="@row">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <RadzenFieldset Text="Order Infor">
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <RadzenLabel Text="Customer Name" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox Disabled="true" style="width: 100%;" Name="CustomerName" @bind-Value="row.UserName" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <RadzenLabel Text="Restaurant Name" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox Disabled="true" style="width: 100%;" Name="RestaurantName" @bind-Value="row.RestaurantName" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <RadzenLabel Text="Order Time" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenDatePicker Disabled="true" style="width: 100%;" Name="CreateTime" @bind-Value="row.CreateTime" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <RadzenLabel Text="Desired Time" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenDatePicker Disabled="true" style="width: 100%;" Name="DesiredTime" @bind-Value="row.DesiredTime" />
+                        </div>
+                    </div>
+                </RadzenFieldset>
+            </div>
+            <div class="col-md-6">
+                <RadzenFieldset Text="Purchase Info">
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <RadzenLabel Text="Pay Time" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenDatePicker Disabled="true" style="width: 100%;" Name="PayTime" @bind-Value="row.PayTime" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <RadzenLabel Text="Card #" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox Disabled="true" style="width: 100%;" Name="CardNo" @bind-Value="row.Card.CardNo" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <RadzenLabel Text="Valid Date" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenDatePicker Disabled="true" style="width: 100%;" Name="ValidDate" @bind-Value="row.Card.ValidTime" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <RadzenLabel Text="Cardholder" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox Disabled="true" style="width: 100%;" Name="CardName" @bind-Value="row.Card.CardName" />
+                        </div>
+                    </div>
+                </RadzenFieldset>
+            </div>
+        </div>
+        <div class="row">
+            <RadzenFieldset Text="Amount Info">
+                <div class="row">
+                    <div class="align-items-center d-flex col-md-2">
+                        <RadzenLabel Text="SubTotal" />
+                    </div>
+                    <div class="col-md-10">
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@row.StrSubTotal</RadzenText>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="align-items-center d-flex col-md-2">
+                        <RadzenLabel Text="Tax" />
+                    </div>
+                    <div class="col-md-10">
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@row.StrTax</RadzenText>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="align-items-center d-flex col-md-2">
+                        <RadzenLabel Text="Pay Total" />
+                    </div>
+                    <div class="col-md-10">
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@row.StrPayTotal</RadzenText>
+                    </div>
+                </div>
+            </RadzenFieldset>
+        </div>
+    </div>
+</RadzenTemplateForm>
+<RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" AllowSorting="false" AllowPaging="false" 
+                Data="@row.ItemList" TItem="OrderItem">
+    <Columns>
+        <RadzenDataGridColumn TItem="OrderItem" Property="Item.Name" Filterable="false" Title="Name" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="OrderItem" Property="Item.Price" Title="Price" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn TItem="OrderItem" Property="Qty" Title="QTY" Width="160px" />
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    [Parameter] public OrderModel row { get; set; }
+}

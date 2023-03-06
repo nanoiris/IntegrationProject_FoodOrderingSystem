@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RestaurantDaoBase.IServices;
 using RestaurantDaoBase.Models;
@@ -6,6 +7,7 @@ using RestaurantServer.Services;
 
 namespace RestaurantServer.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class LogoController : Controller

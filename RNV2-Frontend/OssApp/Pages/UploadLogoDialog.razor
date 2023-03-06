@@ -8,7 +8,9 @@
     <div class="col-12" >
         <RadzenCard Style="width: 100%; overflow: hidden; border: var(--rz-grid-cell-border)" class="rz-shadow-0">
             <RadzenText TextStyle="TextStyle.Subtitle1" class="rz-pb-4">User Photo upload</RadzenText>
-            <RadzenUpload @ref="logo" Auto="false" Url=@UploadUrl Complete=@OnComplete Progress ="@((args) => OnProgress(args, "Logo"))" />
+            <RadzenUpload @ref="logo" Auto="false" Url=@UploadUrl Complete=@OnComplete Progress ="@((args) => OnProgress(args, "Logo"))" >
+                <RadzenUploadHeader Name="Authorization" Value=@jwt />
+            </RadzenUpload>
         </RadzenCard>
     </div>
     <div class="row">
@@ -21,6 +23,7 @@
 
 @code {
     RadzenUpload logo;
+    string jwt = $"Bearer {AuthService.User.Token}";
 
     [Parameter] public string Id { get; set; }
     [Parameter] public string UploadUrl { get; set; }

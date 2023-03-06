@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantDaoBase.IServices;
 using RestaurantDaoBase.Models;
@@ -19,31 +20,31 @@ namespace RestaurantServer.Controllers
             this.service = service;
             this.fileService = fileService;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public Task<List<Restaurant>> List()
         {
             return service.ListRestaurant();
         }
-
+        [AllowAnonymous]
         [HttpGet("{limit}")]
         public Task<List<Restaurant>> ListWithLimit(int limit)
         {
             return service.ListWithLimit(limit);
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public Task<List<Restaurant>> ListWeeklyTrends()
         {
             return service.ListWeeklyTrends();
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public Task<List<Restaurant>> Search([FromBody]RestSearchForm model)
         {
             return service.Search(model.SearchKey,model.Categoryid);
         }
-
+        [Authorize(Roles = "Operator,Restaurant")]
         [HttpPost]
         public async Task<IActionResult> NewOne([FromForm] RestaurantForm form)
         {
@@ -66,8 +67,11 @@ namespace RestaurantServer.Controllers
                 try
                 {
                     var result = await service.AddRestaurant(form);
-                    if (result == true)
-                        return Ok(new AppResult("", true));
+                    if (result !=  null)
+                    {
+                        
+                        return Ok(new AppResult(result, true));
+                    }                        
                     else
                     {
                         if (form.Logo != null)
@@ -85,12 +89,13 @@ namespace RestaurantServer.Controllers
             }
             return BadRequest(new AppResult("Some properties are not correct", false));
         }
-
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public Task<Restaurant?> One(string id)
         {
             return service.FindRestaurant(id);
         }
+        [Authorize(Roles = "Operator,Restaurant")]
         [HttpPut]
         public async Task<IActionResult> UpdatedOne([FromForm] RestaurantForm form)
         {
@@ -134,6 +139,7 @@ namespace RestaurantServer.Controllers
             return BadRequest(new AppResult("Some properties are not correct", false));
         }
 
+        [Authorize(Roles = "Operator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletedOne(string id)
         {

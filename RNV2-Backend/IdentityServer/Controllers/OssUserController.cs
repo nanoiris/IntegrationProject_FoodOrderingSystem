@@ -1,11 +1,14 @@
 ﻿using IdentityServer.Models;
 using IdentityServer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 
 namespace IdentityServer.Controllers
 {
+    [Authorize(Roles = "Operator")]
     [Route("api/[controller]/[Action]")]
     [ApiController]
     public class OssUserController : Controller
@@ -130,6 +133,12 @@ namespace IdentityServer.Controllers
             if (oldOne.Logo != null)
                 fileService.DeleteFile(oldOne.Logo);
             return BadRequest(new AppResult("", false));
+        }
+
+        [HttpGet]
+        public Task<List<AppUser>>? AvaliableDeliveryMan()
+        {
+            return userService.AvaliableDeliveryManList();
         }
     }
 }

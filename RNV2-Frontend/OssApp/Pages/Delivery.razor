@@ -1,3 +1,120 @@
 ﻿@page "/Delivery"
 
-<p>Delivery</p>
+@using OssApp.Model
+@using OssApp.Services
+@using RestaurantDaoBase.Enums
+@inject DialogService DialogService
+@inject DeliveryService service
+@inject DialogService DialogService
+@inject NotificationService NotificationService
+
+<EventConsole @ref=@console />
+
+<div class="rz-m-12 m-0">
+    <RadzenBreadCrumb>
+        <RadzenBreadCrumbItem Path="/" Text="Home" />
+        <RadzenBreadCrumbItem Path="/Delivery" Text="Delivery" />
+    </RadzenBreadCrumb>
+</div>
+<RadzenDataGrid @ref="myGrid" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true"
+                ExpandMode="DataGridExpandMode.Single" Data="@rows" TItem="DeliveryModel" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedRows>
+
+    <Template Context="row">
+        <div class="row">
+            <RadzenCard class="col-4 m-2">
+                <RadzenStack Gap="0">
+                    <h4 class="text-thin">Restaurant Address</h4>
+                    <RadzenText>@row.Restaurant.Address.Street</RadzenText>
+                    <RadzenText>@row.Restaurant.Address.City @row.Restaurant.Address.State @row.Restaurant.Address.Country</RadzenText>
+                    <RadzenText>@row.Restaurant.Address.PostalCode</RadzenText>
+                </RadzenStack>
+            </RadzenCard>
+            <RadzenCard class="col-3  m-2">
+                <h4 class="text-thin">Time</h4>
+                <RadzenText>AcceptTime : @row.AcceptTime</RadzenText>
+                <RadzenText>PickupTime : @row.PickupTime</RadzenText>
+                <RadzenText>EstimateTime : @row.EstimateTime</RadzenText>
+                <RadzenText>DeliveryTime : @row.DeliveryTime</RadzenText>
+            </RadzenCard>
+            <RadzenCard class="col-4  m-2">
+                <h4 class="text-thin">Destaination Address</h4>
+                <RadzenText>@row.Destination.Street</RadzenText>
+                <RadzenText>@row.Destination.City @row.Destination.State @row.Destination.Country</RadzenText>
+                <RadzenText>@row.Destination.PostalCode</RadzenText>
+            </RadzenCard>
+        </div>
+    </Template>
+    <Columns>
+        <RadzenDataGridColumn TItem="DeliveryModel" Property="Id" Title="ID" Filterable="false" Sortable="false" />
+        <RadzenDataGridColumn TItem="DeliveryModel" Property="OrderId" Title="Order ID" />
+        <RadzenDataGridColumn TItem="DeliveryModel" Property="CustomerName" Title="Customer Name" />
+        <RadzenDataGridColumn TItem="DeliveryModel" Property="Restaurant.Name" Title="Restaurant" />
+        <RadzenDataGridColumn TItem="DeliveryModel" Property="CreateTime" Title="Create Time" />
+        <RadzenDataGridColumn TItem="DeliveryModel" Property="Status" Title="Status" />
+        <RadzenDataGridColumn TItem="DeliveryModel" Property="DeliveryMan" Title="Delivery Man" Filterable="false" Sortable="false" />
+
+        <RadzenDataGridColumn TItem="DeliveryModel" Filterable="false" Sortable="false">
+            <Template Context="row">
+                @if (row.Status == DeliveryStatusEnum.Pending)
+                {
+                    <RadzenButton Icon="assignment" ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Click="@(args => AssignOrder(row))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+                }
+                else if (row.Status == DeliveryStatusEnum.Reject)
+                {
+                    <RadzenButton Icon="autorenew" ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Click="@(args => Reject2Pending(row))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+                }
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    EventConsole console;
+
+    RadzenDataGrid<DeliveryModel> myGrid;
+
+    List<DeliveryModel> rows;
+    IList<DeliveryModel> selectedRows;
+
+    protected override async Task OnInitializedAsync()
+    {
+        rows = await service.ListActive();
+    }
+
+    public async Task AssignOrder(DeliveryModel row)
+    {
+        await DialogService.OpenAsync<DeliveryAssignDialog>($"Delivery ",
+              new Dictionary<string, object>() { { "row", row } },
+              new DialogOptions() { Width = "1200px", Height = "800px", Resizable = true });
+    }
+    void RowRender(RowRenderEventArgs<Order> args)
+    {
+        args.Expandable = true;
+    }
+
+    public void Reject2Pending(DeliveryModel row)
+    {
+        string result = service.ChangeStatus2Pending(row);
+        var message = new NotificationMessage
+            {
+                Duration = 2500
+            };
+        if(result == null)
+        {
+            message.Severity = NotificationSeverity.Error;
+            message.Summary = $"Cannot update the order {row.Id} status to pending";
+
+        }
+        else
+        {
+            row.Status = DeliveryStatusEnum.Pending;
+            message.Severity = NotificationSeverity.Success;
+            message.Summary = $"Update the order {row.Id} status to pending successfully! ";
+
+        }
+        NotificationService.Notify(message);
+    }
+
+}

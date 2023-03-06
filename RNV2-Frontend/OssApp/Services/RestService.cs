@@ -20,10 +20,6 @@ namespace OssApp.Services
 
         public async Task<List<T>> List(string listUrl)
         {
-            /*
-            if(AuthService.User != null)
-                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
-            */
             var response = await http.GetAsync(listUrl);
             List<T> rows = null;
             if (response.IsSuccessStatusCode)
@@ -46,12 +42,33 @@ namespace OssApp.Services
             return rows;
         }
 
+        public async Task<List<T>> List(string listUrl,HttpContent content)
+        {
+            http.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+            var response = await http.PostAsync(listUrl,content);
+            List<T> rows = null;
+            if (response.IsSuccessStatusCode)
+            {
+                Log.Debug("RestService.List");
+                try
+                {
+                    //Log.Debug(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+                    rows = await response.Content.ReadFromJsonAsync<List<T>>();
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug($"RestService.List : {ex.Message}");
+                }
+            }
+            if (rows == null)
+            {
+                rows = new List<T>();
+            }
+            return rows;
+        }
+
         public async Task<T> FindOne(string url)
         {
-            /*
-            if(AuthService.User != null)
-                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
-            */
             var response = await http.GetAsync(url);
             T row = default(T);
             if (response.IsSuccessStatusCode)
@@ -72,25 +89,18 @@ namespace OssApp.Services
 
         public bool DeleteOne(string url)
         {
-            /*
-             if(AuthService.User != null)
-                 http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
-             */
             Log.Debug($"RestService.DeleteOne {url}");
             var response = http.DeleteAsync(url).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
                 return true;
             }
+            Log.Debug($"response {response}");
             return false;
         }
 
         public string UpdateOne(string url, MultipartFormDataContent content)
         {
-            /*
-            if(AuthService.User != null)
-                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
-            */
             var response = http.PutAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
@@ -104,10 +114,22 @@ namespace OssApp.Services
         }
         public string AddNewOne(string url, MultipartFormDataContent content)
         {
-            /*
-            if(AuthService.User != null)
-                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
-            */
+            Log.Debug($"Enter RestService : AddNewOne : {url}");
+            var response = http.PostAsync(url, content).GetAwaiter().GetResult();
+            if (response.IsSuccessStatusCode)
+            {
+                Log.Debug("Add new one succefully");
+                var result = response.Content.ReadFromJsonAsync<AppResult>().GetAwaiter().GetResult();
+                if (result.isSuccess)
+                {
+                    return result.message;
+                }
+            }
+            return null;
+        }
+
+        public string AddNewOne(string url, HttpContent content)
+        {
             Log.Debug($"Enter RestService : AddNewOne : {url}");
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
@@ -123,10 +145,6 @@ namespace OssApp.Services
         }
         public bool AddNewOneAction(string url, MultipartFormDataContent content)
         {
-            /*
-            if(AuthService.User != null)
-                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
-            */
             Log.Debug($"Enter RestService : AddNewOne : {url}");
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)

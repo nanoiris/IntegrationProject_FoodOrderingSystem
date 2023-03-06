@@ -12,7 +12,7 @@ namespace RestaurantDao.Services
 {
     public partial class RestaurantService : IRestaurantService
     {
-        public async Task<bool> AddRestaurant(RestaurantForm form)
+        public async Task<string> AddRestaurant(RestaurantForm form)
         {
             using (var ctx = new RestaurantContext())
             {
@@ -20,7 +20,7 @@ namespace RestaurantDao.Services
                 if (category == null)
                 {
                     Console.WriteLine("The category is not right");
-                    return false;
+                    return null;
                 }
 
 
@@ -46,9 +46,8 @@ namespace RestaurantDao.Services
                 newOne.CategoryId = category.Id;
                 ctx.Restaurants.Add(newOne);
                 var result = await ctx.SaveChangesAsync();
-                if (result == 1)
-                    return true;
-                return false;
+               
+                return result == 1 ? newOne.Id : null;
             }
         }
 
@@ -131,9 +130,7 @@ namespace RestaurantDao.Services
                 row.CategoryId = category.Id;
 
                 var result = await ctx.SaveChangesAsync();
-                if (result == 1)
-                    return true;
-                return false;
+                return result == 1 ? true : false;
             }
         }
         public async Task<bool> UpdateRestaurantLogo(Restaurant model)

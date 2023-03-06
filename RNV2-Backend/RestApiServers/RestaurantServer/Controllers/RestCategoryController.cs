@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantDaoBase.IServices;
 using RestaurantDaoBase.Models;
 using RestaurantServer.Services;
+using System.Data;
 
 namespace RestaurantServer.Controllers
 {
@@ -19,13 +21,13 @@ namespace RestaurantServer.Controllers
             this.service = service;
             this.fileService = fileService;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public Task<List<RestCategory>> List()
         {
             return service.ListCategory();
         }
-
+        [Authorize(Roles = "Operator")]
         [HttpPost]
         public async Task<IActionResult> NewOne([FromForm] RestCategory category)
         {
@@ -68,13 +70,14 @@ namespace RestaurantServer.Controllers
             }
             return BadRequest(new AppResult("Some properties are not correct", false));
         }
-
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public Task<RestCategory?> One(string id)
         {
             return service.FindCategory(id);
         }
 
+        [Authorize(Roles = "Operator")]
         [HttpPut]
         public async Task<IActionResult> UpdatedOne([FromForm] RestCategory category)
         {
@@ -115,7 +118,7 @@ namespace RestaurantServer.Controllers
             }
             return BadRequest(new AppResult("Some properties are not correct", false));
         }
-
+        [Authorize(Roles = "Operator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletedOne(string id)
         {

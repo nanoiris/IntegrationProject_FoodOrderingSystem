@@ -39,6 +39,7 @@ namespace DeliveryServer.Controllers
         [HttpGet]
         public Task<List<Delivery>> ActiveList()
         {
+            logger.LogInformation("Enter ActiveList");
             return service.ListActiveDeliveries();
         }
 
@@ -70,7 +71,7 @@ namespace DeliveryServer.Controllers
         public async Task<IActionResult> DeliveryStatus(string id, DeliveryStatusEnum status)
         {
             var result = await service.UpdateDeliveryStatus(id, status);
-            return Ok(new AppResult("", result));
+            return Ok(new AppResult(id, result));
         }
 
         [HttpPut("{id}/{deliveryMan}")]

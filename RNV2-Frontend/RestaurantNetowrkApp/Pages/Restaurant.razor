@@ -9,8 +9,7 @@
 @inject NavigationManager NavigationManager
 @inject RestService restService;
 @inject OrderService orderService;
-
-
+@inject RatingService ratingService;
 
 <div class="osahan-restaurant">
     <div class="osahan-restaurant-detail">
@@ -37,8 +36,16 @@
                 
                 <div class="rating-wrap d-flex align-items-center mt-2">
                     <ul class="rating-stars list-unstyled m-0">
-                        <RatingStars />
+                        <li>
+                            <i class="feather-star star_active"></i>
+                            <i class="feather-star star_active"></i>
+                            <i class="feather-star star_active"></i>
+                            <i class="feather-star star_active"></i>
+                            <i class="feather-star"></i>
+                        </li>
                     </ul>
+                    <p class="label-rating text-white-50 ml-2 small m-0"> (@totalRating Reviews)</p>
+
                 </div>
             </div>
         </div>
@@ -59,7 +66,7 @@
         </div>
     </div>
 
-    <div class="px-3 pt-3 pb-5">
+    <div class="px-3 pt-3 pb-2">
         <div class="d-flex item-aligns-center">
             <p class="font-weight-bold">Menu</p>
         </div>
@@ -104,6 +111,32 @@
          }       
     </div>
 
+    @* ------------ rating -----------*@
+    @if (ratingPercentages != null)
+    {     
+        <div class="rounded shadow-sm bg-white pb-3 px-4 pt-2">
+            <p>
+            <span class="font-weight-bold">Rating </span>
+            <span> (@totalRating Reviews)</span>
+        </p>
+            @for(int i = 0; i< 5; i++)
+            {
+                <div>
+                    @for(int j = 0; j< i + 1;j++)
+                    {
+                        <i class="feather-star text-warning"></i>
+                        <span>&nbsp</span>
+                    }
+                    <span class="float-right">@ratingPercentages[i]</span>
+                </div>
+            }
+        </div>
+    }
+    <div class="py-5">
+        <p></p>
+    </div>
+    
+
     <div class="fixed-bottom p-3">
         <a @onclick = "goOrderReview"
             class="btn btn-success btn-block btn-lg text-white rounded shadow text-decoration-none d-flex align-items-center shadow">
@@ -139,6 +172,9 @@
     private HttpClient httpOrder = new HttpClient();
     private string orderBaseHttp = Data.Constants.OrderUri;
 
+    private string[] ratingPercentages;
+    private string totalRating;
+
     protected override async Task OnInitializedAsync()
     {
         Log.Debug("Rest:" + restId);
@@ -147,6 +183,8 @@
         restaurant = restService.GetRestById(restId);
         menuCategories = await restService.ListMenuCategory(restId);
         FeaturedMenuItems = await restService.ListFeaturedItem(restId);
+        ratingPercentages = await ratingService.getRatingPercentages(restId);
+        totalRating = await ratingService.getRatingTotal(restId);
         getCart();
     }
 

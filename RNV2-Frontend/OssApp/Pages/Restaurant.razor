@@ -5,6 +5,7 @@
 @inject RestCategoryService restCateService
 @inject DialogService DialogService
 @inject NavigationManager navManager
+@inject NotificationService NotificationService
 
 <div class="rz-m-12 m-0">
     <RadzenBreadCrumb>
@@ -13,11 +14,11 @@
     </RadzenBreadCrumb>
 </div>
 
-<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" class="mt-2 mb-4" Text="Add New Cateogry" Click="@InsertRow" Disabled=@(rowToInsert != null || rowToUpdate != null) />
+<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" class="mt-2 mb-4" Text="Add New Restaurant" Click="@InsertRow" Disabled=@(rowToInsert != null || rowToUpdate != null) />
 <RadzenDataGrid @ref="myGrid" AllowAlternatingRows="false" AllowFiltering="false" AllowPaging="false" AllowSorting="false" EditMode="DataGridEditMode.Single"
-                Data="@rows" TItem="RestaurantForm" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow">
+                Data="@rows" TItem="RestaurantModel" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow">
     <Columns>
-        <RadzenDataGridColumn TItem="RestaurantForm" Property="Logo" Title="Logo" Width="60px">
+        <RadzenDataGridColumn TItem="RestaurantModel" Property="Logo" Title="Logo" Width="60px">
             <Template Context="row">
                 @if (row.Logo != null)
                 {
@@ -30,13 +31,13 @@
                 }
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="RestaurantForm" Property="Name" Title="Name" Width="160px">
+        <RadzenDataGridColumn TItem="RestaurantModel" Property="Name" Title="Name" Width="160px">
             <EditTemplate Context="row">
                 <RadzenTextBox @bind-Value="row.Name" Style="width:100%; display: block" Name="Name" />
                 <RadzenRequiredValidator Text="Name is required" Component="Name" Popup="true" />
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="RestaurantForm" Property="IsFeatured" Title="Featured" Width="60px">
+        <RadzenDataGridColumn TItem="RestaurantModel" Property="IsFeatured" Title="Featured" Width="60px">
             <Template Context="row">
                 <RadzenSwitch @bind-Value="row.IsFeatured" Disabled="true" />
             </Template>
@@ -45,19 +46,19 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="RestaurantForm" Property="CategoryName" Title="Category" Width="80px">
+        <RadzenDataGridColumn TItem="RestaurantModel" Property="CategoryName" Title="Category" Width="80px">
             <EditTemplate Context="row">
                 <RadzenDropDown @bind-Value="row.CategoryId" Data="@categories" TextProperty="Name" ValueProperty="Id" Style="width:100%; display: block;" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="RestaurantForm" Property="Description" Title="Description" Width="160px">
+        <RadzenDataGridColumn TItem="RestaurantModel" Property="Description" Title="Description" Width="160px">
             <EditTemplate Context="row">
                 <RadzenTextBox @bind-Value="row.Description" Style="width:100%; display: block" Name="Description" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="RestaurantForm" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="100px" Title="Action">
+        <RadzenDataGridColumn TItem="RestaurantModel" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="100px" Title="Action">
             <Template Context="row">
                 <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(row))" @onclick:stopPropagation="true">
                 </RadzenButton>
@@ -77,7 +78,7 @@
                 </RadzenButton>
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="RestaurantForm" Title="User" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="60px">
+        <RadzenDataGridColumn TItem="RestaurantModel" Title="User" Context="row" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="60px">
             <Template Context="row">
                 <RadzenButton Icon="account_box" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => GotoUserPage(row))" @onclick:stopPropagation="true">
                 </RadzenButton>
@@ -87,12 +88,12 @@
 </RadzenDataGrid>
 
 @code {
+    RadzenDataGrid<RestaurantModel> myGrid;
+    List<RestaurantModel> rows;
+    RestaurantModel rowToInsert;
+    RestaurantModel rowToUpdate;
 
-    RadzenDataGrid<RestaurantForm> myGrid;
-    List<RestaurantForm> rows;
-    RestaurantForm rowToInsert;
-    RestaurantForm rowToUpdate;
-
+    RestaurantModel rowToSaved;
     IEnumerable<RestCategoryModel> categories;
 
     void Reset()
@@ -108,40 +109,51 @@
         rows = await service.List();
     }
 
-    async Task EditRow(RestaurantForm row)
+    async Task EditRow(RestaurantModel row)
+    {
+        rowToSaved = new RestaurantModel(row);
+
+        rowToUpdate = row;
+        await myGrid.EditRow(row);
+    }
+
+    async Task EditAdress(RestaurantModel row)
     {
         rowToUpdate = row;
         await myGrid.EditRow(row);
     }
 
-    async Task EditAdress(RestaurantForm row)
-    {
-        rowToUpdate = row;
-        await myGrid.EditRow(row);
-    }
-
-    void OnFeaturedChange(RestaurantForm row)
+    void OnFeaturedChange(RestaurantModel row)
     {
         row.IsFeatured = !row.IsFeatured;
     }
 
-    void OnUpdateRow(RestaurantForm row)
+    void OnUpdateRow(RestaurantModel row)
     {
         if (row == rowToInsert)
-        {
             rowToInsert = null;
-        }
 
         rowToUpdate = null;
-        service.UpdateOneMain(row);
+        var result = service.UpdateOneMain(row);
+        if (result == null)
+        {
+            row.CopyFrom(rowToSaved);
+            var message = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Cannot update the restaurant",
+                    Duration = 2500
+                };
+            NotificationService.Notify(message);
+        }
     }
 
-    async Task SaveRow(RestaurantForm row)
+    async Task SaveRow(RestaurantModel row)
     {
         await myGrid.UpdateRow(row);
     }
 
-    void CancelEdit(RestaurantForm row)
+    void CancelEdit(RestaurantModel row)
     {
         if (row == rowToInsert)
         {
@@ -151,18 +163,17 @@
         myGrid.CancelEditRow(row);
     }
 
-    async Task DeleteRow(RestaurantForm row)
+    async Task DeleteRow(RestaurantModel row)
     {
+        var isConfirmed = await DialogService.Confirm($"Are you sure to delete the restaurant {row.Name}?",
+                          "Restaurant",
+                          new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (isConfirmed == false)
+            return;
         if (row == rowToInsert)
-        {
             rowToInsert = null;
-        }
-
         if (row == rowToUpdate)
-        {
             rowToUpdate = null;
-        }
-
         if (rows.Contains(row))
         {
             var result = service.DeleteOne(row);
@@ -173,7 +184,13 @@
             }
             else
             {
-                //TODO
+                var message = new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Cannot delete the restaurant",
+                        Duration = 2500
+                    };
+                NotificationService.Notify(message);
             }
         }
         else
@@ -182,19 +199,22 @@
             await myGrid.Reload();
         }
     }
-
     async Task InsertRow()
     {
         var category = categories?.FirstOrDefault();
-        var cateId = "0";
+        string cateId = "0", cateName = "";
+
         if (category != null)
+        {
             cateId = category.Id;
-        rowToInsert = new RestaurantForm
-            { Name = "", CategoryId = cateId, IsFeatured = false };
+            cateName = category.Name;        
+        }
+        rowToInsert = new RestaurantModel
+            { Name = "", CategoryId = cateId, CategoryName = cateName, IsFeatured = false };
         await myGrid.InsertRow(rowToInsert);
     }
 
-    void OnCreateRow(RestaurantForm row)
+    async Task OnCreateRow(RestaurantModel row)
     {
         string id = service.AddNewOne(row);
         if (id != null)
@@ -202,14 +222,24 @@
             row.Id = id;
             rows.Add(row);
             rowToInsert = null;
-
         }
         else
         {
-            //TODO
+            rows.Remove(row);
+            await myGrid.Reload();
+            if (row == rowToInsert)
+                rowToInsert = null;
+
+            var message = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Cannot create new restaurant",
+                    Duration = 2500
+                };
+            NotificationService.Notify(message);
         }
     }
-    async Task OpenUploadDialog(RestaurantForm row)
+    async Task OpenUploadDialog(RestaurantModel row)
     {
         string uploadUrl = service.LogoUploadUrl + row.Id;
         await DialogService.OpenAsync<UploadLogoDialog>($"Restaurant Logo Dialog",
@@ -217,7 +247,7 @@
               new DialogOptions() { Width = "700px", Height = "512px", Resizable = false, Draggable = false });
     }
 
-    void GotoUserPage(RestaurantForm row)
+    void GotoUserPage(RestaurantModel row)
     {
         navManager.NavigateTo($"/User?RestId={row.Id}&RestName={row.Name}&RestLogo={row.Logo}");
     }
