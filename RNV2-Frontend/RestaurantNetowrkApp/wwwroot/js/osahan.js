@@ -70,3 +70,15 @@ window.showTotal = (qty, subTotal) => {
     document.getElementById("orderItemQty").textContent = qty.concat(" item");
     document.getElementById("subTotal").textContent = "$".concat(subTotal);
 }
+
+window.previewImage = (inputElem, imgElem) => {
+    //const url = URL.createObjectURL(inputElem.files[0]);
+    //imgElem.addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
+    //imgElem.src = url;
+    var fileData = inputElem.files[0];
+    var reader = new FileReader();
+    reader.readAsDataURL(fileData);
+    reader.onload = function () {
+        imgElem.setAttribute("src", this.result);
+    }
+}

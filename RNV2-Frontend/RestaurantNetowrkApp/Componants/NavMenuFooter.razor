@@ -1,4 +1,7 @@
-﻿<div class="osahan-menu-fotter border rounded shadow fixed-bottom bg-white m-3 px-3 py-2 text-center">
+﻿@inject Data.SessionStorageAccessor sessionStorageAccessor
+@inject NavigationManager navigationManager;
+
+<div class="osahan-menu-fotter border rounded shadow fixed-bottom bg-white m-3 px-3 py-2 text-center">
     <div class="row">
         <div class="col selected">
             <a href="" class="text-danger small font-weight-bold text-decoration-none">
@@ -24,7 +27,7 @@
             </a>
         </div>
         <div class="col">
-            <a href="/Account/Profile/1" class="text-dark small font-weight-bold text-decoration-none">
+            <a @onclick = "navToProfile" class="text-dark small font-weight-bold text-decoration-none">
                 <p class="h4 m-0"><i class="feather-user"></i></p>
                 Profile
             </a>
@@ -33,5 +36,25 @@
 </div>
 
 @code {
-    
+    private string userEmail;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //userEmail = await sessionStorageAccessor.GetValueAsync<string>("userEmail");
+        userEmail = "u4@gmail.com";
+    }
+
+    private void navToProfile()
+    {
+        if (userEmail == null)
+        {
+            string msg = "Please Login first";
+            navigationManager.NavigateTo($"/Account/Login/{msg}");
+        }
+        else
+        {
+            navigationManager.NavigateTo($"/Account/Profile/{userEmail}");
+        }
+    }
+
 }
