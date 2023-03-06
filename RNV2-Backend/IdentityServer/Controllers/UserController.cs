@@ -1,11 +1,13 @@
 ﻿using IdentityServer.Models;
 using IdentityServer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityServer.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/[Action]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -58,6 +60,14 @@ namespace IdentityServer.Controllers
                 return result.IsSuccess == true ? Ok(result) : BadRequest(result);
             }
             return BadRequest(new AppResult("Some properties are not valid",true));
+        }
+
+        [HttpGet("{email}")]
+        public async Task<IActionResult> OneByEmail(string email)
+        {
+            logger.LogInformation("Enter get user ByEmail");
+            var result = await userService.FindUserByEmail(email);
+            return Ok(result);
         }
     }    
 }
