@@ -1,4 +1,8 @@
-﻿@inject AuthService AuthService
+﻿@using RmsApp.Services
+@inherits LayoutComponentBase
+@inject ILogger<AuthService> logger
+@* @inject AuthService AuthService *@
+
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">RMS</a>
@@ -15,7 +19,7 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-        @if (AuthService.IsLoggedIn)
+        @if (conditionalMenu)
         {
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="order" Match="NavLinkMatch.All">
@@ -47,12 +51,22 @@
 </div>
 
 @code {
+    @* [Inject]
+    public IAuthService AuthService { get; set; } *@
     private bool collapseNavMenu = true;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private bool conditionalMenu = AuthService.IsLoggedIn;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
+    protected override async Task OnInitializedAsync()
+    {
+        logger.LogInformation("nav menu OnInitializedAsync");
+        logger.LogInformation(AuthService.IsLoggedIn.ToString());    
+        conditionalMenu = AuthService.IsLoggedIn;
+    } 
 }

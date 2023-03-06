@@ -6,6 +6,8 @@
 @using RmsApp.Services
 @using RmsApp.Dtos
 @inject IFlashMessageService FlashMessageService
+@inject AuthService authService
+@inject ILogger<AuthService> logger
 
 
 
@@ -104,7 +106,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        string id = Constants.RestaurantId; 
+        // hardcodeded restaurant below
+        @* string id = Constants.RestaurantId;  *@
+        // get restaurant from login 
+        string id = AuthService.User.RestaurantId;
+         logger.LogInformation("print from edit page logged in status: " + AuthService.IsLoggedIn.ToString());
+        
         restaurant = await RestaurantService.GetOneRestaurantAsync(id);
     }
 

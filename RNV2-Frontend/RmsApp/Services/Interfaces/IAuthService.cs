@@ -8,6 +8,6 @@ namespace RmsApp.Services
     {
         Task<bool> LoginAsync(string username, string password);
         void Logout();
-        bool IsLoggedIn { get; }
+        // bool IsLoggedIn { get; set; }
     }
 }

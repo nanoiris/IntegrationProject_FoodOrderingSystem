@@ -35,8 +35,8 @@ namespace RmsApp
             {
                 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
             });
-            builder.Services.AddSingleton<IAuthService, AuthService>();
-            builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
+            builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddHttpClient<AuthService>(client =>
             {
                 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
             });
