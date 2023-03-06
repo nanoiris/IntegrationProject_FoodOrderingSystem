@@ -1,6 +1,8 @@
 ﻿using IdentityServer.Models;
 using IdentityServer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace IdentityServer.Controllers
 {

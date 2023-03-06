@@ -104,7 +104,7 @@ namespace RestaurantDao.Services
         {
             using (var ctx = new OrderContext())
             {
-                return ctx.Orders.Where(x => x.Id == orderId).FirstAsync();
+               return ctx.Orders.Where(x => x.Id == orderId).FirstAsync();
             }
         }
         public async Task<bool> DecreaseDishQty(string orderItemId, string orderId)
@@ -231,7 +231,9 @@ namespace RestaurantDao.Services
                 if (string.IsNullOrEmpty(restaurantId))
                 {
                     if (string.IsNullOrEmpty(email))
+                    {
                         return ctx.Orders.Take(20).ToListAsync();
+                    }
                     return ctx.Orders.Take(20).Where(x => x.UserName.Contains(email))
                         .ToListAsync();
                 }

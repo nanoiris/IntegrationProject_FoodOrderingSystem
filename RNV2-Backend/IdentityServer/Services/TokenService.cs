@@ -17,8 +17,8 @@ namespace IdentityServer.Services
                 new Claim(JwtRegisteredClaimNames.Nbf,$"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}") ,
                 new Claim (JwtRegisteredClaimNames.Exp,$"{new DateTimeOffset(DateTime.Now.AddMinutes(30)).ToUnixTimeSeconds()}"),
                 new Claim(ClaimTypes.NameIdentifier, user.UserName.ToString()),
-                new Claim("UserName", user.UserName.ToString()),
-                new Claim("UserEmail", user.Email),
+                new Claim("username", user.UserName.ToString()),
+                new Claim("email", user.Email),
             };
             if (user.District != null)
                 claims.Add(new Claim("UserDistrict", user.District));
@@ -27,7 +27,7 @@ namespace IdentityServer.Services
             if (user.RestaurantName != null)
                 claims.Add(new Claim("UserRestName", user.RestaurantName));
             if (user.Role != null)
-                claims.Add(new Claim("UserRole", user.Role));
+                claims.Add(new Claim("role", user.Role));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AuthSettings:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

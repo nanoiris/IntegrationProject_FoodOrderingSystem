@@ -4,8 +4,9 @@
 @inject NavigationManager navManager
 
 <RadzenDialog />
+<RadzenNotification/>
 
-<RadzenLayout style="height: 100vh">
+<RadzenLayout style="height: 100vh;width:100vw">
     <RadzenHeader>
         <ChildContent>
             <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0px">
@@ -57,8 +58,6 @@
 </RadzenLayout>
 
 @code {
-    EventConsole console;
-
     private void OnLogout()
     {
         authService.Logout();

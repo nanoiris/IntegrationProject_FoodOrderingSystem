@@ -24,7 +24,6 @@ namespace OssApp.Services
             });
             return result;
         }
-
         public string AddNewOne(RestCategoryModel row)
         {
 

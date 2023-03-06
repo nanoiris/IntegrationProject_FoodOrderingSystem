@@ -3,7 +3,6 @@ using Serilog.Events;
 using Serilog;
 using Radzen;
 using OssApp.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace OssApp;
 
@@ -28,16 +27,17 @@ public static class MauiProgram
         builder.Services.AddSingleton<RoleService>(service =>
            new RoleService("http://localhost:5191")
         );
-
         builder.Services.AddSingleton<RestCategoryService>(service =>
            new RestCategoryService("http://localhost:5064")
         );
-
         builder.Services.AddSingleton<RestaurantService>(service =>
            new RestaurantService("http://localhost:5064")
         );
         builder.Services.AddSingleton<UserService>(service =>
            new UserService("http://localhost:5191")
+        );
+        builder.Services.AddSingleton<OrderService>(service =>
+           new OrderService("http://localhost:5275")
         );
 
         builder.Services.AddScoped<DialogService>();

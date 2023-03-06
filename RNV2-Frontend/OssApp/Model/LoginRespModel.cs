@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OssApp.Model
 {
-    public class UserModel
+    public class LoginRespModel
     {
         public string UserName { get; set; }
         public string Role { get; set; }

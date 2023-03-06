@@ -1,3 +1,104 @@
 ﻿@page "/Order"
 
-Order
+@using OssApp.Model
+@using OssApp.Services
+@using RestaurantDaoBase.Enums
+@inject DialogService DialogService
+@inject OrderService service
+@inject DialogService DialogService
+@inject NotificationService NotificationService
+
+<EventConsole @ref=@console />
+
+<div class="rz-m-12 m-0">
+    <RadzenBreadCrumb>
+        <RadzenBreadCrumbItem Path="/" Text="Home" />
+        <RadzenBreadCrumbItem Path="/Order" Text="Order" />
+    </RadzenBreadCrumb>
+</div>
+
+<RadzenRow JustifyContent="JustifyContent.Normal" AlignItems="AlignItems.Start" class="mb-2">
+    <RadzenColumn Size="8" class="rz-text-align-left m-0">
+        <RadzenTextBox @bind-value=@customerName class="w-100" />
+    </RadzenColumn>
+    <RadzenColumn Size="4" class="rz-text-align-left m-0">
+        <RadzenButton Click=@(args => OnSearch()) Icon="search" Text="By Customer" ButtonStyle="ButtonStyle.Success" />
+    </RadzenColumn>
+</RadzenRow>
+
+<RadzenDataGrid @ref="myGrid" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="10" AllowSorting="true"
+                Data="@rows" TItem="OrderModel" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedRows>
+    <Columns>
+        <RadzenDataGridColumn TItem="OrderModel" Property="Id" Title="ID" Filterable="false" Sortable="false" />
+        <RadzenDataGridColumn TItem="OrderModel" Property="UserName" Title="Customer Name"  />
+        <RadzenDataGridColumn TItem="OrderModel" Property="RestaurantName" Title="Restaurant Name" />
+        <RadzenDataGridColumn TItem="OrderModel" Property="CreateTime" Title="Order Date"  />
+        <RadzenDataGridColumn TItem="OrderModel" Property="Subtotal" Title="Subtotal">
+             <Template Context="row">
+                @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", row.SubTotal)
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="OrderModel" Property="Status" Title="Status"  Width="120px"/>
+        <RadzenDataGridColumn TItem="OrderModel" Filterable="false" Sortable="false">
+            <Template Context="row">
+                <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="m-1" Click=@(() => OpenOrder(row))/>
+                @if(row.Status != StatusEnum.Canceled && row.Status != StatusEnum.Cart && row.Status != StatusEnum.Completed)
+                {
+                    <RadzenButton Icon="cancel" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Click="@(args => CancelOrder(row))" @onclick:stopPropagation="true">
+                    </RadzenButton>
+                }
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    EventConsole console;
+
+    RadzenDataGrid<OrderModel> myGrid;
+    string customerName = "";
+
+    List<OrderModel> rows = new List<OrderModel>();
+    IList<OrderModel> selectedRows;
+
+    async Task OpenOrder(OrderModel row)
+    {
+        if(row.Card == null)
+            row.Card = new PayCard();
+        if(row.ItemList == null)
+            row.ItemList = new List<OrderItem>();
+
+        await DialogService.OpenAsync<OrderDetailDialog>($"Order ",
+              new Dictionary<string, object>() { { "row", row } },
+              new DialogOptions() { Width = "1200px", Height = "800px" ,Resizable=true});
+    }
+
+    public async Task OnSearch()
+    {
+        rows = await service.Search(customerName);
+    }
+    public async Task CancelOrder(OrderModel row)
+    {
+        var isConfirmed = await DialogService.Confirm($"Are you sure to cancel the order?",
+                          "Order",
+                          new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (isConfirmed == false)
+            return;
+        var result = service.CancelOrder(row);
+        var message = new NotificationMessage();
+        message.Duration = 2500;
+
+        if(result == true)
+        {
+            row.Status = StatusEnum.Canceled;
+            message.Severity = NotificationSeverity.Success;
+            message.Summary = $"The order({row.Id} is canceled";
+        }
+        else
+        {
+            message.Severity = NotificationSeverity.Error;
+            message.Summary = $"Error to cancel the order({row.Id}";
+        }
+        NotificationService.Notify(message);
+    }
+}

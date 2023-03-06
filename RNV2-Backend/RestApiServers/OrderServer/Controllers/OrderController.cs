@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantDaoBase.IServices;
 using RestaurantDaoBase.Models;
@@ -26,6 +27,8 @@ namespace OrderServer.Controllers
         [HttpDelete("{orderId}")]
         public async Task<IActionResult> CanceledOne(string orderId)
         {
+            logger.LogInformation($"CanceledOne: orderId = {orderId}");
+
             if (ModelState.IsValid)
             {
                 var result = await service.CancelOrder(orderId);
@@ -85,6 +88,8 @@ namespace OrderServer.Controllers
         [HttpPost]
         public Task<List<Order>>? SearchWithoutStatus([FromBody] RestAndEmailViewModel model)
         {
+            logger.LogInformation($"SearchWithoutStatus: {model.RestaurantId} {model.Email}");
+
             if (ModelState.IsValid)
             {
                 return service.SearchOrder(model.RestaurantId, model.Email);

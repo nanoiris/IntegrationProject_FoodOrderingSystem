@@ -4,7 +4,7 @@ using Serilog;
 
 namespace OssApp.Services
 {
-    public class UserService : RestService<AppUserForm>
+    public class UserService : RestService<AppUserModel>
     {
         public static readonly string BaseUrl = "api/OssUser";
         public string LogoUploadUrl { get; set; }
@@ -13,12 +13,12 @@ namespace OssApp.Services
             this.LogoUploadUrl = $"{server}/{BaseUrl}/Logo/";
         }
         
-        public async Task<List<AppUserForm>> List(string restaurantId)
+        public async Task<List<AppUserModel>> List(string restaurantId)
         {
             var result = await base.List($"{BaseUrl}/ByRestaurant/{restaurantId}");
             if(result == null)
             {
-                return new List<AppUserForm>();
+                return new List<AppUserModel>();
             }
             result.ForEach(row => {
                 if (row.Logo != null)
@@ -30,7 +30,7 @@ namespace OssApp.Services
             return result;
         }
 
-        public string AddNewOne(AppUserForm row)
+        public string AddNewOne(AppUserModel row)
         {
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(row.Name), "Name");
@@ -49,12 +49,12 @@ namespace OssApp.Services
             return base.AddNewOne($"{BaseUrl}/NewOne",content);
         }
 
-        public bool DeleteOne(AppUserForm row)
+        public bool DeleteOne(AppUserModel row)
         {
             return base.DeleteOne($"{BaseUrl}/ByEmail/{row.Email}");
         }
 
-        public string UpdateOneMain(AppUserForm row)
+        public string UpdateOneMain(AppUserModel row)
         {
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(row.Name), "Name");
@@ -70,7 +70,7 @@ namespace OssApp.Services
             return result;
         }
 
-        public string UpdateOneAdress(AppUserForm row)
+        public string UpdateOneAdress(AppUserModel row)
         {
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(row.Email), "Email");

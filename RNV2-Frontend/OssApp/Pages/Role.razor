@@ -2,6 +2,8 @@
 @using OssApp.Model
 @using OssApp.Services
 @inject RoleService service
+@inject DialogService DialogService
+@inject NotificationService NotificationService
 
 <div class="rz-m-12 m-0">
     <RadzenBreadCrumb>
@@ -45,6 +47,8 @@
     RoleModel rowToInsert;
     RoleModel rowToUpdate;
 
+    RoleModel rowToSaved;
+    
     void Reset()
     {
         rowToInsert = null;
@@ -65,13 +69,21 @@
     void OnUpdateRow(RoleModel row)
     {
         if (row == rowToInsert)
-        {
             rowToInsert = null;
-        }
-
+        
         rowToUpdate = null;
-        service.UpdateOne(row);
-
+        var result = service.UpdateOne(row);
+        if (result == null)
+        {
+            row.CopyFrom(rowToSaved);
+            var message = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Cannot update the category",
+                    Duration = 2500
+                };
+            NotificationService.Notify(message);
+        }
     }
 
     async Task SaveRow(RoleModel row)
@@ -82,28 +94,22 @@
     void CancelEdit(RoleModel row)
     {
         if (row == rowToInsert)
-        {
             rowToInsert = null;
-        }
-
         rowToUpdate = null;
-
         myGrid.CancelEditRow(row);
-
     }
 
     async Task DeleteRow(RoleModel row)
     {
+        var isConfirmed = await DialogService.Confirm($"Are you sure to delete the rolw {row.Name}?",
+                          "Role",
+                          new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (isConfirmed == false)
+            return;
         if (row == rowToInsert)
-        {
             rowToInsert = null;
-        }
-
         if (row == rowToUpdate)
-        {
             rowToUpdate = null;
-        }
-
         if (rows.Contains(row))
         {
             var result = service.DeleteOne(row);
@@ -114,7 +120,13 @@
             }
             else
             {
-                //TODO
+                var message = new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Cannot delete the role",
+                        Duration = 2500
+                    };
+                NotificationService.Notify(message);
             }
         }
         else
@@ -130,17 +142,30 @@
         await myGrid.InsertRow(rowToInsert);
     }
 
-    void OnCreateRow(RoleModel row)
+    async Task OnCreateRow(RoleModel row)
     {
         string id = service.AddNewOne(row);
-        if(id != null)
+        if (id != null)
         {
             row.Id = id;
+            rows.Add(row);
             rowToInsert = null;
-        }            
+
+        }
         else
         {
-            //TODO
+            rows.Remove(row);
+            await myGrid.Reload();
+            if (row == rowToInsert)
+                rowToInsert = null;
+
+            var message = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Cannot create new category",
+                    Duration = 2500
+                };
+            NotificationService.Notify(message);
         }
     }
 }

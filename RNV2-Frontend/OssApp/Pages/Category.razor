@@ -3,6 +3,7 @@
 @using OssApp.Services
 @inject RestCategoryService service
 @inject DialogService DialogService
+@inject NotificationService NotificationService
 
 <div class="rz-m-12 m-0">
     <RadzenBreadCrumb>
@@ -53,10 +54,14 @@
 </RadzenDataGrid>
 
 @code {
+    EventConsole console;
+
     RadzenDataGrid<RestCategoryModel> myGrid;
     List<RestCategoryModel> rows;
     RestCategoryModel rowToInsert;
     RestCategoryModel rowToUpdate;
+
+    RestCategoryModel rowToSaved;
 
     void Reset()
     {
@@ -71,6 +76,8 @@
 
     async Task EditRow(RestCategoryModel row)
     {
+        rowToSaved = new RestCategoryModel(row);
+
         rowToUpdate = row;
         await myGrid.EditRow(row);
     }
@@ -78,12 +85,21 @@
     void OnUpdateRow(RestCategoryModel row)
     {
         if (row == rowToInsert)
-        {
             rowToInsert = null;
-        }
 
         rowToUpdate = null;
-        service.UpdateOne(row);
+        var result = service.UpdateOne(row);
+        if(result == null)
+        {
+            row.CopyFrom(rowToSaved);
+            var message = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Cannot update the category",
+                    Duration = 2500
+                };
+            NotificationService.Notify(message);
+        }
     }
 
     async Task SaveRow(RestCategoryModel row)
@@ -94,25 +110,22 @@
     void CancelEdit(RestCategoryModel row)
     {
         if (row == rowToInsert)
-        {
             rowToInsert = null;
-        }
         rowToUpdate = null;
         myGrid.CancelEditRow(row);
     }
 
     async Task DeleteRow(RestCategoryModel row)
     {
+        var isConfirmed = await DialogService.Confirm($"Are you sure to delete the category {row.Name}?",
+                          "Category",
+                          new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (isConfirmed == false)
+            return;
         if (row == rowToInsert)
-        {
             rowToInsert = null;
-        }
-
         if (row == rowToUpdate)
-        {
             rowToUpdate = null;
-        }
-
         if (rows.Contains(row))
         {
             var result = service.DeleteOne(row);
@@ -123,7 +136,13 @@
             }
             else
             {
-                //TODO
+                var message = new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Cannot delete the category",
+                        Duration = 2500
+                    };
+                NotificationService.Notify(message);
             }
         }
         else
@@ -139,7 +158,7 @@
         await myGrid.InsertRow(rowToInsert);
     }
 
-    void OnCreateRow(RestCategoryModel row)
+    async Task OnCreateRow(RestCategoryModel row)
     {
         string id = service.AddNewOne(row);
         if (id != null)
@@ -151,10 +170,21 @@
         }
         else
         {
-            //TODO
+            rows.Remove(row);
+            await myGrid.Reload();
+            if (row == rowToInsert)
+                rowToInsert = null;
+
+            var message = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Cannot create new category",
+                    Duration = 2500
+                };
+            NotificationService.Notify(message);
         }
     }
-    
+
     async Task OpenUploadDialog(RestCategoryModel row)
     {
         string uploadUrl = service.LogoUploadUrl + row.Id;

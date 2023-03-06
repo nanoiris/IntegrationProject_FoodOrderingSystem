@@ -2,7 +2,7 @@
 
 namespace OssApp.Services
 {
-    public class RestaurantService : RestService<RestaurantForm>
+    public class RestaurantService : RestService<RestaurantModel>
     {
         public static readonly string BaseUrl = "api/Restaurant";
         
@@ -22,7 +22,7 @@ namespace OssApp.Services
             }
         }
 
-        public async Task<List<RestaurantForm>> List()
+        public async Task<List<RestaurantModel>> List()
         {
             var result = await this.List($"{BaseUrl}/List");
             result.ForEach(row => {
@@ -33,7 +33,7 @@ namespace OssApp.Services
             return result;
         }
 
-        public async Task<RestaurantForm> Find(string id)
+        public async Task<RestaurantModel> Find(string id)
         {
             var result = await this.FindOne($"{BaseUrl}/One/{id}");
             if(result != null)
@@ -41,7 +41,7 @@ namespace OssApp.Services
             return result;
         }
 
-        public string AddNewOne(RestaurantForm row)
+        public string AddNewOne(RestaurantModel row)
         {
 
             if(string.IsNullOrEmpty(row.Name))
@@ -52,15 +52,19 @@ namespace OssApp.Services
             content.Add(new StringContent(row.Description), "Description");
             content.Add(new StringContent(row.IsFeatured.ToString()), "IsFeatured");
             content.Add(new StringContent(row.CategoryId), "CategoryId");
-
-            return base.AddNewOne($"{BaseUrl}/NewOne", content);
+          
+            var result = base.AddNewOne($"{BaseUrl}/NewOne", content);
+            if (result == null)
+                return null;
+            row.CategoryName = CategoryDict[row.CategoryId];
+            return result;
         }
-       public bool DeleteOne(RestaurantForm row)
+       public bool DeleteOne(RestaurantModel row)
        {
           return base.DeleteOne($"{BaseUrl}/DeletedOne/{row.Id}");
        }
 
-        public string UpdateOneMain(RestaurantForm row)
+        public string UpdateOneMain(RestaurantModel row)
         {
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(row.Id), "Id");
@@ -69,12 +73,14 @@ namespace OssApp.Services
             content.Add(new StringContent(row.IsFeatured.ToString()), "IsFeatured");
             content.Add(new StringContent(row.CategoryId), "CategoryId");
             var result = base.UpdateOne($"{BaseUrl}/UpdatedOne", content);
+            if(result == null)
+                return null;
             row.CategoryId = result;
             row.CategoryName = CategoryDict[row.CategoryId];
             return result;
         }
 
-        public string UpdateOneAdress(RestaurantForm row)
+        public string UpdateOneAdress(RestaurantModel row)
         {
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(row.Id), "Id");
