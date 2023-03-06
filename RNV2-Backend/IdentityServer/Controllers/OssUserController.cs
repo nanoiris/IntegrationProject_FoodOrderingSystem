@@ -134,5 +134,11 @@ namespace IdentityServer.Controllers
                 fileService.DeleteFile(oldOne.Logo);
             return BadRequest(new AppResult("", false));
         }
+
+        [HttpGet]
+        public Task<List<AppUser>>? AvaliableDeliveryMan()
+        {
+            return userService.AvaliableDeliveryManList();
+        }
     }
 }

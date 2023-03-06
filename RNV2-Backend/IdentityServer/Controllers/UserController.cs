@@ -55,7 +55,7 @@ namespace IdentityServer.Controllers
             if (ModelState.IsValid)
             {
                 var result = await userService.ResetPassword(model.Email, model.Password, model.ConfirmPassword);
-                return Ok(result);
+                return result.IsSuccess == true ? Ok(result) : BadRequest(result);
             }
             return BadRequest("Some properties are not valid");
         }

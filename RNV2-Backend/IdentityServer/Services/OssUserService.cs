@@ -106,5 +106,28 @@ namespace IdentityServer.Services
             return appResult;
         }
 
+        public async Task<List<object>>? AvaliableDeliveryManList()
+        {
+            //userManager.Users.Where(x => x.Status == UserStatusEnum.active
+            //&& x.Role)
+            using (var ctx = new AppCtx())
+            {
+                var query = from users in ctx.Users
+                            join userRoles in ctx.UserRoles
+                            on users.Id equals userRoles.UserId
+                            join roles in ctx.Roles
+                            on userRoles.RoleId equals roles.Id
+                            where users.Status == UserStatusEnum.active
+                            && roles.Name == "Delivery"
+                            select new
+                            {
+                                Id = users.Id,
+                                Name = users.Name,
+                            };
+                return query.ToListAsync<List<object>>(); ;
+
+            }
+        }
+
     }
 }
