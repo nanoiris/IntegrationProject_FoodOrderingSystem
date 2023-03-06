@@ -1,11 +1,11 @@
 ﻿@page "/Account/Terminate"
-@using DeliveryApp.Services;
+@using Services;
 @using RestaurantDaoBase.Models;
 @using System.Net.Http;
 @using System.Net.Http.Json;
 @using RestaurantDaoBase;
 @using Serilog;
-@using DeliveryApp.Data;
+@using Data;
 @inject NavigationManager NavigationManager
 @inject AuthService authService
 
@@ -17,6 +17,7 @@
     protected override async Task OnInitializedAsync()
     {
         httpClient.BaseAddress = new Uri(Constants.IdentityUri);
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
         userName = AuthService.User.UserName;
         var response = (await httpClient.PutAsJsonAsync<bool>($"api/UserStatus/Terminated/" + userName, true));
         if (response.IsSuccessStatusCode == true)

@@ -2,14 +2,14 @@
 @page "/Account/EditProfile/{msg}"
 @using DeliveryApp.Services
 @using DeliveryApp.Data
-@using DeliveryApp.Data.Dto
+@using DeliveryApp.Data.Model
 @using System.Net.Http;
 @using System.Net.Http.Json;
 @using System.Net.Http.Headers;
 @using Serilog;
 @using Microsoft.AspNetCore.Http;
 @inject AuthService authService
-@inject Utils utils
+@inject IJSRuntime JSRuntime;
 @inject NavigationManager NavigationManager
 
 <div class="p-4 login-page-form">
@@ -38,45 +38,58 @@
     <EditForm class="mt-4 " id="signupForm" Model="@user" OnValidSubmit="EditProfilePut" enctype="multipart/form-data">
         <DataAnnotationsValidator />
         <div class="form-group">
-            <input @bind-value="user.Name" type="text" placeholder="Name" class="form-control" id="Name" />
+            <label class="text-info pl-2 mt-1 mb-0">Email:</label>
+            <input @bind-value="user.UserName" type="text" class="form-control" id="Email" readonly />
+        </div>
+        <div class="form-group">
+            <label class="text-info pl-2 mt-1 mb-0">Name:</label>
+            <input @bind-value="user.Name" type="text" class="form-control" id="Name" />
             <ValidationMessage For="@(() => user.Name)" />
         </div>
         <div class="form-group">
-            <input @bind-value="user.Email" type="text" placeholder="Email" class="form-control" id="Email" readonly />
-            <ValidationMessage For="@(() => user.Email)" />
+            <label class="text-info pl-2 mt-1 mb-0">Mobile Number:</label>
+            <input @bind-value="user.PhoneNumber" type="text" class="form-control" id="Phone" />
+            <ValidationMessage For="@(() => user.PhoneNumber)" />
         </div>
         <div class="form-group">
-            <input @bind-value="user.PhoneNumber" type="text" placeholder="Mobile Number" class="form-control" id="Phone" />
-            <ValidationMessage For="@(() => user.PhoneNumber)" />
-        </div>       
-        <div class="form-group">
-            <input @bind-value="user.Street" type="text" placeholder="Street" class="form-control" id="Street" />
+            <label class="text-info pl-2 mt-1 mb-0">Street:</label>
+            <input @bind-value="user.Street" type="text" class="form-control" id="Street" />
             <ValidationMessage For="@(() => user.Street)" />
         </div>
         <div class="form-group">
-            <input @bind-value="user.City" type="text" placeholder="City" class="form-control" id="City" />
+            <label class="text-info pl-2 mt-1 mb-0">City:</label>
+            <input @bind-value="user.City" type="text" class="form-control" id="City" />
             <ValidationMessage For="@(() => user.City)" />
         </div>
         <div class="form-group">
-            <input @bind-value="user.State" type="text" placeholder="Province" class="form-control" id="Province" />
+            <label class="text-info pl-2 mt-1 mb-0">Province:</label>
+            <input @bind-value="user.State" type="text" class="form-control" id="Province" />
             <ValidationMessage For="@(() => user.State)" />
         </div>
         <div class="form-group">
-            <input @bind-value="user.Country" type="text" placeholder="Country" class="form-control" id="Country" />
+            <label class="text-info pl-2 mt-1 mb-0">Country:</label>
+            <input @bind-value="user.Country" type="text" class="form-control" id="Country" />
             <ValidationMessage For="@(() => user.Country)" />
         </div>
         <div class="form-group">
-            <input @bind-value="user.PostCode" type="text" placeholder="Zip" class="form-control" id="Zip" />
+            <label class="text-info pl-2 mt-1 mb-0">Zip:</label>
+            <input @bind-value="user.PostCode" type="text" class="form-control" id="Zip" />
             <ValidationMessage For="@(() => user.PostCode)" />
         </div>
-        <div class="form-group mr-3 ">
-            <div class="custom-file  mr-3">
-                <InputFile class="form-control" OnChange="@onFileChange" />
+
+        <div class="form-group">
+            <label class="text-info pl-2 mt-1 mb-0">Image:</label>
+            <div class="custom-file">
+                <InputFile class="form-control" OnChange="@onFileChange" @ref="inputFile" />
             </div>
         </div>
 
-        <button class="btn btn-primary btn-lg btn-block mb-2" type="submit" @onclick="OnSubmit">Update</button>
-       
+        <div class="mx-5 mb-3">
+            <img src="@(Data.Constants.imgUrl + user.Logo)" class="w-50" @ref="previewImageElem" />
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block mb-2" type="submit">Update</button>
+
     </EditForm>
        
 </div>
@@ -86,47 +99,24 @@
 
     public string deliveryman { get; set; }
     public string logo { get; set; }
-    public HttpClient httpClient = new HttpClient();
-    private RegisterUser user = new RegisterUser();
+    //public HttpClient ;
+    private UserModel user = new UserModel();
+    private InputFile? inputFile;
+    private ElementReference previewImageElem;
 
     protected override async Task OnInitializedAsync()
     {
 
-        httpClient.BaseAddress = new Uri(Constants.IdentityUri);
         deliveryman = AuthService.User.UserName;
-        user = (await httpClient.GetFromJsonAsync<RegisterUser>($"api/Ossuser/OneByEmail/" + deliveryman));
-        if (user.Logo != null)
-        {
-            logo = Utils.BuildLogoPath(user.Logo);
-        }
+        user = authService.getUserByEmail(deliveryman);
+        logo = AuthService.User.Logo;
     }
 
     private async Task EditProfilePut()
     {
-        var multipartContent = new MultipartFormDataContent();
-        multipartContent.Add(new StringContent(user.Name), "Name");
-        multipartContent.Add(new StringContent(user.Email), "Email");
-        //multipartContent.Add(new StringContent(user.Password), "Password");
-        //multipartContent.Add(new StringContent(user.ConfirmPassword), "ConfirmPassword");
-        multipartContent.Add(new StringContent(user.PhoneNumber), "PhoneNumber");
-        multipartContent.Add(new StringContent(user.Street), "Street");
-        multipartContent.Add(new StringContent(user.City), "City");
-        multipartContent.Add(new StringContent(user.State), "State");
-        multipartContent.Add(new StringContent(user.Country), "Country");
-        multipartContent.Add(new StringContent(user.PostCode), "PostCode");
-        multipartContent.Add(new StringContent("DeliveryMan"), "Role");
+        var response = await authService.Update(user);
 
-        var img = new StreamContent(user.UploadImg?.OpenReadStream());
-        Log.Debug(user.UploadImg.Name);
-        Log.Debug(user.UploadImg.ContentType);
-        img.Headers.ContentType = new MediaTypeHeaderValue(user.UploadImg.ContentType);
-        multipartContent.Add(content: img, "UploadImg", fileName: user.UploadImg.Name);
-
-
-        //httpClient.BaseAddress = new Uri(Constants.IdentityUri);
-        HttpResponseMessage response = await httpClient.PutAsync("http://localhost:5191/api/User/UpdatedOne", multipartContent);
-
-        if (response.IsSuccessStatusCode)
+        if (response)
         {
             string msg = "Update Profile succeed!";
             NavigationManager.NavigateTo($"/Account/Profile/{msg}", forceLoad: true);
@@ -138,15 +128,11 @@
         }
     }
 
-    private async void onFileChange(InputFileChangeEventArgs e)
+    private async Task onFileChange(InputFileChangeEventArgs e)
     {
         user.UploadImg =e.File;
+        await JSRuntime.InvokeVoidAsync("previewImage", inputFile!.Element, previewImageElem);
 
-    }
-
-    private async Task OnSubmit()
-    {
-        await EditProfilePut();
     }
 
 }
