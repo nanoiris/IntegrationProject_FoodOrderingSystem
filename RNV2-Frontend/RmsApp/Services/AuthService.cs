@@ -24,7 +24,7 @@ public class AuthService : IAuthService
     private readonly IJSRuntime _jsRuntime;
     private readonly IFlashMessageService _flashMessageService;
     public static LoginDto User { get; set; }
-    public bool IsLoggedIn { get; set; }
+    public static bool IsLoggedIn { get; set; }
 
     public AuthService(HttpClient httpClient, IFlashMessageService flashMessageService, IJSRuntime jsRuntime)
     {
@@ -39,9 +39,11 @@ public class AuthService : IAuthService
         var response = await _httpClient.PostAsJsonAsync("api/auth/login", new { UserName = username, Password = password });
         if (response.IsSuccessStatusCode)
         {
-            Console.Write("Login successfully");
+            Console.WriteLine("Login successfully");
             User = await response.Content.ReadFromJsonAsync<LoginDto>();
+            Console.WriteLine("user role is " + User.Role);
             IsLoggedIn = true;
+            Console.WriteLine("login status is" + IsLoggedIn);
             if (User.Logo != null)
             {
                 //User.Logo = Utils.BuildLogoPath(User.Logo);

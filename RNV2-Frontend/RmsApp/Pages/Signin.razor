@@ -4,7 +4,7 @@
 @inject ILogger<AuthService> logger
 @inject IFlashMessageService FlashMessageService
 @inject NavigationManager NavigationManager
-@inject IAuthService AuthService
+@inject AuthService AuthService
 
 <PageTitle>Signin</PageTitle>
 
@@ -33,7 +33,7 @@
             }
             else
             {
-                <p>You are already logged in.</p>
+                <p>You have already logged in.</p>
             }
             <br>
         </div>
