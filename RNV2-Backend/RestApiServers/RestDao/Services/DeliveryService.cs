@@ -41,9 +41,12 @@ namespace RestaurantDao.Services
         }
         public Task<List<Delivery>> ListActiveDeliveries()
         {
+            logger.LogInformation("Enter DeliveryService.ListActiveDeliveries");
             using (var ctx = new DeliveryContext())
             {
-                return ctx.Deliveries.Where(x => x.Status == DeliveryStatusEnum.Pending)
+                return ctx.Deliveries
+                    .Where(x => x.Status == DeliveryStatusEnum.Pending
+                         || x.Status == DeliveryStatusEnum.Reject)
                     .ToListAsync();
             }
         }

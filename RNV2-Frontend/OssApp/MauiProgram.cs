@@ -39,6 +39,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<OrderService>(service =>
            new OrderService("http://localhost:5275")
         );
+        builder.Services.AddSingleton<DeliveryService>(service =>
+           new DeliveryService("http://localhost:5175")
+        );
 
         builder.Services.AddScoped<DialogService>();
         builder.Services.AddScoped<NotificationService>();
