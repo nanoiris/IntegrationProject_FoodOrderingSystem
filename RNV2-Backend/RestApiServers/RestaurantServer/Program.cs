@@ -81,7 +81,7 @@ namespace RestaurantServer
             app.UseHttpsRedirection();
             app.UseCors();
             app.UseAuthorization();
-           // app.UseAuthentication();
+            app.UseAuthentication();
 
             app.MapControllers();
 

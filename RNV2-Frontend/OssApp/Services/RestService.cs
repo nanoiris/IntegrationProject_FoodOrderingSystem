@@ -137,7 +137,8 @@ namespace OssApp.Services
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadFromJsonAsync<AppResult>().GetAwaiter().GetResult();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var result = response.Content.ReadFromJsonAsync<AppResult>(options).GetAwaiter().GetResult();
                 if (result.isSuccess)
                 {
                     return result.message;
@@ -166,6 +167,7 @@ namespace OssApp.Services
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
+                Log.Debug(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
                 var result = response.Content.ReadFromJsonAsync<AppResult>().GetAwaiter().GetResult();
                 return result.isSuccess;
             }

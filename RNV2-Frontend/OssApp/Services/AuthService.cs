@@ -34,6 +34,7 @@ namespace OssApp.Services
                 Log.Debug("Login succefully");
                 try 
                 {
+                    Log.Debug(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
                     User = await response.Content.ReadFromJsonAsync<LoginRespModel>();
                 }
                 catch(Exception ex)
