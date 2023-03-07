@@ -20,6 +20,8 @@ namespace DeliveryApp.Data.Dto
         public DateTime? CreateTime { get; set; }
         public DateTime? AcceptTime { get; set; }
         public DateTime? EstimateTime { get; set; }
+
+        public DateTime? PickupTime { get; set; }
         public DateTime? DeliveryTime { get; set; }
         public DeliveryStatusEnum? Status { get; set; }
 
