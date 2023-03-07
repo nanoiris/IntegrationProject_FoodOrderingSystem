@@ -1,0 +1,292 @@
+﻿@page "/takeawayOrder"
+
+@using RmsApp.Services
+@using RmsApp.Dtos
+@using RestaurantDaoBase.Enums
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using Microsoft.Extensions.Logging
+@inject ILogger<CategoryService> logger
+@inject IFlashMessageService FlashMessageService
+@inject AuthService authService
+@using Microsoft.AspNetCore.Components.Web
+
+<ul class="breadcrumb breadcrumb-gray">
+    @foreach (var path in Paths)
+    {
+        <li class="breadcrumb-item"><NavLink href="@path.Path">@path.Title</NavLink></li>
+    }
+</ul>
+
+@if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @FlashMessageService.SuccessMessage
+    </div>
+}
+else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
+{
+    <div class="alert alert-danger">
+        @FlashMessageService.FailureMessage
+    </div>
+}
+
+<h2>Take-Away Orders</h2>
+<div class="p-3 rounded shadow-sm bg-white">
+     <div class="p-3 rounded shadow-sm bg-white">
+            <form class="col-12 mb-4 row">
+               <div class="col-1">
+               @* <button class="btn btn-icon-only btn-pill btn-success" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Paid)">Paid</button> *@
+              <button class="btn btn-icon-only btn-pill btn-success" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Paid)">Paid</button>
+            </div>
+             <div class="col-1">
+                @* <button class="btn btn-icon-only btn-pill btn-info" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Accepted)">Accepted</button> *@
+                <button class="btn btn-icon-only btn-pill btn-info" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Accepted)">Accepted</button>
+            </div>
+            <div class="col-1">
+                @* <button class="btn btn-icon-only btn-pill btn-warning" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Ready)">Ready</button> *@
+                <button class="btn btn-icon-only btn-pill btn-warning" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Ready)">Ready</button>
+            </div>
+            <div class="col-1">
+                @* <button class="btn btn-icon-only btn-pill btn-primary" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Completed)">Completed</button> *@
+                <button class="btn btn-icon-only btn-pill btn-primary" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Completed)">Completed</button>
+            </div>
+            <div class="col-1">
+                <button class="btn btn-icon-only btn-pill btn-primary" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Canceled)">Canceled</button>
+            </div> 
+
+           </form>
+        </div>
+            
+           @if (TakeAwayOrders != null && TakeAwayOrders.Any())
+{
+    <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
+        <thead class="text-danger font-weight-bold">
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Edit</th>
+                <th>Cancel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in TakeAwayOrders)
+            {
+                <tr>
+                    <td>@order.id</td>
+                    <td>@order.UserName</td>
+                    <td>@order.StatusString</td>
+                    <td>
+              @if (order.Status == (int)StatusEnum.Paid)
+                {
+                    <button class="btn btn-icon-only btn-pill btn-primary" @onclick="() => ChangeToAccepted(order.id, (int)StatusEnum.Accepted)">Accept</button>
+                }
+                else if (order.Status == (int)StatusEnum.Accepted)
+                {
+                    <button class="btn btn-icon-only btn-pill btn-primary" @onclick="() => ChangeToReady(order.id, (int)StatusEnum.Ready)">Ready</button>
+                }
+                else if (order.Status == (int)StatusEnum.Ready)
+                {
+                    <button class="btn btn-icon-only btn-pill btn-primary" @onclick="() => ChangeToCompleted(order.id, (int)StatusEnum.Completed)">Complete</button>
+                } 
+
+            </td>
+                    <td>
+                        @* <button class="btn btn-icon-only btn-pill btn-primary" @onclick="() => ChangeToCancel(order.id, (int)StatusEnum.Canceled)">Cancel</button> *@
+
+                        </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No take-away orders found.</p>
+}
+</div>
+
+
+@code {
+    public List<TabPath> Paths = new List<TabPath>
+    {
+        new TabPath { Title = "Home", Path = "/" },
+        new TabPath { Title = "Order", Path = "/order" },
+    };
+    public List<OrderListDto> Orders { get; set; }
+    public int _statusFilter = (int)StatusEnum.Paid;
+
+
+    @* public string restaurantId = AuthService.User.RestaurantId; *@
+    public string restaurantId = Constants.RestaurantId;
+    public int paidStatus = (int)StatusEnum.Paid;
+
+    public int acceptedStatus = (int)StatusEnum.Accepted;
+
+    public int readyStatus = (int)StatusEnum.Ready;
+
+    public int completeStatus = (int)StatusEnum.Completed;
+
+    [Inject]
+    public IOrderService OrderService { get; set; }
+
+    public List<OrderListDto> TakeAwayOrders { get; set; }
+
+
+
+    private bool isInitialized = false;
+    private int selectedStatus = (int)StatusEnum.Accepted;
+
+    protected override async Task OnInitializedAsync()
+    {
+        logger.LogInformation("order list OnInitializedAsync");
+
+        if (!isInitialized)
+        {
+            // Retrieve the initial orders based on the selected status
+            Orders = await OrderService.ListOrderAsync(restaurantId, selectedStatus);
+            TakeAwayOrders = Orders.Where(o => o.IsDelivery == false).ToList();
+            
+            isInitialized = true;
+        }
+    }
+    private async Task LoadOrdersByStatus(int status)
+    {
+        switch (status)
+        {
+            case (int)StatusEnum.Paid:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Paid);
+                selectedStatus = (int)StatusEnum.Paid;
+                break;
+            case (int)StatusEnum.Accepted:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Accepted);
+                selectedStatus = (int)StatusEnum.Accepted;
+                break;
+            case (int)StatusEnum.Ready:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Ready);
+                selectedStatus = (int)StatusEnum.Ready;
+                break;
+            case (int)StatusEnum.Completed:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Completed);
+                selectedStatus = (int)StatusEnum.Completed;
+                break;
+            case (int)StatusEnum.Canceled:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Canceled);
+                selectedStatus = (int)StatusEnum.Canceled;
+                break;
+            default:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Paid);
+                selectedStatus = (int)StatusEnum.Paid;
+                break;
+        }
+
+        TakeAwayOrders = Orders.Where(o => o.IsDelivery == false).ToList();
+        StateHasChanged();
+    }
+
+
+     @* protected override async Task OnInitializedAsync()
+    {
+     if (!AuthService.IsLoggedIn)
+        {
+            NavigationManager.NavigateTo("/signin");
+            return;
+        } 
+        logger.LogInformation("order list OnInitializedAsync");
+        Orders = await OrderService.ListOrderAsync(restaurantId, paidStatus);
+        TakeAwayOrders = Orders.Where(o => o.IsDelivery == false).ToList(); 
+    }  *@
+
+
+
+    @* private async Task ChangeToAccepted(string orderId, int status)
+    {
+        var result = await OrderService.UpdateOrderStatus(orderId, status);
+
+        if (result)
+        {
+            logger.LogInformation($"Order status changed to {status}");
+            Orders = await OrderService.ListOrderAsync(restaurantId, paidStatus);
+            TakeAwayOrders = Orders.Where(o => o.IsDelivery == false).ToList();
+            StateHasChanged();
+        }
+        else
+        {
+            logger.LogError($"Failed to change order status to {status}");
+        }
+    } *@
+private async Task ChangeToAccepted(string orderId, int newStatus)
+{
+    var orderDto = await OrderService.GetOrderAsync(orderId);
+
+    if (orderDto == null)
+    {
+        // Handle error - order not found
+        return;
+    }
+
+    // Update the order status
+    orderDto.Status = newStatus;
+    await OrderService.UpdateOrderStatusAsync(orderId,newStatus);
+
+    // Reload the orders with the new status
+    Orders = await OrderService.ListOrderAsync(restaurantId, newStatus);
+    TakeAwayOrders = Orders.Where(o => o.IsDelivery == false).ToList();
+
+    // Show success message
+    @* await JSRuntime.InvokeVoidAsync("showToast", "Success", "Order status updated to Accepted."); *@
+}
+
+public async Task ChangeToReady(string orderId, int status)
+{
+    var isSuccess = await OrderService.UpdateOrderStatusAsync(orderId, status);
+
+    if (isSuccess)
+    {
+        var order = Orders.FirstOrDefault(o => o.id == orderId);
+
+        if (order != null)
+        {
+            order.Status = readyStatus;
+            StateHasChanged();
+        }
+    }
+}
+
+public async Task ChangeToCompleted(string orderId, int status)
+{
+    var isSuccess = await OrderService.UpdateOrderStatusAsync(orderId, status);
+
+    if (isSuccess)
+    {
+        var order = Orders.FirstOrDefault(o => o.id == orderId);
+
+        if (order != null)
+        {
+            order.Status = completeStatus;
+            StateHasChanged();
+        }
+    }
+}
+
+public async Task ChangeToCancel(string orderId, int status)
+{
+    var isSuccess = await OrderService.UpdateOrderStatusAsync(orderId, status);
+
+    if (isSuccess)
+    {
+        var order = Orders.FirstOrDefault(o => o.id == orderId);
+
+        if (order != null)
+        {
+            order.Status = completeStatus;
+            StateHasChanged();
+        }
+    }
+}
+
+
+
+
+}

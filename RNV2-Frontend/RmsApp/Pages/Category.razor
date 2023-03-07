@@ -6,7 +6,8 @@
 @inject IJSRuntime JSRuntime
 @using Microsoft.Extensions.Logging
 @inject ILogger<CategoryService> logger
-@inject IFlashMessageService FlashMessageService  
+@inject IFlashMessageService FlashMessageService 
+@inject AuthService authService 
 
 
 <ul class="breadcrumb breadcrumb-gray">
@@ -72,7 +73,7 @@ else
         new TabPath { Title = "Category", Path = "/category" },
         };
     public List<CategoryDto> Categories { get; set; }
-    public string restaurantId = Constants.RestaurantId;
+    public string restaurantId = AuthService.User.RestaurantId;
 
 
     [Inject]
@@ -80,6 +81,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+         if (!AuthService.IsLoggedIn)
+        {
+            NavigationManager.NavigateTo("/signin");
+            return;
+        }
         logger.LogInformation("category list OnInitializedAsync");
         Categories = (await CategoryService.ListCategoryAsync(restaurantId)).ToList();
         

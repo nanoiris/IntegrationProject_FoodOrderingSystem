@@ -8,7 +8,7 @@ namespace RmsApp.Services
         string FailureMessage { get; set; }
         int DurationInSeconds { get; set; }
         event Action OnChange;
-        void SetSuccessMessage(string message);
+        Task SetSuccessMessage(string message);
         void SetFailureMessage(string message);
         void ClearMessages();
 

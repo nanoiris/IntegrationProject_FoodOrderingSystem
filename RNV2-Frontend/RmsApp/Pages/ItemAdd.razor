@@ -9,6 +9,7 @@
 @inject IFlashMessageService FlashMessageService  
 @using Microsoft.AspNetCore.Http;
 @using Microsoft.AspNetCore.Components.Forms
+@inject AuthService authService
 
 <ul class="breadcrumb breadcrumb-gray">
     @foreach (var path in Paths)
@@ -101,7 +102,7 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
     public string NewItemCategoryId { get; set; } = "";
 
 
-    public string restaurantId = Constants.RestaurantId; 
+    public string restaurantId = AuthService.User.RestaurantId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -109,13 +110,18 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
     }
     private IBrowserFile UploadImg { get; set; }
 
+    private async Task ClearMessageAsync()
+    {
+        logger.LogInformation("clearing");
+        await FlashMessageService.ClearMessagesAsync();
+    }
     private void OnFileChange(InputFileChangeEventArgs e)
     {
         UploadImg = e.File;
     }
     private async Task AddMenuItem()
     {
-        string restaurantId = Constants.RestaurantId;
+        string restaurantId = AuthService.User.RestaurantId;
         var newItem = new ItemAddDto 
         {
             Name = NewItemName,

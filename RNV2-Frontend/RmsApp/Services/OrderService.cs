@@ -52,7 +52,23 @@ namespace RmsApp.Services
 
             return orders;
         }
-    }
+        public async Task<bool> UpdateOrderStatusAsync(string orderId, int status)
+        {
+            var model = new OrderListDto { id = orderId, Status = status };
+            var response = await _httpClient.PutAsJsonAsync("api/Order/OrderStatus", model);
 
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<OrderListDto> GetOrderAsync(string orderId)
+        {
+            var response = await _httpClient.GetAsync($"api/order/one/{orderId}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<OrderListDto>();
+
+
+        }
+
+    }
 
 }

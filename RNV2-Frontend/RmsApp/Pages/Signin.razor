@@ -12,9 +12,21 @@
     <div class="px-5 col-md-6">
         <div class="px-5 col-10 mx-auto">
             <h2 class="text-dark my-0"><i class="fa fa-utensils text-danger"></i> Restaurant Admin, Welcome! </h2>
-            <p class="text-50">Sign in to continue</p>
+            @if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+            {
+                <div class="alert alert-success">
+                    @FlashMessageService.SuccessMessage
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
+            {
+                <div class="alert alert-danger">
+                    @FlashMessageService.FailureMessage
+                </div>
+            }
             @if (!AuthService.IsLoggedIn)
             {
+                <p class="text-50">Sign in to continue</p>
                 <form class="mt-5 mb-4" @onsubmit="async () => await OnSigninAsync()">
                     <div class="form-group mb-3">
                         <label class="text-dark">Email</label>
@@ -33,6 +45,7 @@
             }
             else
             {
+                <br>
                 <p>You have already logged in.</p>
             }
             <br>
@@ -41,8 +54,6 @@
 </div>
 
 @code {
-    
-
 
     private LoginDto loginModel = new LoginDto();
 
@@ -51,17 +62,26 @@
         logger.LogInformation("Sign in OnInitializedAsync");
     }
 
+    private async Task ClearMessageAsync()
+    {
+        logger.LogInformation("clearing");
+        await FlashMessageService.ClearMessagesAsync();
+    }
+
     private async Task OnSigninAsync()
     {
         bool result = await AuthService.LoginAsync(loginModel.UserName, loginModel.Password);
         if (result)
         {
-            FlashMessageService.SuccessMessage = "You have been logged in.";
+            FlashMessageService.SetSuccessMessage("Successfully logged in..");
             NavigationManager.NavigateTo("/edit");
+            await ClearMessageAsync();
         }
         else
         {
-            FlashMessageService.FailureMessage = "Login failed. Please try again.";
-        }
+            FlashMessageService.SetFailureMessage("Login failed. Please try again.");
+            await ClearMessageAsync();
+        } 
     }
+
 }
