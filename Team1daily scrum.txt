@@ -660,6 +660,8 @@ ppt
 
 2023/03/07 Tuesday Zibin 
 1. Done / not done since last scrum:
+- finish authrization and fix changepassword bug
 2. To do until next Scrum:
+-search page and order detail page
 3. Need assistance / figure things out
 
