@@ -27,7 +27,8 @@ namespace RestaurantServer.Controllers
         {
             return service.ListCategory();
         }
-        [Authorize(Roles = "Operator")]
+        //[Authorize(Roles = "Operator")]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> NewOne([FromForm] RestCategory category)
         {
@@ -77,7 +78,8 @@ namespace RestaurantServer.Controllers
             return service.FindCategory(id);
         }
 
-        [Authorize(Roles = "Operator")]
+        //[Authorize(Roles = "Operator")]
+        [AllowAnonymous]
         [HttpPut]
         public async Task<IActionResult> UpdatedOne([FromForm] RestCategory category)
         {
@@ -118,7 +120,8 @@ namespace RestaurantServer.Controllers
             }
             return BadRequest(new AppResult("Some properties are not correct", false));
         }
-        [Authorize(Roles = "Operator")]
+        //[Authorize(Roles = "Operator")]
+        [AllowAnonymous]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletedOne(string id)
         {
