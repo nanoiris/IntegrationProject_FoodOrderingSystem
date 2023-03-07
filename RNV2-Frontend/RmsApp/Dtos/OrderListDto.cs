@@ -16,6 +16,28 @@ namespace RmsApp.Dtos
 
         public bool IsDelivery { get; set; }
 
+        public string StatusString
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case (int)RmsStatusEnum.Paid:
+                        return "Paid";
+                    case (int)RmsStatusEnum.Accepted:
+                        return "Accepted";
+                    case (int)RmsStatusEnum.Ready:
+                        return "Ready";
+                    case (int)RmsStatusEnum.Completed:
+                        return "Completed";
+                    case (int)RmsStatusEnum.Canceled:
+                        return "Canceled";
+                    default:
+                        return "Unknown";
+                }
+            }
+        }
+
     }
 
 }

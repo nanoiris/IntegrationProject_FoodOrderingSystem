@@ -7,6 +7,7 @@
 @using Microsoft.Extensions.Logging
 @inject ILogger<CategoryService> logger
 @inject IFlashMessageService FlashMessageService  
+@inject AuthService authService
 
 
 <ul class="breadcrumb breadcrumb-gray">
@@ -59,9 +60,14 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
         logger.LogInformation("OnInitializedAsync");
 
     } 
+     private async Task ClearMessageAsync()
+    {
+        logger.LogInformation("clearing");
+        await FlashMessageService.ClearMessagesAsync();
+    }
     private async Task AddCategory()
     {
-        string restaurantId = Constants.RestaurantId;
+        string restaurantId = AuthService.User.RestaurantId;
         var newCategory = new CategoryDto { Name = NewCategoryName };
         await CategoryService.AddCategoryAsync(restaurantId, newCategory);
         FlashMessageService.SuccessMessage = "Add successfully!";

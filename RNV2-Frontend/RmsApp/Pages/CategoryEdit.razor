@@ -6,6 +6,7 @@
 @using Microsoft.Extensions.Logging
 @inject ILogger<CategoryService> logger
 @inject IFlashMessageService FlashMessageService
+@inject AuthService authService
 
 <h1>Category Edit</h1>
 <ul class="breadcrumb breadcrumb-gray">
@@ -52,6 +53,11 @@ else
     [Inject]
     public ICategoryService CategoryService { get; set; }
 
+     private async Task ClearMessageAsync()
+    {
+        logger.LogInformation("clearing");
+        await FlashMessageService.ClearMessagesAsync();
+    }
     protected override async Task OnInitializedAsync()
     {
         logger.LogInformation("OnInitializedAsync");

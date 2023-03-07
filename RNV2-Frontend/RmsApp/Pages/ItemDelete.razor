@@ -6,6 +6,7 @@
 @inject IJSRuntime JSRuntime
 @inject ILogger<ItemService> logger
 @inject IFlashMessageService FlashMessageService
+@inject AuthService authService
 
 <h1>Delete Item</h1>
 
@@ -43,6 +44,11 @@ else
 
     [Inject]
     public IItemService ItemService { get; set; }
+     private async Task ClearMessageAsync()
+    {
+        logger.LogInformation("clearing");
+        await FlashMessageService.ClearMessagesAsync();
+    }
 
     protected override async Task OnInitializedAsync()
     {
