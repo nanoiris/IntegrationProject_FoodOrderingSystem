@@ -650,7 +650,12 @@ ppt
 
 2023/03/07 Tuesday Xiao Pei
 1. Done / not done since last scrum:
+- finish stripe checkout
+- dynamically show delivery status
 2. To do until next Scrum:
+- generate delivery after payment
+- transfer to cloud
+- presentation ppt
 3. Need assistance / figure things out
 
 2023/03/07 Tuesday Wenzhe
