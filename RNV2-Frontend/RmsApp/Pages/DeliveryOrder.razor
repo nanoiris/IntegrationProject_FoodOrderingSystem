@@ -9,6 +9,7 @@
 @inject ILogger<CategoryService> logger
 @inject IFlashMessageService FlashMessageService
 @inject AuthService authService
+@using Microsoft.AspNetCore.Components.Web
 
 <ul class="breadcrumb breadcrumb-gray">
     @foreach (var path in Paths)
@@ -17,71 +18,90 @@
     }
 </ul>
 
-@if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
-{
-    <div class="alert alert-success">
-        @FlashMessageService.SuccessMessage
-    </div>
-}
-else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
-{
-    <div class="alert alert-danger">
-        @FlashMessageService.FailureMessage
-    </div>
-}
 
 <h2>Delivery Orders</h2>
-<div class="p-3 rounded shadow-sm bg-white">
-    <form asp-controller="Order" asp-action="search" method="post" class="col-12 mb-4 row">
-        <div class="col-8 row">
-            @*<input type="text"
-                   class="form-control input_search border-right-0 col-11"
-                   asp-for="SearchKey">*@
-            <div class="input-group-prepend">
-                <Button type="submit" class="btn input-group-text bg-white border_search border-left-0 text-primary">
-                    <i class="fa fa-search"></i>
-                </Button>
-            </div>
-            <div class="col-4">
-                <select class="form-control">
-                    @foreach (var status in Enum.GetValues(typeof(RestaurantDaoBase.Enums.RmsStatusEnum)))
-                    {
-                        <option value="@status">@status.ToString()</option>
-                    }
-                </select>
-            </div>
+ @if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+    {
+        <div class="alert alert-success">
+        @FlashMessageService.SuccessMessage
         </div>
-    </form>
-    @if (DeliveryOrders != null && DeliveryOrders.Any())
+    }
+else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
     {
-        <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
-            <thead class="text-danger font-weight-bold">
+        <div class="alert alert-danger">
+        @FlashMessageService.FailureMessage
+        </div>
+     }       
+
+<div class="p-3 rounded shadow-sm bg-white">
+     <div class="p-3 rounded shadow-sm bg-white">
+            <form class="col-12 mb-4 row">
+               <div class="col-1">
+              <button class="btn btn-icon-only btn-pill btn-warning" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Paid)">Paid</button>
+            </div>
+             <div class="col-1">
+                <button class="btn btn-icon-only btn-pill btn-info" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Accepted)">Accepted</button>
+            </div>
+            <div class="col-1">
+                <button class="btn btn-icon-only btn-pill btn-warning" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Ready)">Ready</button>
+            </div>
+            <div class="col-1">
+                <button class="btn btn-icon-only btn-pill btn-success" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Completed)">Completed</button>
+            </div>
+            <div class="col-1">
+                <button class="btn btn-icon-only btn-pill btn-primary" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Canceled)">Canceled</button>
+            </div> 
+
+           </form>
+        </div>
+            
+           @if (DeliveryOrders != null && DeliveryOrders.Any())
+{
+    <table class="table table-hover shadow-inset table-responsive-xl rounded table-striped">
+        <thead class="text-danger font-weight-bold">
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Edit</th>
+                <th>Cancel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in DeliveryOrders)
+            {
                 <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in DeliveryOrders)
+                    <td>@order.id</td>
+                    <td>@order.UserName</td>
+                    <td>@order.StatusString</td>
+                    <td>
+              @if (order.Status == (int)StatusEnum.Paid)
                 {
-                    <tr>
-                        <td>@order.id</td>
-                        <td>@order.UserName</td>
-                        <td>@order.Status</td>
-                        <td><a class="btn btn-icon-only btn-pill btn-primary" href="/order/edit/@order.id"><i class="fa fa-pen"></i></a></td>
-                        <td><a class="btn btn-icon-only btn-pill btn-primary" href="/order/delete/@order.id"><i class="fa fa-trash"></i></a></td>
-                    </tr>
+                    <button class="btn btn-icon-only btn-pill btn-primary" @onclick="() => ChangeToAccepted(order.id, (int)StatusEnum.Accepted)">Accept</button>
                 }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No delivery orders found.</p>
-    }
+                else if (order.Status == (int)StatusEnum.Accepted)
+                {
+                    <button class="btn btn-icon-only btn-pill btn-primary" @onclick="() => ChangeToReady(order.id, (int)StatusEnum.Ready)">Ready</button>
+                }
+                else if (order.Status == (int)StatusEnum.Ready)
+                {
+                    <button class="btn btn-icon-only btn-pill btn-primary" @onclick="() => ChangeToCompleted(order.id, (int)StatusEnum.Completed)">Complete</button>
+                } 
+
+            </td>
+                    <td>
+                        @* <button class="btn btn-icon-only btn-pill btn-primary" @onclick="() => ChangeToCancel(order.id, (int)StatusEnum.Canceled)">Cancel</button> *@
+
+                        </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No take-away orders found.</p>
+}
 </div>
 
 
@@ -92,31 +112,164 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
         new TabPath { Title = "Order", Path = "/order" },
     };
     public List<OrderListDto> Orders { get; set; }
+    public int _statusFilter = (int)StatusEnum.Paid;
 
-@* public string restaurantId = AuthService.User.RestaurantId; *@
-public string restaurantId = Constants.RestaurantId;
-public int status = (int)StatusEnum.Paid;
 
-[Inject]
-public IOrderService OrderService { get; set; }
+    @* public string restaurantId = AuthService.User.RestaurantId; *@
+    public string restaurantId = Constants.RestaurantId;
+    public int paidStatus = (int)StatusEnum.Paid;
 
-public List<OrderListDto> DeliveryOrders { get; set; }
+    public int acceptedStatus = (int)StatusEnum.Accepted;
 
-protected override async Task OnInitializedAsync()
+    public int readyStatus = (int)StatusEnum.Ready;
+
+    public int completeStatus = (int)StatusEnum.Completed;
+
+    [Inject]
+    public IOrderService OrderService { get; set; }
+
+    public List<OrderListDto> DeliveryOrders { get; set; }
+
+
+
+    private bool isInitialized = false;
+    private int selectedStatus = (int)StatusEnum.Accepted;
+
+    protected override async Task OnInitializedAsync()
+    {
+        logger.LogInformation("order list OnInitializedAsync");
+
+        if (!isInitialized)
+        {
+            // Retrieve the initial orders based on the selected status
+            Orders = await OrderService.ListOrderAsync(restaurantId, selectedStatus);
+            DeliveryOrders = Orders.Where(o => o.IsDelivery == true).ToList();
+            
+            isInitialized = true;
+        }
+    }
+    private async Task LoadOrdersByStatus(int status)
+    {
+        switch (status)
+        {
+            case (int)StatusEnum.Paid:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Paid);
+                selectedStatus = (int)StatusEnum.Paid;
+                break;
+            case (int)StatusEnum.Accepted:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Accepted);
+                selectedStatus = (int)StatusEnum.Accepted;
+                break;
+            case (int)StatusEnum.Ready:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Ready);
+                selectedStatus = (int)StatusEnum.Ready;
+                break;
+            case (int)StatusEnum.Completed:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Completed);
+                selectedStatus = (int)StatusEnum.Completed;
+                break;
+            case (int)StatusEnum.Canceled:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Canceled);
+                selectedStatus = (int)StatusEnum.Canceled;
+                break;
+            default:
+                Orders = await OrderService.ListOrderAsync(restaurantId, (int)StatusEnum.Paid);
+                selectedStatus = (int)StatusEnum.Paid;
+                break;
+        }
+
+        DeliveryOrders = Orders.Where(o => o.IsDelivery == true).ToList();
+        StateHasChanged();
+    }
+
+
+     @* protected override async Task OnInitializedAsync()
+    {
+     if (!AuthService.IsLoggedIn)
+        {
+            NavigationManager.NavigateTo("/signin");
+            return;
+        } 
+        logger.LogInformation("order list OnInitializedAsync");
+        Orders = await OrderService.ListOrderAsync(restaurantId, paidStatus);
+        TakeAwayOrders = Orders.Where(o => o.IsDelivery == false).ToList(); 
+    }  *@
+
+
+
+    private async Task ChangeToAccepted(string orderId, int status)
+    {
+        var result = await OrderService.UpdateOrderStatusAsync(orderId, status);
+        logger.LogInformation("===========================");
+        logger.LogInformation("Order id"+ orderId+ " status"+ status);
+
+        if (result)
+        {
+            logger.LogInformation($"Order status changed to {status}");
+            FlashMessageService.SetSuccessMessage("Order status changed successfully");
+            Orders = await OrderService.ListOrderAsync(restaurantId, paidStatus);
+            DeliveryOrders = Orders.Where(o => o.IsDelivery == true).ToList();
+            StateHasChanged();
+        }
+        else
+        {
+            logger.LogError($"Failed to change order status to {status}");
+        }
+    }
+
+
+public async Task ChangeToReady(string orderId, int status)
 {
-@* if (!AuthService.IsLoggedIn)
+    var result = await OrderService.UpdateOrderStatusAsync(orderId, status);
+
+    if (result)
     {
-        NavigationManager.NavigateTo("/signin");
-        return;
-    } *@
-    logger.LogInformation("order list OnInitializedAsync");
-    Orders = await OrderService.ListOrderAsync(restaurantId, status);
-    DeliveryOrders = Orders.Where(o => o.IsDelivery == true).ToList();
+        FlashMessageService.SetSuccessMessage("Order status changed successfully");
+        var order = Orders.FirstOrDefault(o => o.id == orderId);
+
+        if (order != null)
+        {
+            order.Status = readyStatus;
+            StateHasChanged();
+        }
+    }
 }
-@* public enum StatusEnum
+
+public async Task ChangeToCompleted(string orderId, int status)
+{
+    var result = await OrderService.UpdateOrderStatusAsync(orderId, status);
+
+    if (result)
     {
-        Cart = 0,Paid = 1,Accepted = 2,Ready = 3,Completed = 4, Canceled = 5
-    } *@
+        FlashMessageService.SetSuccessMessage("Order status changed successfully");
+        var order = Orders.FirstOrDefault(o => o.id == orderId);
+
+        if (order != null)
+        {
+            order.Status = completeStatus;
+            StateHasChanged();
+        }
+    }
+}
+
+public async Task ChangeToCancel(string orderId, int status)
+{
+    var result = await OrderService.UpdateOrderStatusAsync(orderId, status);
+
+    if (result)
+    {
+        FlashMessageService.SetSuccessMessage("Order status changed successfully");
+        var order = Orders.FirstOrDefault(o => o.id == orderId);
+
+        if (order != null)
+        {
+            order.Status = completeStatus;
+            StateHasChanged();
+        }
+    }
+}
+
+
 
 
 }

@@ -54,7 +54,7 @@ namespace RmsApp.Services
         }
         public async Task<bool> UpdateOrderStatusAsync(string orderId, int status)
         {
-            var model = new OrderListDto { id = orderId, Status = status };
+            var model = new OrderStatusDto { OrderId = orderId, Status = status };
             var response = await _httpClient.PutAsJsonAsync("api/Order/OrderStatus", model);
 
             return response.IsSuccessStatusCode;

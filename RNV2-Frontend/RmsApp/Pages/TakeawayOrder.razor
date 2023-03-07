@@ -18,38 +18,35 @@
     }
 </ul>
 
-@if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
-{
-    <div class="alert alert-success">
-        @FlashMessageService.SuccessMessage
-    </div>
-}
-else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
-{
-    <div class="alert alert-danger">
-        @FlashMessageService.FailureMessage
-    </div>
-}
 
 <h2>Take-Away Orders</h2>
+ @if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+    {
+        <div class="alert alert-success">
+        @FlashMessageService.SuccessMessage
+        </div>
+    }
+else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
+    {
+        <div class="alert alert-danger">
+        @FlashMessageService.FailureMessage
+        </div>
+     }       
+
 <div class="p-3 rounded shadow-sm bg-white">
      <div class="p-3 rounded shadow-sm bg-white">
             <form class="col-12 mb-4 row">
                <div class="col-1">
-               @* <button class="btn btn-icon-only btn-pill btn-success" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Paid)">Paid</button> *@
-              <button class="btn btn-icon-only btn-pill btn-success" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Paid)">Paid</button>
+              <button class="btn btn-icon-only btn-pill btn-warning" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Paid)">Paid</button>
             </div>
              <div class="col-1">
-                @* <button class="btn btn-icon-only btn-pill btn-info" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Accepted)">Accepted</button> *@
                 <button class="btn btn-icon-only btn-pill btn-info" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Accepted)">Accepted</button>
             </div>
             <div class="col-1">
-                @* <button class="btn btn-icon-only btn-pill btn-warning" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Ready)">Ready</button> *@
                 <button class="btn btn-icon-only btn-pill btn-warning" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Ready)">Ready</button>
             </div>
             <div class="col-1">
-                @* <button class="btn btn-icon-only btn-pill btn-primary" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Completed)">Completed</button> *@
-                <button class="btn btn-icon-only btn-pill btn-primary" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Completed)">Completed</button>
+                <button class="btn btn-icon-only btn-pill btn-success" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Completed)">Completed</button>
             </div>
             <div class="col-1">
                 <button class="btn btn-icon-only btn-pill btn-primary" @onclick:preventDefault="true" @onclick="async () => await LoadOrdersByStatus((int)StatusEnum.Canceled)">Canceled</button>
@@ -200,13 +197,16 @@ else
 
 
 
-    @* private async Task ChangeToAccepted(string orderId, int status)
+    private async Task ChangeToAccepted(string orderId, int status)
     {
-        var result = await OrderService.UpdateOrderStatus(orderId, status);
+        var result = await OrderService.UpdateOrderStatusAsync(orderId, status);
+        logger.LogInformation("===========================");
+        logger.LogInformation("Order id"+ orderId+ " status"+ status);
 
         if (result)
         {
             logger.LogInformation($"Order status changed to {status}");
+            FlashMessageService.SetSuccessMessage("Order status changed successfully");
             Orders = await OrderService.ListOrderAsync(restaurantId, paidStatus);
             TakeAwayOrders = Orders.Where(o => o.IsDelivery == false).ToList();
             StateHasChanged();
@@ -215,35 +215,16 @@ else
         {
             logger.LogError($"Failed to change order status to {status}");
         }
-    } *@
-private async Task ChangeToAccepted(string orderId, int newStatus)
-{
-    var orderDto = await OrderService.GetOrderAsync(orderId);
-
-    if (orderDto == null)
-    {
-        // Handle error - order not found
-        return;
     }
 
-    // Update the order status
-    orderDto.Status = newStatus;
-    await OrderService.UpdateOrderStatusAsync(orderId,newStatus);
-
-    // Reload the orders with the new status
-    Orders = await OrderService.ListOrderAsync(restaurantId, newStatus);
-    TakeAwayOrders = Orders.Where(o => o.IsDelivery == false).ToList();
-
-    // Show success message
-    @* await JSRuntime.InvokeVoidAsync("showToast", "Success", "Order status updated to Accepted."); *@
-}
 
 public async Task ChangeToReady(string orderId, int status)
 {
-    var isSuccess = await OrderService.UpdateOrderStatusAsync(orderId, status);
+    var result = await OrderService.UpdateOrderStatusAsync(orderId, status);
 
-    if (isSuccess)
+    if (result)
     {
+        FlashMessageService.SetSuccessMessage("Order status changed successfully");
         var order = Orders.FirstOrDefault(o => o.id == orderId);
 
         if (order != null)
@@ -256,10 +237,11 @@ public async Task ChangeToReady(string orderId, int status)
 
 public async Task ChangeToCompleted(string orderId, int status)
 {
-    var isSuccess = await OrderService.UpdateOrderStatusAsync(orderId, status);
+    var result = await OrderService.UpdateOrderStatusAsync(orderId, status);
 
-    if (isSuccess)
+    if (result)
     {
+        FlashMessageService.SetSuccessMessage("Order status changed successfully");
         var order = Orders.FirstOrDefault(o => o.id == orderId);
 
         if (order != null)
@@ -272,10 +254,11 @@ public async Task ChangeToCompleted(string orderId, int status)
 
 public async Task ChangeToCancel(string orderId, int status)
 {
-    var isSuccess = await OrderService.UpdateOrderStatusAsync(orderId, status);
+    var result = await OrderService.UpdateOrderStatusAsync(orderId, status);
 
-    if (isSuccess)
+    if (result)
     {
+        FlashMessageService.SetSuccessMessage("Order status changed successfully");
         var order = Orders.FirstOrDefault(o => o.id == orderId);
 
         if (order != null)
