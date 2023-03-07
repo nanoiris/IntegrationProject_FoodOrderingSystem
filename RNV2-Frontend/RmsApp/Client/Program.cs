@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RmsApp.Services;
 using RmsApp;
 using Microsoft.Extensions.Logging;
+using Radzen;
 
 
 namespace RmsApp
@@ -41,6 +42,7 @@ namespace RmsApp
                 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
             });
             builder.Services.AddFlashMessageService();
+            builder.Services.AddScoped<NotificationService>();
 
 
             var host = builder.Build();

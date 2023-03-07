@@ -16,6 +16,18 @@
 @if (restaurant != null)
 {
     <h2>@restaurant.Name</h2>
+      @if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+            {
+                <div class="alert alert-success">
+                    @FlashMessageService.SuccessMessage
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
+            {
+                <div class="alert alert-danger">
+                    @FlashMessageService.FailureMessage
+                </div>
+            }
     <form Model="restaurant" @onsubmit="UpdateRestaurant">
         <div class="row">
             <div class="col-md-6">
@@ -103,14 +115,25 @@ else
     {
         UploadImg = e.File;
     }
+     private async Task ClearMessageAsync()
+    {
+        logger.LogInformation("clearing");
+        await FlashMessageService.ClearMessagesAsync();
+    }
 
     protected override async Task OnInitializedAsync()
     {
+        if (!AuthService.IsLoggedIn)
+        {
+            NavigationManager.NavigateTo("/signin");
+            return;
+        }
+
         // hardcodeded restaurant below
         @* string id = Constants.RestaurantId;  *@
         // get restaurant from login 
         string id = AuthService.User.RestaurantId;
-         logger.LogInformation("print from edit page logged in status: " + AuthService.IsLoggedIn.ToString());
+        logger.LogInformation("print from edit page logged in status: " + AuthService.IsLoggedIn.ToString());
         
         restaurant = await RestaurantService.GetOneRestaurantAsync(id);
     }

@@ -24,5 +24,8 @@ namespace RestaurantNetowrkApp.Data
 
         public const string imgUrl = imgLocal;
 
+        public const string keyPublic = "pk_test_51MZ0uECfoDmFMZLdq9tu56tAiEdIS8khf5QNtFHmBZxd71zDLHMMP3FnGdP3EuWJGe75YqCvMOkq6YmooEfWVKBF00qzrJoc06";
+        public const string keySecret = "sk_test_51MZ0uECfoDmFMZLdzmF7eLHHLAonoZe5hptwRkvNfg4imaHG8djSCo0Z8dNJF0l1yJdOOfz2ftDlI0O3JnqUJYWU00zdNk6KJr";
+
     }
 }

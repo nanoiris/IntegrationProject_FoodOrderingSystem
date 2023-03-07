@@ -6,6 +6,7 @@
 @using Microsoft.Extensions.Logging
 @inject ILogger<CategoryService> logger
 @inject IFlashMessageService FlashMessageService 
+@inject AuthService authService
 
 
 <h1>Delete Category</h1>
@@ -48,6 +49,11 @@
 
     [Inject]
     public ILogger<CategoryDelete> Logger { get; set; }
+    private async Task ClearMessageAsync()
+    {
+        logger.LogInformation("clearing");
+        await FlashMessageService.ClearMessagesAsync();
+    }
 
     protected override async Task OnInitializedAsync()
     {

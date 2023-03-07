@@ -1,5 +1,5 @@
 ﻿@page "/accept/{delyId}"
-@using DeliveryApp.Services;
+@using Services;
 @using RestaurantDaoBase.Models;
 @using System.Net.Http;
 @using System.Net.Http.Json;
@@ -19,6 +19,7 @@
     {       
         //httpClient.BaseAddress = new Uri("http://localhost:5175/");
         httpClient.BaseAddress = new Uri("http://ec2-18-214-61-45.compute-1.amazonaws.com:5175/");
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
         deliveryman = AuthService.User.Name;
         var response = (await httpClient.PutAsJsonAsync<bool>($"api/delivery/Accept/" + delyId + "/" + deliveryman,true));
         if (response.IsSuccessStatusCode == true)

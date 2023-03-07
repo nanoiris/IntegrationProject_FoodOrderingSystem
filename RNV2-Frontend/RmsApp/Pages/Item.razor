@@ -6,6 +6,7 @@
 @using Microsoft.Extensions.Logging
 @inject ILogger<ItemService> logger
 @inject IFlashMessageService FlashMessageService  
+@inject AuthService authService
 
 
 <PageTitle>Items</PageTitle>
@@ -97,7 +98,7 @@ else
         new TabPath { Title = "Item", Path = "/item" },
         };
     public List<ItemListDto> Items { get; set; }
-    public string restaurantId = Constants.RestaurantId; 
+    public string restaurantId = AuthService.User.RestaurantId;
      public List<CategoryDto> Categories { get; set; }
 
     [Inject]
@@ -105,6 +106,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+         if (!AuthService.IsLoggedIn)
+        {
+            NavigationManager.NavigateTo("/signin");
+            return;
+        }
       
         logger.LogInformation("OnInitializedAsync item list");
         Categories = await ItemService.ListCategoryAsync(restaurantId);

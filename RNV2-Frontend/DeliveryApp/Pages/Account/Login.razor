@@ -2,6 +2,7 @@
 @page "/Account/Login/{msg}"
 @using DeliveryApp.Services;
 @using Serilog;
+@using DeliveryApp.Componants;
 @inject NavigationManager NavigationManager
 @inject AuthService authService
 
@@ -9,6 +10,10 @@
     @if (msg != null)
     {
         <p class="py-2 pl-2 bg-warning">@msg</p>
+@*        <div class="mb-5 p-5 bg-warning text-sm-left rounded-xl">
+        <FlashMessage Message=@msg />
+        </div>*@
+       
     }
     <div class="font-weight-bold text-back text-decoration-none d-flex">
                   <div class="col-11 mx-auto ">

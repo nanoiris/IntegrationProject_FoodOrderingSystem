@@ -223,8 +223,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
-        string userEmail = "u3@gmail.com";
+        string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
         ordersCart = await orderService.getOrderByStatus(userEmail, 0);
         ordersPaid = await orderService.getOrderByStatus(userEmail, 1);
         ordersAccepted = await orderService.getOrderByStatus(userEmail, 2);

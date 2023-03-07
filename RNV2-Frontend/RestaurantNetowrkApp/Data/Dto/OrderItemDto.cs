@@ -10,15 +10,15 @@ namespace RestaurantNetowrkApp.Data.Dto
 {
     public class OrderItemDto
     {
-        [JsonPropertyName("id")]
+        //[JsonPropertyName("id")]
         public string? Id { get; set; }
-        [JsonPropertyName("item")]
+        //[JsonPropertyName("item")]
         public MenuItemDto? Item { get; set; }
-        [JsonPropertyName("qty")]
+        //[JsonPropertyName("qty")]
         public int Qty { get; set; }
-        [JsonPropertyName("status")]
+        //[JsonPropertyName("status")]
         public StatusEnum Status { get; set; }
-        [JsonPropertyName("orderId")]
+        //[JsonPropertyName("orderId")]
         public string? OrderId { get; set; }
     }
 }
