@@ -2,9 +2,12 @@
 @using Services;
 @using Data.Dto;
 @using Data.model;
+@using RestaurantDaoBase.Models;
 @inject Data.SessionStorageAccessor sessionStorageAccessor;
 @inject OrderService orderService;
 @inject UserService userService;
+@inject DeliveryService deliveryService;
+@inject RestService restService;
 @inject IJSRuntime JSRuntime;
 @inject NavigationManager navigationManager
 
@@ -173,6 +176,7 @@
     private UserModel user;
     private bool hidePickupDiv = false;
     private CardInfo cardInfo = new CardInfo();
+    private Address address = new Address();
 
 
 
@@ -181,24 +185,54 @@
         string userEmail = await sessionStorageAccessor.GetValueAsync<string>("userEmail");
         user = userService.getUserByEmail(userEmail);
         order = orderService.getOrderById(orderId);
-        //rest = restService.GetRestById(order.RestaurantId);
     }
 
     private void useHomeAddress()
     {
+        address = new Address
+            {
+                Street = user.Street,
+                City = user.City,
+                State = user.State,
+                PostalCode = user.PostCode,
+                Country = user.Country
+            };
         order.IsDelivery = true;
         hidePickupDiv = true;
     }
 
     private async Task checkout()
     {
-        var result = await orderService.pay(order, cardInfo);
-        if (result == "Success")
+        //stripe payment
+        var response = await orderService.pay(order, cardInfo, user.UserName);
+        if (response != "Success")
         {
-            await orderService.changeOrderStatus(order.Id, 1);
-            string msg = "Payment succeed!";
-            navigationManager.NavigateTo($"/Order/Details/{order.Id}/{msg}");
+            return;
         }
+
+        //change order status to paid
+        var result = await orderService.changeOrderStatus(orderId, 1);
+        if (!result) return;
+
+        //add payment info to order
+        result =  await orderService.payment(orderId, cardInfo);
+        if (!result) return;
+
+        //if choose to delivery, create a new delivery,then set order isDelivery to true
+        if (order.IsDelivery)
+        {
+            RestaurantDto rest = restService.GetRestById(order.RestaurantId);
+
+            result = await deliveryService.createDelivery(order, rest, address);
+            if (!result) return;
+
+            result = await orderService.setOrderDelivery(orderId);
+             if (!result) return;
+        }
+        
+        string msg = "Payment succeed!";
+        navigationManager.NavigateTo($"/Order/Details/{order.Id}/{msg}");
+
     }
 
 }

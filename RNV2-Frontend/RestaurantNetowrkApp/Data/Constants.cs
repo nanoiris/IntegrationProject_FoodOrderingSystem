@@ -18,6 +18,7 @@ namespace RestaurantNetowrkApp.Data
         public const string RestUri = baseUri + "5064";     
         public const string OrderUri = baseUri + "5275";
         public const string RatingUri = baseUri + "5048";
+        public const string DeliveryUri = baseUri + "5175";
 
         public const string imgLocal = "img/rest/";
         public const string imgAzureBlob = "https://pxtoday.blob.core.windows.net/pxtoday/";
