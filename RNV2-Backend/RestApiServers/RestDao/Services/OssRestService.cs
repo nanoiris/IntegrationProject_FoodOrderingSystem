@@ -138,10 +138,13 @@ namespace RestaurantDao.Services
             using (var ctx = new RestaurantContext())
             {
                 var row = await ctx.Restaurants.FindAsync(model.Id);
+                Console.WriteLine("UpdateRestaurantLogo 1");
                 if (row == null)
                     return false;
+                Console.WriteLine("UpdateRestaurantLogo 2");
                 row.Logo= model.Logo;
                 var result = await ctx.SaveChangesAsync();
+                Console.WriteLine($"UpdateRestaurantLogo 3 ={result}");
                 return result == 1 ? true : false;
             }
         }

@@ -56,8 +56,15 @@ namespace RestaurantServer
                 };
             });
 
+            /*
             builder.Services.AddScoped<IFileService, LocalFileService>(
                 x => new LocalFileService(builder.Configuration["LogoRootPath"]));
+            */
+            var blobConn = builder.Configuration["BlobStorage:ConnectionString"];
+            var blobContainer = builder.Configuration["BlobStorage:ContainerName"];
+            builder.Services.AddScoped<IFileService, BlobStorageService>(
+                x => new BlobStorageService(blobConn, blobContainer));
+
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
             builder.Services.AddScoped<IMenuService, MenuService>(x =>
               new MenuService(x.GetRequiredService<ILogger<MenuService>>()));

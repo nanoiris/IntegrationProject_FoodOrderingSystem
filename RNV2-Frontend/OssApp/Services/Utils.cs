@@ -4,7 +4,7 @@
     {
         public static string BuildLogoPath(string logoPath)
         {
-            return $"images/share/{logoPath}";
+            return $"https://pxtoday.blob.core.windows.net/pxtoday/{logoPath}";
         }
     }
 }
