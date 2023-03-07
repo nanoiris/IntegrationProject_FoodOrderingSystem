@@ -96,6 +96,14 @@ namespace OrderServer.Controllers
             }
             return null;
         }
-        
+        [HttpPut("{orderId}/{isDelivery}")]
+        public async Task<IActionResult> Delivery(string orderId, bool isDelivery)
+        {
+            logger.LogInformation($"Enter Delivery : {isDelivery}");
+            var result = await service.ChangeDelivery(orderId, isDelivery);
+            if (result == true)
+                return Ok(new AppResult("", true));
+            return BadRequest(new AppResult("Cannot create the new cart", false));
+        }
     }
 }

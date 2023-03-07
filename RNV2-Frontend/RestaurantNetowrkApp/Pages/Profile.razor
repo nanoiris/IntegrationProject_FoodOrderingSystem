@@ -3,7 +3,7 @@
 @using RestaurantNetowrkApp.Componants;
 @using Data.model;
 @using Services;
-@inject AuthService authService;
+@inject UserService userService;
 
 <div class="profile">
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
@@ -85,6 +85,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        user = authService.getUserByEmail(userEmail);
+        user = userService.getUserByEmail(userEmail);
+
     }
 }

@@ -20,6 +20,6 @@ namespace IdentityServer.Services
         Task<AppResult> UpdateUserAddress(UserAddressViewModel model);
         Task<AppResult> UpdateUserLogo(string email,string logoPath);
 
-        //Task<List<AppUser>>? AvaliableDeliveryManList();
+        List<object>? AvaliableDeliveryManList();
     }
 }

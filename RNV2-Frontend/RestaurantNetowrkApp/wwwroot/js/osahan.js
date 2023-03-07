@@ -65,8 +65,7 @@ window.changeToAdd = (itemId) => {
 }
 
 window.showTotal = (qty, subTotal) => {
-    //var s1 = qty.concat(" item");
-    //var s2 = "$".concat(subTotal);
+
     document.getElementById("orderItemQty").textContent = qty.concat(" item");
     document.getElementById("subTotal").textContent = "$".concat(subTotal);
 }

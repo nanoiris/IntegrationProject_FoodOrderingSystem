@@ -81,5 +81,16 @@ namespace OssApp.Services
             content.Add(new StringContent(row.PostalCode), "PostalCode");
             return base.UpdateOne($"{BaseUrl}/UpdatedOne", content);
         }
+
+        public async Task<List<AppUserModel>> ListAvaliableDeliveryMan()
+        {
+            Log.Debug("ListAvaliableDeliveryMan");
+            var result = await base.List($"{BaseUrl}/AvaliableDeliveryManList");
+            result.ForEach(row => {
+                if (row.Logo != null)
+                    row.Logo = Utils.BuildLogoPath(row.Logo);
+            });
+            return result;
+        } 
     }
 }

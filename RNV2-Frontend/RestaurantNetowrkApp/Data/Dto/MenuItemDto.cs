@@ -9,19 +9,19 @@ namespace RestaurantNetowrkApp.Data.Dto
 {
     public class MenuItemDto
     {
-        [JsonPropertyName("id")]
+        //[JsonPropertyName("id")]
         public string? Id { get; set; }
-        [JsonPropertyName("name")]
+       // [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonPropertyName("description")]
+        //[JsonPropertyName("description")]
         public string? Description { get; set; }
-        [JsonPropertyName("isFeatured")]
+        //[JsonPropertyName("isFeatured")]
         public bool IsFeatured { get; set; }
-        [JsonPropertyName("price")]
+        //[JsonPropertyName("price")]
         public decimal Price { get; set; }
-        [JsonPropertyName("logo")]
+        //[JsonPropertyName("logo")]
         public string? Logo { get; set; }
-        [JsonPropertyName("categoryId")]
+        //[JsonPropertyName("categoryId")]
         public string? CategoryId { get; set; }
 
     }

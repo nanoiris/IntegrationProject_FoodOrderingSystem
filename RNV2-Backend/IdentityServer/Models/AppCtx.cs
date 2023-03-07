@@ -7,5 +7,13 @@ namespace IdentityServer.Models
     {
         public AppCtx() : base() { }
         public AppCtx(DbContextOptions<AppCtx> options) : base(options) { }
+
+        public static string ConnectionString { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(ConnectionString);
+        }
+
     }
 }

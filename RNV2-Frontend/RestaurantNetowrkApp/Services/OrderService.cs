@@ -10,6 +10,8 @@ using Serilog;
 using RestaurantNetowrkApp.Data.Dto;
 using Microsoft.JSInterop;
 using System.Text.Json;
+using Stripe.Checkout;
+using Stripe;
 
 namespace RestaurantNetowrkApp.Services
 {
@@ -27,7 +29,7 @@ namespace RestaurantNetowrkApp.Services
             this.server = server;
             http = new HttpClient();
             http.BaseAddress = new Uri(server);
-            //http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
         }
 
         public async Task<bool> createCart(CartModel cart)
@@ -153,5 +155,88 @@ namespace RestaurantNetowrkApp.Services
             }
             return false;
         } 
+
+
+        public async Task<string> pay(OrderDto order, CardInfo cardInfo)
+        {
+            string Msg = "Checkout faild";
+            try
+            {
+                long amount = (long)(order.PayTotal * 100);
+                string email = order.UserName;
+                string description = $"Order from {order.RestaurantName}";
+                Stripe.StripeConfiguration.ApiKey = Data.Constants.keySecret;
+
+                string[] strs = cardInfo.ValidThrough.Split("/");
+                var optionToken = new TokenCreateOptions
+                {
+                    Card = new TokenCardOptions
+                    {
+                        Number = cardInfo.CardNumber,
+                        ExpMonth = strs[0],
+                        ExpYear = strs[1],
+                        Cvc = cardInfo.Cvv
+                    }
+                };
+
+                var serviceToken = new TokenService();
+                Token stripetoken = await serviceToken.CreateAsync(optionToken);
+
+                var customer = new Stripe.Customer
+                {
+                    Name = "Jack",
+                    Address = new Address
+                    {
+                        Country = "canada",
+                        City = "Montreal",
+                        Line1 = "13 sr",
+                        PostalCode = "234455"
+                    }
+                };
+
+                var options = new Stripe.ChargeCreateOptions
+                {
+                    Amount = (long)(order.PayTotal *100),
+                    Currency = "cad",
+                    Description= description,
+                    ReceiptEmail= email,
+                    Source = stripetoken.Id,
+                };
+                var service = new Stripe.ChargeService();
+                Stripe.Charge charge =await  service.CreateAsync(options);
+                Msg = charge.Status;
+                if (charge.Paid)
+                {
+                    return "Success";
+                }
+                else
+                {
+                    return "fail";
+                }
+            }
+            catch(Exception ex)
+            {
+                Msg = ex.Message;
+                throw ex;
+            }
+
+        }
+
+        public async Task<bool> changeOrderStatus(string orderId, int status)
+        {
+            var requestBody = new
+            {
+                OrderId = orderId,
+                Status = status
+            };
+            var response =await http.PutAsJsonAsync("api/Order/OrderStatus", requestBody);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
     }
 }

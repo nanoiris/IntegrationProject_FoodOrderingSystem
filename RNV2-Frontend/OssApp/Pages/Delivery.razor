@@ -85,8 +85,8 @@
 
     public async Task AssignOrder(DeliveryModel row)
     {
-        await DialogService.OpenAsync<DeliveryAssignDialog>($"Delivery ",
-              new Dictionary<string, object>() { { "row", row } },
+        await DialogService.OpenAsync<DeliveryAssignDialog>($"Assign Delivery Man",
+              new Dictionary<string, object>() { { "DeliveryRow", row } },
               new DialogOptions() { Width = "1200px", Height = "800px", Resizable = true });
     }
     void RowRender(RowRenderEventArgs<Order> args)

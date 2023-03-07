@@ -26,7 +26,7 @@ namespace RestaurantDaoBase.IServices
         public Task<bool> PayCart(string orderId,PayCard card);
 
         public Task<bool> UpdateOrderStatus(string orderId, StatusEnum newStatus);
-
+        public Task<bool> ChangeDelivery(string orderId, bool isDelivery);
         public Task<List<Order>> ListOrderByStatus(string restaurantId, StatusEnum status);
         public Task<List<Order>> SearchOrder(string restaurantId, string email, StatusEnum status);
         public Task<List<Order>> SearchOrder(string restaurantId, string email);

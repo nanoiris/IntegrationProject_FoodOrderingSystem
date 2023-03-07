@@ -186,6 +186,7 @@ namespace RestaurantDao.Services
 
         public async Task<bool> Assign(AssignForm form)
         {
+            logger.LogInformation("Enter DeliveryService.Assign");
             using (var ctx = new DeliveryContext())
             {
                 var row = await ctx.Deliveries.FindAsync(form.Id);
@@ -213,5 +214,15 @@ namespace RestaurantDao.Services
                 return result == 1 ? true : false;
             }
         }
+
+        public Task<Delivery?> FindByOrderId(string orderId)
+        {
+            using (var ctx = new DeliveryContext())
+            {
+                return ctx.Deliveries
+                    .Where(x => x.OrderId == orderId)
+                    .FirstOrDefaultAsync();
+            }
+        } 
     }
 }

@@ -17,7 +17,11 @@ namespace IdentityServer.Controllers
         private readonly IUserService userService;
         private readonly ILogger<OssUserController> logger;
         private readonly IConfiguration configuration;
-        public OssUserController(ILogger<OssUserController> logger, IUserService userService, IFileService fileService, IConfiguration configuration)
+        public OssUserController(ILogger<OssUserController> logger, 
+            IUserService userService, 
+            IFileService fileService, 
+            IConfiguration configuration
+            )
         {
             this.logger = logger;
             this.userService = userService;
@@ -135,12 +139,11 @@ namespace IdentityServer.Controllers
             return BadRequest(new AppResult("", false));
         }
 
-        /*
         [HttpGet]
-        public Task<List<AppUser>>? AvaliableDeliveryMan()
+        public List<object>? AvaliableDeliveryManList()
         {
+            logger.LogInformation($"Enter OssUserController.AvaliableDeliveryManList");
             return userService.AvaliableDeliveryManList();
         }
-        */
     }
 }
