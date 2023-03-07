@@ -1,6 +1,7 @@
 ﻿@page "/Order/Details/{delyId}"
-@using Componants
+@using DeliveryApp.Componants
 @using RestaurantDaoBase.Models;
+@using RestaurantDaoBase.Enums
 @using System.Net.Http;
 @using System.Net.Http.Json;
 @using RestaurantDaoBase;
@@ -14,7 +15,132 @@
             <i class="feather-chevron-left"></i>
             <span class="ml-3 h6 mb-0">Home</span>
         </a>
+    </div>    
+    @if (delivery.Restaurant != null)
+    {
+        <div class="py-3 osahan-profile">
+            <h6><i class="feather-award bg-warning text-white p-2 rounded-circle mr-2"></i>Restaurant Info</h6>
+            <div class="bg-white shadow mt-3 profile-details">
+                <div class="left mx-3 py-2 border-bottom">
+                    <h6 class="font-weight-bold mb-1 text-dark">Name</h6>
+                    <p class="small text-muted m-0">@delivery.Restaurant.Name</p>
+                </div>
+                <div class="left mx-3 py-2 border-bottom">
+                    <h6 class="font-weight-bold mb-1 text-dark">Address</h6>
+                    <p class="small text-muted m-0">@delivery.Restaurant.Address.Street,@delivery.Restaurant.Address.City</p>
+                    <p class="small text-muted m-0">@delivery.Restaurant.Address.State,@delivery.Restaurant.Address.Country,@delivery.Restaurant.Address.PostalCode</p>
+                </div>
+            </div>
+        </div>
+    }
+    @if (delivery.Destination != null)
+    {
+        <div class="py-3 osahan-profile">
+            <h6><i class="feather-users bg-primary text-white p-2 rounded-circle mr-2"></i>Customer Info</h6>
+            <div class="bg-white shadow mt-3 profile-details">
+                <div class="left mx-3 py-2 border-bottom">
+                    <h6 class="font-weight-bold mb-1 text-dark">Name</h6>
+                    <p class="small text-muted m-0">@delivery.CustomerName</p>
+                </div>
+                <div class="left mx-3 py-2 border-bottom">
+                    <h6 class="font-weight-bold mb-1 text-dark">Address</h6>
+                    <p class="small text-muted m-0">@delivery.Destination.Street,@delivery.Destination.City</p>
+                    <p class="small text-muted m-0">@delivery.Destination.State,@delivery.Destination.Country,@delivery.Destination.PostalCode</p>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="py-3 osahan-profile">
+        <h6><i class="feather-gift bg-success text-white p-2 rounded-circle mr-2"></i>Delivery Status</h6>
+        <div class="track mx-2">
+            <div class="step active">
+                <span class="icon">  <i class="fa fa-check"></i> </span>
+                <span class="text"> Create</span>
+            </div>
+            @if (delivery.Status == DeliveryStatusEnum.Accept || delivery.Status == DeliveryStatusEnum.PickedUp || delivery.Status == DeliveryStatusEnum.Completed)
+            {
+                <div class="step active">
+                    <span class="icon"> <i class="fa fa-user"></i> </span>
+                    <span class="text"> Accept</span>
+                </div>
+            }
+            else
+            {
+                <div class="step">
+                    <span class="icon"> <i class="fa fa-user"></i> </span>
+                    <span class="text"> Accept</span>
+                </div>
+            }
+            @if (delivery.Status == DeliveryStatusEnum.PickedUp || delivery.Status == DeliveryStatusEnum.Completed)
+            {
+                <div class="step active">
+                    <span class="icon"> <i class="fa fa-user"></i> </span>
+                    <span class="text"> PickUp</span>
+                </div>
+            }
+            else
+            {
+                <div class="step">
+                    <span class="icon"> <i class="fa fa-user"></i> </span>
+                    <span class="text"> PickUp</span>
+                </div>
+            }
+            @if (delivery.Status == DeliveryStatusEnum.Completed)
+            {
+                <div class="step active">
+                    <span class="icon"> <i class="fa fa-box"></i> </span>
+                    <span class="text"> Complete</span>
+                </div>
+            }
+            else
+            {
+                <div class="step">
+                    <span class="icon"> <i class="fa fa-box"></i> </span>
+                    <span class="text"> Complete</span>
+                </div>
+            }
+        </div>
     </div>
+
+    @if (delivery != null)
+    {
+        <div class="py-3 osahan-profile">
+            <h6><i class="feather-clock bg-danger text-white p-2 rounded-circle mr-2"></i>Delivery Time</h6>
+            <div id="ratings-and-reviews"
+             class=" d-flex align-items-center py-2 clearfix restaurant-detailed-star-rating">
+                <p class="mb-0">Create:</p>
+                <div class="star-rating ml-auto">
+                    <div class="d-inline-block m-0">
+                        @delivery.CreateTime
+                    </div>
+                </div>
+            </div>
+            <div id="ratings-and-reviews" class=" d-flex align-items-center  py-2 clearfix restaurant-detailed-star-rating">
+                <p class="mb-0">Accept:</p>
+                <div class="star-rating ml-auto">
+                    <div class="d-inline-block m-0">
+                        @delivery.AcceptTime
+                    </div>
+                </div>
+            </div>
+            <div id="ratings-and-reviews" class=" d-flex align-items-center  py-2 clearfix restaurant-detailed-star-rating">
+                <p class="mb-0">Pickup:</p>
+                <div class="star-rating ml-auto">
+                    <div class="d-inline-block m-0">
+                        @delivery.PickupTime
+                    </div>
+                </div>
+            </div>
+            <div id="ratings-and-reviews" class=" d-flex align-items-center  py-2 clearfix restaurant-detailed-star-rating">
+                <p class="mb-0">Delivery:</p>
+                <div class="star-rating ml-auto">
+                    <div class="d-inline-block m-0">
+                        @delivery.DeliveryTime
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
     <div class="card-header bg-white">
         <div class="row">
             <div class="col-6 my-auto">
@@ -44,89 +170,22 @@
         <hr>
         <h6 class="font-weight-bold mb-0">Total <span class="float-right">$1329</span></h6>
     </div>
-    <div class="track mx-2">
-        <div class="step active">
-            <span class="icon">  <i class="fa fa-check"></i> </span>
-            <span class="text">Order confirmed</span>
-        </div>
-        <div class="step active">
-            <span class="icon"> <i class="fa fa-user"></i> </span>
-            <span class="text"> Picked by courier</span>
-        </div>
-        <div class="step active">
-            <span class="icon"> <i class="fa fa-truck"></i> </span>
-            <span class="text"> On the way</span>
-        </div>
-        <div class="step">
-            <span class="icon"> <i class="fa fa-box"></i> </span>
-            <span class="text">Complete</span>
-        </div>
-    </div>
-   
 </div>
-<div class="p-3 bg-white shadow-sm">
-    <h6>Delivery Info</h6>
-    <div id="ratings-and-reviews"
-         class=" d-flex align-items-center py-2 clearfix restaurant-detailed-star-rating">
-        <p class="mb-0">Create Time</p>
-        <div class="star-rating ml-auto">
-            <div class="d-inline-block h6 m-0">
-                @delivery.CreateTime
-            </div>
-        </div>
-    </div>
-    <div id="ratings-and-reviews" class=" d-flex align-items-center  py-2 clearfix restaurant-detailed-star-rating">
-        <p class="mb-0">Accept Time</p>
-        <div class="star-rating ml-auto">
-            <div class="d-inline-block h6 m-0">
-                @delivery.AcceptTime
-            </div>
-        </div>
-    </div>
-    <div id="ratings-and-reviews" class=" d-flex align-items-center  py-2 clearfix restaurant-detailed-star-rating">
-        <p class="mb-0">Pickup Time</p>
-        <div class="star-rating ml-auto">
-            <div class="d-inline-block h6 m-0">
-                @delivery.PickupTime
-            </div>
-        </div>
-    </div>
-    <div id="ratings-and-reviews"
-         class=" d-flex align-items-center py-2 clearfix restaurant-detailed-star-rating">
-        <p class="mb-0">Estimate Time</p>
-        <div class="star-rating ml-auto">
-            <div class="d-inline-block h6 m-0">
-                @delivery.EstimateTime
-            </div>
-        </div>
-    </div>
-    <div id="ratings-and-reviews" class=" d-flex align-items-center  py-2 clearfix restaurant-detailed-star-rating">
-        <p class="mb-0">Delivery Time</p>
-        <div class="star-rating ml-auto">
-            <div class="d-inline-block h6 m-0">
-                @delivery.DeliveryTime
-            </div>
-        </div>
-    </div>
-</div>
-<div class="py-5">
-    <hr />
-</div>
+
 <NavMenuFooter />
 @code {
     [Parameter]
     public string delyId { get; set; }
 
-    public Delivery delivery { get; set; }
+    private Delivery delivery { get; set; }
     public HttpClient httpClient = new HttpClient();
     protected override async Task OnInitializedAsync()
     {
-        //Log.Debug("render start");
         //httpClient.BaseAddress = new Uri("http://localhost:5175/");
         httpClient.BaseAddress = new Uri("http://ec2-18-214-61-45.compute-1.amazonaws.com:5175/");
         httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
         delivery = new Delivery();
-        delivery = (await httpClient.GetFromJsonAsync<Delivery>($"api/delivery/one/"+delyId));
+        delivery = await httpClient.GetFromJsonAsync<Delivery>($"api/delivery/one/" + delyId);
     }
 }
 

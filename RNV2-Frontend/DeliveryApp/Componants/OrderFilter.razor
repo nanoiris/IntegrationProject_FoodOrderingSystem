@@ -1,0 +1,86 @@
+﻿@using Data.Dto;
+@using Data;
+@using Services;
+@using System.Net.Http;
+@using System.Net.Http.Json;
+@inject AuthService authService
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <EditForm Model="model" class="modal-content">
+            <div class="modal-header align-items-center">
+                <h5 class="modal-title" id="exampleModalLabel">Filter</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="feather-x float-right"></i>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="osahan-filter">
+                    <div class="filter">
+                        <div class="filters-card border-bottom">                          
+                            <div class="filters-card-body pb-3 card-shop-filters">
+                                <div class="filters-search p-3">
+                                    <div class="form-group mb-2 position-relative">
+                                        <i class="feather-search"></i>
+                                        <input type="text" class="form-control" @bind-value="model.searchKey" placeholder="Start typing to search...">
+                                    </div>
+                                </div>
+                                @foreach (var rest in restaurants)
+                                {
+                                    <div class="custom-control border-bottom px-0 custom-checkbox">
+                                        <input type="radio"
+                                           name="CategoryKey"
+                                           class="custom-control-input"
+                                           id="@rest.Name"
+                                           value="@rest.Id"
+                                           checked="@(model.restid == rest.Id)"
+                                           @onchange="() => model.restid = rest.Id" />
+                                        <label class="custom-control-label py-3 w-100 px-3" for="@rest.Name">@rest.Name</label>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer p-0 border-0 p-3">
+                <div class="col-6 m-0 pl-0 pr-1">
+                    <button type="button" class="btn border btn-lg btn-block" data-dismiss="modal">Clear</button>
+                </div>
+                <div class="col-6 m-0 pr-0 pl-1">
+                    <button type="button" class="btn btn-primary btn-lg btn-block"
+                            data-dismiss="modal">
+                        Apply
+                    </button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public List<RestaurantDto> restaurants { get; set; }
+
+    private class searchModel
+    {
+        public string searchKey { get; set; }
+        public string restid { get; set; }
+    }
+
+    private searchModel model = new searchModel();
+    private HttpClient httpClient = new HttpClient();
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    httpClient.BaseAddress = new Uri(Constants.RestUri);
+
+    //    if (httpClient.DefaultRequestHeaders.Authorization == null)
+    //    {
+    //        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+    //    }
+    //    restaurants = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/list")).ToList();
+    //}
+}
+
