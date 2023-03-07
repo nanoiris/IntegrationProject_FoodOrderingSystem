@@ -2,6 +2,8 @@
 using Serilog;
 using Microsoft.AspNetCore.Components;
 using DeliveryApp.Data.Model;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace DeliveryApp.Services
 {
@@ -19,6 +21,7 @@ namespace DeliveryApp.Services
             this.identityServer = identityServer;
             http = new HttpClient();
             http.BaseAddress = new Uri(identityServer);
+            //http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
             IsLoggedIn = false;
         }
 
@@ -43,6 +46,38 @@ namespace DeliveryApp.Services
         public void Logout()
         {
             IsLoggedIn = false;
+        }
+
+        public UserModel getUserByEmail(string userEmail)
+        {
+            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            return http.GetFromJsonAsync<UserModel>($"api/User/OneByEmail/{userEmail}").Result;
+        }
+
+        public async Task<bool> Update(UserModel user)
+        {
+            var multipartContent = new MultipartFormDataContent();
+            multipartContent.Add(new StringContent(user.Name), "Name");
+            multipartContent.Add(new StringContent(user.Email), "Email");
+            multipartContent.Add(new StringContent(user.PhoneNumber), "PhoneNumber");
+            multipartContent.Add(new StringContent(user.Street), "Street");
+            multipartContent.Add(new StringContent(user.City), "City");
+            multipartContent.Add(new StringContent(user.State), "State");
+            multipartContent.Add(new StringContent(user.Country), "Country");
+            multipartContent.Add(new StringContent(user.PostCode), "PostCode");
+
+            var img = new StreamContent(user.UploadImg?.OpenReadStream());
+            img.Headers.ContentType = new MediaTypeHeaderValue(user.UploadImg.ContentType);
+            multipartContent.Add(content: img, "UploadImg", fileName: user.UploadImg.Name);
+            //http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            HttpResponseMessage response = await http.PutAsync("api/User/UpdatedOne", multipartContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            Log.Debug("Update failed,sign up again");
+            return false;
         }
     }
 }

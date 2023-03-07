@@ -1,10 +1,12 @@
 ﻿@page "/Order/Details/{delyId}"
-@using DeliveryApp.Componants
+@using Componants
 @using RestaurantDaoBase.Models;
 @using System.Net.Http;
 @using System.Net.Http.Json;
 @using RestaurantDaoBase;
 @using Serilog;
+@using Services
+@inject AuthService authService
 
 <div class="OrderDetails pb-5">
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
@@ -122,6 +124,7 @@
         //Log.Debug("render start");
         //httpClient.BaseAddress = new Uri("http://localhost:5175/");
         httpClient.BaseAddress = new Uri("http://ec2-18-214-61-45.compute-1.amazonaws.com:5175/");
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
         delivery = new Delivery();
         delivery = (await httpClient.GetFromJsonAsync<Delivery>($"api/delivery/one/"+delyId));
     }
