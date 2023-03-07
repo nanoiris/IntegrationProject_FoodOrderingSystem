@@ -1,0 +1,73 @@
+﻿@inject IJSRuntime JSRuntime;
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components
+@using System.Net.Http;
+@using System.Net.Http.Json;
+@using Newtonsoft.Json
+
+@*
+<input type="text" @bind="@Postcode" />
+<button @onclick="SearchMap">Search</button>*@
+
+<div id="map" @ref="mapDiv" style="height: 100px; width: 100%;"></div>
+
+@code {
+    [Parameter]
+    public string Postcode { get; set; }
+
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+
+    //private ElementReference MapElement { get; set; }
+    private ElementReference mapDiv;
+    private string MapElement = null;
+
+    public HttpClient httpClient = new HttpClient();   
+
+    protected override async Task OnInitializedAsync()
+    {
+        var address = $"{Postcode}, CA";
+        var requestUri = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key=AIzaSyAAvTxW9M4D-W80QH9g0mjnGL1dI_TAJhM";
+        var response = await httpClient.GetAsync(requestUri);
+        var content = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<GoogleMapsApiResult>(content);
+
+        if (result.Status == "OK")
+        {
+            var location = result.Results.FirstOrDefault()?.Geometry.Location;
+            if (location != null)
+            {
+                Latitude = location.Lat;
+                Longitude = location.Lng;
+            }
+        }
+
+        //await JSRuntime.InvokeAsync<object>("initMap", Latitude, Longitude); 
+        await JSRuntime.InvokeVoidAsync("initMap", Latitude, Longitude);
+    }
+    public class GoogleMapsApiResult
+    {
+        public string Status { get; set; }
+        public List<GoogleMapsApiAddress> Results { get; set; }
+    }
+
+    public class GoogleMapsApiAddress
+    {
+        public string FormattedAddress { get; set; }
+        public GoogleMapsApiGeometry Geometry { get; set; }
+        // Other properties representing location information
+    }
+
+    public class GoogleMapsApiGeometry
+    {
+        public GoogleMapsApiLocation Location { get; set; }
+        // Other properties representing location information
+    }
+
+    public class GoogleMapsApiLocation
+    {
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+    }
+    
+}
