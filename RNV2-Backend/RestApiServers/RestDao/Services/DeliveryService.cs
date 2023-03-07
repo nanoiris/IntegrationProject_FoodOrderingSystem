@@ -214,5 +214,15 @@ namespace RestaurantDao.Services
                 return result == 1 ? true : false;
             }
         }
+
+        public Task<Delivery?> FindByOrderId(string orderId)
+        {
+            using (var ctx = new DeliveryContext())
+            {
+                return ctx.Deliveries
+                    .Where(x => x.OrderId == orderId)
+                    .FirstOrDefaultAsync();
+            }
+        } 
     }
 }

@@ -13,6 +13,7 @@ namespace RestaurantDaoBase.IServices
 
         public Task<bool> AddDelivery(Delivery delivery);
         public Task<Delivery> FindDelivery(string id);
+        public Task<Delivery?> FindByOrderId(string orderId);
         public Task<bool> UpdateDeliveryStatus(string deliveryId, DeliveryStatusEnum newStatus);
         public Task<List<Delivery>> ListDeliveriesByStatus(string deliveryMan, DeliveryStatusEnum status);
         public Task<List<Delivery>> ListDeliveriesByStatus(DeliveryStatusEnum status);

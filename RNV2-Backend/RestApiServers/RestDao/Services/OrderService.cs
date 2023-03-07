@@ -257,5 +257,18 @@ namespace RestaurantDao.Services
                 return result == 1 ? true : false;
             }
         }
+
+        public async Task<bool> ChangeDelivery(string orderId, bool isDelivery)
+        {
+            using (var ctx = new OrderContext())
+            {
+                var order = await ctx.Orders.FindAsync(orderId);
+                if (order == null)
+                    return false;
+                order.IsDelivery = isDelivery;
+                var result = await ctx.SaveChangesAsync();
+                return result == 1 ? true : false;
+            }
+        }
     }
 }

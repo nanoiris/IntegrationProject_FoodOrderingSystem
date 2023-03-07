@@ -24,6 +24,12 @@ namespace DeliveryServer.Controllers
             return service.FindDelivery(id);
         }
 
+        [HttpGet("{id}")]
+        public Task<Delivery?> OneByOrderId(string id)
+        {
+            return service.FindByOrderId(id);
+        }
+
         [HttpGet("{deliveryMan}/{status}")]
         public Task<List<Delivery>> ByDeliveryManAndStatus(string deliveryMan, DeliveryStatusEnum status)
         {
