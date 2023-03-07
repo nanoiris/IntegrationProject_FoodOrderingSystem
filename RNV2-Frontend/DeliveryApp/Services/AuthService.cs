@@ -33,10 +33,11 @@ namespace DeliveryApp.Services
                 Log.Debug("Login succefully");
                 User = await response.Content.ReadFromJsonAsync<UserModel>();
                 IsLoggedIn = true;
+                
 
                 if (User.Logo != null)
                 {
-                    User.Logo = Utils.BuildLogoPath(User.Logo);
+                    User.Logo = await Utils.BuildLogoPath(User.Logo);
                 }
                 return true;
             }
@@ -48,9 +49,12 @@ namespace DeliveryApp.Services
             IsLoggedIn = false;
         }
 
-        public UserModel getUserByEmail(string userEmail)
+        public async Task<UserModel> getUserByEmail(string userEmail)
         {
-            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            if (http.DefaultRequestHeaders.Authorization == null)
+            {
+                http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            }
             return http.GetFromJsonAsync<UserModel>($"api/User/OneByEmail/{userEmail}").Result;
         }
 
@@ -69,7 +73,10 @@ namespace DeliveryApp.Services
             var img = new StreamContent(user.UploadImg?.OpenReadStream());
             img.Headers.ContentType = new MediaTypeHeaderValue(user.UploadImg.ContentType);
             multipartContent.Add(content: img, "UploadImg", fileName: user.UploadImg.Name);
-            //http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            if (http.DefaultRequestHeaders.Authorization==null)
+            {
+            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            }
             HttpResponseMessage response = await http.PutAsync("api/User/UpdatedOne", multipartContent);
 
             if (response.IsSuccessStatusCode)

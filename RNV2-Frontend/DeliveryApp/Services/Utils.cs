@@ -2,9 +2,9 @@
 {
     public class Utils
     {
-        public static string BuildLogoPath(string logoPath)
+        public static async Task<string> BuildLogoPath(string logoPath)
         {
-            return $"img/delivery/{logoPath}";
+            return $"/img/delivery/{logoPath}";
         }
     }
 }

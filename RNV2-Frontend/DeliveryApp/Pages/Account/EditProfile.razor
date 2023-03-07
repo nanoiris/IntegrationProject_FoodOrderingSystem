@@ -48,7 +48,7 @@
         </div>
         <div class="form-group">
             <label class="text-info pl-2 mt-1 mb-0">Mobile Number:</label>
-            <input @bind-value="user.PhoneNumber" type="text" class="form-control" id="Phone" />
+            <input @bind-value="user.PhoneNumber" type="text" class="form-control" id="PhoneNumber" />
             <ValidationMessage For="@(() => user.PhoneNumber)" />
         </div>
         <div class="form-group">
@@ -63,7 +63,7 @@
         </div>
         <div class="form-group">
             <label class="text-info pl-2 mt-1 mb-0">Province:</label>
-            <input @bind-value="user.State" type="text" class="form-control" id="Province" />
+            <input @bind-value="user.State" type="text" class="form-control" id="State" />
             <ValidationMessage For="@(() => user.State)" />
         </div>
         <div class="form-group">
@@ -73,7 +73,7 @@
         </div>
         <div class="form-group">
             <label class="text-info pl-2 mt-1 mb-0">Zip:</label>
-            <input @bind-value="user.PostCode" type="text" class="form-control" id="Zip" />
+            <input @bind-value="user.PostCode" type="text" class="form-control" id="PostCode" />
             <ValidationMessage For="@(() => user.PostCode)" />
         </div>
 
@@ -85,7 +85,7 @@
         </div>
 
         <div class="mx-5 mb-3">
-            <img src="@(Data.Constants.imgUrl + user.Logo)" class="w-50" @ref="previewImageElem" />
+            <img src="@(Data.Constants.imgUrl + user.Logo)" class="w-50" @ref="previewImageElem"/>
         </div>
 
         <button class="btn btn-primary btn-lg btn-block mb-2" type="submit">Update</button>
@@ -108,8 +108,8 @@
     {
 
         deliveryman = AuthService.User.UserName;
-        user = authService.getUserByEmail(deliveryman);
-        logo = AuthService.User.Logo;
+        user = await authService.getUserByEmail(deliveryman);
+        logo = await Utils.BuildLogoPath(user.Logo);        
     }
 
     private async Task EditProfilePut()
@@ -119,12 +119,12 @@
         if (response)
         {
             string msg = "Update Profile succeed!";
-            NavigationManager.NavigateTo($"/Account/Profile/{msg}", forceLoad: true);
+            NavigationManager.NavigateTo($"/Account/Profile/{msg}");
         }
         else
         {
             string msg = "Update Profile failed.Please try again";
-            NavigationManager.NavigateTo($"/Account/EditProfile/{msg}", forceLoad: true);
+            NavigationManager.NavigateTo($"/Account/EditProfile/{msg}");
         }
     }
 
