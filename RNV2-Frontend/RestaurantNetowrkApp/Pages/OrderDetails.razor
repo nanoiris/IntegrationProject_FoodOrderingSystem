@@ -3,11 +3,13 @@
 @using RestaurantNetowrkApp.Componants
 @using Services;
 @using Data.Dto;
+@using RestaurantDaoBase.Models;
 @inject OrderService orderService;
 @inject RestService restService;
 @inject RatingService ratingService;
 @inject Data.SessionStorageAccessor sessionStorageAccessor;
 @inject NavigationManager navigationManager;
+@inject DeliveryService deliveryService;
 
 
 <div class="OrderDetails pb-5">
@@ -80,20 +82,20 @@
                 <span class="icon">  <i class="fa fa-check"></i> </span>
                 <span class="text">Order confirmed</span>
             </div>
-            <div class="step active">
+            <div class="step @(activeAssigned?"active":"")">
                 <span class="icon"> <i class="fa fa-user"></i> </span>
-                <span class="text"> Picked by courier</span>
+                <span class="text"> Assigned to courier</span>
             </div>
-            <div class="step active">
+            <div class="step @(activeOntheway?"active":"")">
                 <span class="icon"> <i class="fa fa-truck"></i> </span>
                 <span class="text"> On the way</span>
             </div>
-            <div class="step">
+            <div class="step @(activeComplete?"active":"")">
                 <span class="icon"> <i class="fa fa-box"></i> </span>
                 <span class="text">Complete</span>
             </div>
         </div>
-    }
+    } 
 
     
    
@@ -134,13 +136,36 @@
     [Parameter] public string msg { get; set; }
     private OrderDto order ;
     private RestaurantDto rest = new RestaurantDto();
-    private string userEmail; 
+    private string userEmail;
+    private Delivery delivery;
+    private bool activeAssigned;
+    private bool activeOntheway;
+    private bool activeComplete;
 
     protected override async Task OnInitializedAsync()
     {
         userEmail = await sessionStorageAccessor.GetValueAsync<string>("userEmail");
         order = orderService.getOrderById(orderId);
         rest = restService.GetRestById(order.RestaurantId);
+        if (order.IsDelivery)
+        {
+            delivery = deliveryService.getDeliveryByOrderId(orderId);
+            if ((int)delivery.Status == 1 || (int)delivery.Status == 2)
+            {
+                activeAssigned = true;
+            }
+            else if ((int)delivery.Status == 4)
+            {
+                activeAssigned = true;
+                activeOntheway = true;
+            }
+            else if ((int)delivery.Status == 5)
+            {
+                activeAssigned = true;
+                activeOntheway = true;
+                activeComplete = true;
+            }
+        }
     }
 
     private async Task cancleOrder(string orderId)

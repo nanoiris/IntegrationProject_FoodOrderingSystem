@@ -73,8 +73,9 @@ else
         {
            
             await ItemService.DeleteItemAsync(categoryId, itemId);
-            FlashMessageService.SuccessMessage = "Item deleted successfully.";
+            FlashMessageService.SetSuccessMessage("Delete successfully!");
             NavigationManager.NavigateTo("/item");
+            await ClearMessageAsync();
         }
         catch (Exception ex)
         {

@@ -63,7 +63,7 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
                         <tr>
                             <td style="display:none">@item.Id</td>
                             <td>@item.Id</td>
-                           <td scope="row"><img src="@(item.Logo != null ? $"/img/{item.Logo}" : null)" width="50px" height="50px"/></td>
+                           <td scope="row"><img src="@(item.Logo != null ? $"{Constants.imgUrl}/{item.Logo}" : null)" width="50px" height="50px"/></td>
                            @* <td scope="row"><img src="@(item.Logo != null ? $"http://fsd05rnv.eastus.cloudapp.azure.com:5000/img/share/{item.Logo}" : null)" width="50px" height="50px"/></td> *@
                             <td>@item.Name</td>
                             <td>
@@ -98,7 +98,8 @@ else
         new TabPath { Title = "Item", Path = "/item" },
         };
     public List<ItemListDto> Items { get; set; }
-    public string restaurantId = AuthService.User.RestaurantId;
+    @* public string restaurantId = AuthService.User.RestaurantId; *@
+    public string restaurantId; 
      public List<CategoryDto> Categories { get; set; }
 
     [Inject]
@@ -113,6 +114,7 @@ else
         }
       
         logger.LogInformation("OnInitializedAsync item list");
+        restaurantId = AuthService.User.RestaurantId;
         Categories = await ItemService.ListCategoryAsync(restaurantId);
 
     } 

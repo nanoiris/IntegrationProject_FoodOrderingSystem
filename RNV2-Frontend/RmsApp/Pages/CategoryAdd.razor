@@ -70,10 +70,9 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
         string restaurantId = AuthService.User.RestaurantId;
         var newCategory = new CategoryDto { Name = NewCategoryName };
         await CategoryService.AddCategoryAsync(restaurantId, newCategory);
-        FlashMessageService.SuccessMessage = "Add successfully!";
-        FlashMessageService.DurationInSeconds = 5; 
-        await FlashMessageService.ClearMessagesAsync();
+        FlashMessageService.SetSuccessMessage(" Add successfully!");
         NavigationManager.NavigateTo("/category");
+        await ClearMessageAsync(); 
         @* NewCategoryName = string.Empty; *@
     }
 }

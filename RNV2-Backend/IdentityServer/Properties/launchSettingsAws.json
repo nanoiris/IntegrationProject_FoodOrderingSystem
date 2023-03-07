@@ -4,8 +4,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:49222",
-      "sslPort": 44321
+      "applicationUrl": "http://ec2-18-214-61-45.compute-1.amazonaws.com:27916",
+      "sslPort": 44355
     }
   },
   "profiles": {
@@ -14,7 +14,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5048",
+      "applicationUrl": "http://ec2-18-214-61-45.compute-1.amazonaws.com:5191",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -24,7 +24,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:7293;http://localhost:5048",
+      "applicationUrl": "http://ec2-18-214-61-45.compute-1.amazonaws.com:7256;http://ec2-18-214-61-45.compute-1.amazonaws.com:5191",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

@@ -8,6 +8,8 @@
 @inject IFlashMessageService FlashMessageService
 @inject AuthService authService
 @inject ILogger<AuthService> logger
+@using System.ComponentModel.DataAnnotations
+
 
 
 
@@ -28,29 +30,36 @@
                     @FlashMessageService.FailureMessage
                 </div>
             }
-    <form Model="restaurant" @onsubmit="UpdateRestaurant">
+    <EditForm Model="@restaurant" OnValidSubmit="UpdateRestaurant">
+          <DataAnnotationsValidator />
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     <label>Name</label>
                     <InputText class="form-control" @bind-Value="restaurant.Name" />
+                    <ValidationMessage For="@(() => restaurant.Name)" />
                 </div>
                 <div class="form-group mb-3">
                     <label>Description</label>
                     <InputText class="form-control" @bind-Value="restaurant.Description" />
+                    <ValidationMessage For="@(() => restaurant.Description)" />
                 </div>
                 <div class="form-group mb-3">
                     <label>Phone Number</label>
                     <InputText class="form-control" @bind-Value="restaurant.PhoneNo" />
+                    <ValidationMessage For="@(() => restaurant.PhoneNo)" />
                 </div>
                 <div class="form-group mb-3">
                     <label>Email</label>
                     <InputText class="form-control" @bind-Value="restaurant.Email" />
+                    <ValidationMessage For="@(() => restaurant.Email)" />
                 </div>
                  <div class="form-group mb-3">
                     <label>Restaurant Cover Logo</label>
                     <InputFile OnChange="OnFileChange" />
-                      <img src="@(restaurant.Logo != null ? $"/img/{restaurant.Logo}" : null)" width="100px" height="100px"/>
+                      @* <img src="@(restaurant.Logo != null ? $"/img/{restaurant.Logo}" : null)" width="100px" height="100px"/> *@
+                      <img src="@(restaurant.Logo != null ? $"{Constants.imgUrl}/{restaurant.Logo}" : null)" width="100px" height="100px"/>
+
                 </div>
             </div>
             <div class="col-md-6">
@@ -62,39 +71,36 @@
                         <div class="form-group mb-3">
                             <label>Street</label>
                             <InputText class="form-control" @bind-Value="restaurant.Address.Street" />
+                            <ValidationMessage For="@(() => restaurant.Address.Street)" />
                         </div>
                         <div class="form-group mb-3">
                             <label>City</label>
                             <InputText class="form-control" @bind-Value="restaurant.Address.City" />
+                            <ValidationMessage For="@(() => restaurant.Address.City)" />
                         </div>
                         <div class="form-group mb-3">
                             <label>State</label>
                             <InputText class="form-control" @bind-Value="restaurant.Address.State" />
+                            <ValidationMessage For="@(() => restaurant.Address.State)" />
                         </div>
                         <div class="form-group mb-3">
                             <label>Postal Code</label>
                             <InputText class="form-control" @bind-Value="restaurant.Address.PostalCode" />
+                            <ValidationMessage For="@(() => restaurant.Address.PostalCode)" />
                         </div>
                         <div class="form-group mb-3">
                             <label>Country</label>
                             <InputText class="form-control" @bind-Value="restaurant.Address.Country" />
+                            <ValidationMessage For="@(() => restaurant.Address.Country)" />
                         </div>
                     </div>
                 </div> 
                 }
-                @* <div class="form-group">
-                    <label>Category</label>
-                    <InputSelect class="form-control" @bind-Value="restaurant.CategoryId">
-                        @foreach (var category in categories)
-                        {
-                            <option value="@category.Id">@category.Name</option>
-                        }
-                    </InputSelect>
-                </div> *@
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" class="btn btn-primary" @onclick:preventDefault="true">Save Changes</button>
+
             </div>
         </div>
-    </form>
+    </EditForm>
 }
 else
 {
@@ -102,8 +108,6 @@ else
 }
 
 @code {
-    @* [Parameter]
-    public string id { get; set; } *@
     private RestaurantDto restaurant;
     
     [Inject]
@@ -128,13 +132,8 @@ else
             NavigationManager.NavigateTo("/signin");
             return;
         }
-
-        // hardcodeded restaurant below
-        @* string id = Constants.RestaurantId;  *@
-        // get restaurant from login 
         string id = AuthService.User.RestaurantId;
         logger.LogInformation("print from edit page logged in status: " + AuthService.IsLoggedIn.ToString());
-        
         restaurant = await RestaurantService.GetOneRestaurantAsync(id);
     }
 
@@ -160,10 +159,10 @@ else
     
         await RestaurantService.UpdateRestaurantAsync(newRestaurant);
         
-        FlashMessageService.SuccessMessage = "updated restaurant successfully.";
-        FlashMessageService.DurationInSeconds = 5;
+        FlashMessageService.SetSuccessMessage("updated successfully");
+        NavigationManager.NavigateTo("/");
         await FlashMessageService.ClearMessagesAsync();
-        @* NavigationManager.NavigateTo("/item"); *@
+        
     }
 
 

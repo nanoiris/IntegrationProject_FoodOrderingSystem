@@ -135,10 +135,9 @@ else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
         var imgContent = new StreamContent(UploadImg.OpenReadStream());
         imgContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(UploadImg.ContentType);
         await ItemService.AddItemAsync(restaurantId, newItem);
-        FlashMessageService.SuccessMessage = "Menu item added successfully.";
-        FlashMessageService.DurationInSeconds = 5;
-        await FlashMessageService.ClearMessagesAsync();
+        FlashMessageService.SetSuccessMessage(" Add successfully!");
         NavigationManager.NavigateTo("/item");
+        await ClearMessageAsync(); 
     }
 
 }

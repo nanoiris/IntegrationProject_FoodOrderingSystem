@@ -46,6 +46,9 @@ public static class MauiProgram
         builder.Services.AddScoped<UserService>(service =>
           new UserService(Constants.IdentityUri)
        );
+        builder.Services.AddScoped<DeliveryService>(service =>
+          new DeliveryService(Constants.DeliveryUri)
+       );
 
 
         builder.Services.AddScoped<SessionStorageAccessor>();

@@ -28,19 +28,19 @@ public static class MauiProgram
            new RoleService("http://localhost:5191")
         );
         builder.Services.AddSingleton<RestCategoryService>(service =>
-           new RestCategoryService("http://localhost:5064")
+           new RestCategoryService("http://fsd05rnv1.eastus.cloudapp.azure.com:5064")
         );
         builder.Services.AddSingleton<RestaurantService>(service =>
-           new RestaurantService("http://localhost:5064")
+           new RestaurantService("http://fsd05rnv1.eastus.cloudapp.azure.com:5064")
         );
         builder.Services.AddSingleton<UserService>(service =>
            new UserService("http://localhost:5191")
         );
         builder.Services.AddSingleton<OrderService>(service =>
-           new OrderService("http://localhost:5275")
+           new OrderService("http://fsd05rnv1.eastus.cloudapp.azure.com:5275")
         );
         builder.Services.AddSingleton<DeliveryService>(service =>
-           new DeliveryService("http://localhost:5175")
+           new DeliveryService("http://fsd05rnv1.eastus.cloudapp.azure.com:5175")
         );
 
         builder.Services.AddScoped<DialogService>();

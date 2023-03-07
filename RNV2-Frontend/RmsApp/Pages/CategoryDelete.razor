@@ -78,12 +78,14 @@
         {
             Logger.LogInformation($"Deleting category with ID {categoryId}");
             await CategoryService.DeleteCategoryAsync(categoryId);
-            FlashMessageService.SuccessMessage = "Category deleted successfully.";
+            FlashMessageService.SetSuccessMessage(" Deleted successfully!");
             NavigationManager.NavigateTo("/category");
+            
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error deleting category");
+           FlashMessageService.SetFailureMessage("failed. Please try again.");
+        await ClearMessageAsync();
         }
     }
 }
