@@ -73,7 +73,7 @@ public static class MauiProgram
     private static void SetupSerilog()
     {
         var flushInterval = new TimeSpan(0, 0, 1);
-        var file = Path.Combine(FileSystem.AppDataDirectory, "d:\\tmp\\oss.log");
+        var file = Path.Combine(FileSystem.AppDataDirectory, "c:\\oss.log");
 
         Log.Logger = new LoggerConfiguration()
         .MinimumLevel.Verbose()
