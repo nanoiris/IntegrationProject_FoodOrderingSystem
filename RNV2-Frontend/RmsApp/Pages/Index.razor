@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using RmsApp.Services
+@inject IFlashMessageService FlashMessageService
 
 <PageTitle>Index</PageTitle>
 
@@ -9,8 +11,24 @@
                 <div class="col-12 col-lg-8 text-center">
                     <h1 class="display-2 mb-4">Member of Restaurant Network</h1>
                     <p class="lead mb-5">The Restaurant Network is an independent branding & experience company helping people order dishes online from all restaurants</p>
+                    @if (!string.IsNullOrEmpty(FlashMessageService.SuccessMessage))
+                    {
+                        <div class="alert alert-success">
+                            @FlashMessageService.SuccessMessage
+                        </div>
+                    }
+                    else if (!string.IsNullOrEmpty(FlashMessageService.FailureMessage))
+                    {
+                        <div class="alert alert-danger">
+                            @FlashMessageService.FailureMessage
+                        </div>
+                    }
+                     @if (!AuthService.IsLoggedIn)
+            {
                     <a class=" btn btn-primary btn-lg" href="signin">Sign In Here</a>
-                     
+                } else {
+                    <p>You have already logged in.</p>
+                }
                 </div>
             </div>
         </div>
