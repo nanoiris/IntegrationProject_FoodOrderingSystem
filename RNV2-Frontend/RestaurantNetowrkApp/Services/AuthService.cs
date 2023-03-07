@@ -115,6 +115,7 @@ namespace RestaurantNetowrkApp.Services
 
         public UserModel getUserByEmail(string userEmail)
         {
+            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
             return http.GetFromJsonAsync<UserModel>($"api/OssUser/OneByEmail/{userEmail}").Result;
         }
     }

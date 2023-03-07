@@ -178,7 +178,6 @@
     protected override async Task OnInitializedAsync()
     {
         Log.Debug("Rest:" + restId);
-        httpOrder.BaseAddress = new Uri(Data.Constants.OrderUri);
 
         restaurant = restService.GetRestById(restId);
         menuCategories = await restService.ListMenuCategory(restId);
@@ -202,8 +201,7 @@
 
     private async void addToCart(MenuItemDto menuItem)
     {
-        //string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
-        string userEmail = "u3@gmail.com";
+        string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
         render = false;
         if (userEmail == null)
         {
@@ -267,8 +265,7 @@
     // check if this user has an unpaid order in this restaurant
     private async void getCart()
     {
-        //string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
-        string userEmail = "u3@gmail.com";
+        string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
 
         if (userEmail != null)
         {

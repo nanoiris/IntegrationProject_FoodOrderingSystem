@@ -1,4 +1,5 @@
 ﻿@page "/Order/Details/{orderId}"
+@page "/Order/Details/{orderId}/{msg}"
 @using RestaurantNetowrkApp.Componants
 @using Services;
 @using Data.Dto;
@@ -10,6 +11,10 @@
 
 
 <div class="OrderDetails pb-5">
+    @if (msg != null)
+    {
+        <p class="py-2 pl-2 bg-warning">@msg</p>
+    }
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
         <a class="font-weight-bold text-dark text-back text-decoration-none " href="/Order">
             <i class="feather-chevron-left"></i>
@@ -62,12 +67,13 @@
             <h6 class="font-weight-bold mb-0">Total <span class="float-right">$@String.Format("{0:0.00}",order.PayTotal)</span></h6>
         </div>
     }
-    @if((int)order.Status == 0)
+    @if(order != null && (int)order.Status == 0)
     {
         <button class="btn btn-primary text-white" @onclick="()=>cancleOrder(order.Id)">Cancel</button>
+        <button class="btn btn-success text-white" @onclick="()=>checkout(order.Id)">Check Out</button>
     }
 
-    @if (order.IsDelivery)
+    @if (order != null && order.IsDelivery)
     {
         <div class="track mx-2">
             <div class="step active">
@@ -124,15 +130,15 @@
 </div>
 <NavMenuFooter />
 @code {
-    [Parameter] public string orderId{ get; set; }
+    [Parameter] public string orderId { get; set; }
+    [Parameter] public string msg { get; set; }
     private OrderDto order ;
     private RestaurantDto rest = new RestaurantDto();
     private string userEmail; 
 
     protected override async Task OnInitializedAsync()
     {
-        //userEmail = await sessionStorageAccessor.GetValueAsync<string>("userEmail");
-        userEmail = "u3@gmail.com";
+        userEmail = await sessionStorageAccessor.GetValueAsync<string>("userEmail");
         order = orderService.getOrderById(orderId);
         rest = restService.GetRestById(order.RestaurantId);
     }
@@ -147,5 +153,10 @@
             navigationManager.NavigateTo($"/{msg}");
         }
 
+    }
+
+    public void checkout(string orderId)
+    {
+        navigationManager.NavigateTo($"/Order/Checkout/{orderId}");
     }
 }

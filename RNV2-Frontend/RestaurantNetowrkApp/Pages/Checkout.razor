@@ -1,4 +1,12 @@
-﻿@page "/Order/Checkout/1"
+﻿@page "/Order/Checkout/{orderId}"
+@using Services;
+@using Data.Dto;
+@using Data.model;
+@inject Data.SessionStorageAccessor sessionStorageAccessor;
+@inject OrderService orderService;
+@inject UserService userService;
+@inject IJSRuntime JSRuntime;
+@inject NavigationManager navigationManager
 
 <div class="osahan-payment">
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
@@ -13,21 +21,24 @@
             <div class="d-flex flex-column">
                 <h6 class="mb-2 font-weight-bold">DELIVERY ADDRESS</h6>
                 <div class="custom-control custom-radio mb-2 px-0">
-                    <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input"
-                           checked="">
+                    <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" 
+                    @onclick ="()=> useHomeAddress()" />
                     <label class="custom-control-label border osahan-check p-3 w-100 rounded border-primary"
                            for="customRadio1">
                         <b><i class="feather-home mr-2"></i> Home</b> <br>
-                        <p class="small mb-0 pl-4">Kalyani Nagar, Pune, Maharashtra</p>
+                        @if(user != null)
+                        {
+                            <p class="small mb-0 pl-4">@user.Street, @user.City</p>
+                        }
                     </label>
                 </div>
                 <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#exampleModal">
                     ADD NEW ADDRESS
                 </a>
             </div>
-        </div
+        </div>
     </div>
-    <div class="py-3 osahan-cart-item">
+    <div class="py-3 osahan-cart-item" hidden ="@hidePickupDiv">
         <div class="osahan-cart-item-profile bg-white shadow p-3">
             <div class="d-flex flex-column">
                 <h6 class="mb-2 font-weight-bold">PICKUP TIME</h6>
@@ -38,7 +49,7 @@
         </div>
     </div>
     <div class="accordion pb-3" id="accordionExample">
-        <div class="osahan-card bg-white overflow-hidden shadow mb-2">
+        <div class="osahan-card bg-white overflow-hidden  mb-2">
             <div class="osahan-card-header" id="headingOne">
                 <h2 class="mb-0">
                     <button class="d-flex p-3 align-items-center btn btn-link w-100" type="button"
@@ -52,18 +63,12 @@
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
                  data-parent="#accordionExample">
                 <div class="osahan-card-body border-top p-3">
-                    <h6 class="m-0">Add new card</h6>
-                    <p class="small">
-                        WE ACCEPT <span class="osahan-card ml-2 font-weight-bold">
-                            ( Master Card / Visa Card / Rupay )
-                        </span>
-                    </p>
-                    <form>
+                    <EditForm id="payCardForm" Model="@cardInfo" OnValidSubmit="checkout">
                         <div class="form-row">
                             <div class="col-md-12 form-group">
                                 <label class="form-label mb-1 small">Card number</label>
                                 <div class="input-group">
-                                    <input placeholder="Card number" type="number" class="form-control">
+                                    <input @bind-value="cardInfo.CardNumber" type="number" class="form-control">
                                     <div class="input-group-append">
                                         <button id="button-addon2" type="button"
                                                 class="btn btn-outline-secondary">
@@ -75,17 +80,18 @@
                             <div class="col-md-8 form-group">
                                 <label class="form-label mb-1 small">
                                     Valid through(MM/YY)
-                                </label><input placeholder="Enter Valid through(MM/YY)"
-                                               type="number" class="form-control">
+                                </label>
+                                <input @bind-value="cardInfo.ValidThrough" placeholder="Enter Valid through(MM/YY)" type="text" class="form-control">
                             </div>
                             <div class="col-md-4 form-group">
-                                <label class="form-label mb-1 small">CVV</label><input placeholder="Enter CVV Number" type="number" class="form-control">
+                                <label class="form-label mb-1 small">CVV</label>
+                                <input @bind-value = "cardInfo.Cvv" type="text" class="form-control">
                             </div>
                             <div class="col-md-12 form-group">
                                 <label class="form-label mb-1 small">
                                     Name on card
-                                </label><input placeholder="Enter Card number" type="text"
-                                               class="form-control">
+                                </label>
+                                <input @bind-value = "cardInfo.Name" type="text" class="form-control">
                             </div>
                             <div class="col-md-12 form-group mb-0">
                                 <div class="custom-control custom-checkbox">
@@ -98,15 +104,15 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </EditForm>
                 </div>
             </div>
         </div>
     </div>
     <div class="fixed-bottom p-3">
-        <a class="btn btn-success btn-lg btn-block" href="profile.html">
+        <button class="btn btn-success btn-lg btn-block" type="submit" form="payCardForm">
             PAY $1329<i class="feather-arrow-right"></i>
-        </a>
+        </button>
     </div>
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -125,10 +131,9 @@
                             <div class="col-md-12 form-group">
                                 <label class="form-label">Delivery Area</label>
                                 <div class="input-group">
-                                    <input placeholder="Delivery Area" type="text" class="form-control">
+                                    <input  type="text" class="form-control">
                                     <div class="input-group-append">
-                                        <button id="button-addon2" type="button"
-                                                class="btn btn-outline-secondary">
+                                        <button id="button-addon2" type="button"class="btn btn-outline-secondary">
                                             <i class="feather-map-pin"></i>
                                         </button>
                                     </div>
@@ -136,25 +141,20 @@
                             </div>
                             <div class="col-md-12 form-group">
                                 <label class="form-label">
-                                    Complete
-                                    Address
-                                </label><input placeholder="Complete Address e.g. house number, street name, landmark"
-                                               type="text" class="form-control">
+                                    Complete Address
+                                </label><input type="text" class="form-control">
                             </div>
                             <div class="col-md-12 form-group">
                                 <label class="form-label">
-                                    Delivery
-                                    Instructions
-                                </label><input placeholder="Delivery Instructions e.g. Opposite Gold Souk Mall" type="text"
-                                               class="form-control">
+                                    Delivery Instructions
+                                </label><input type="text" class="form-control">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer p-0 border-0 p-3">
                     <div class="col-6 m-0 pl-0 pr-1">
-                        <button type="button" class="btn border btn-lg btn-block"
-                                data-dismiss="modal">
+                        <button type="button" class="btn border btn-lg btn-block" data-dismiss="modal">
                             Close
                         </button>
                     </div>
@@ -168,5 +168,37 @@
 </div>
 
 @code {
+    [Parameter] public string orderId{ get; set; }
+    private OrderDto order;
+    private UserModel user;
+    private bool hidePickupDiv = false;
+    private CardInfo cardInfo = new CardInfo();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        string userEmail = await sessionStorageAccessor.GetValueAsync<string>("userEmail");
+        user = userService.getUserByEmail(userEmail);
+        order = orderService.getOrderById(orderId);
+        //rest = restService.GetRestById(order.RestaurantId);
+    }
+
+    private void useHomeAddress()
+    {
+        order.IsDelivery = true;
+        hidePickupDiv = true;
+    }
+
+    private async Task checkout()
+    {
+        var result = await orderService.pay(order, cardInfo);
+        if (result == "Success")
+        {
+            await orderService.changeOrderStatus(order.Id, 1);
+            string msg = "Payment succeed!";
+            navigationManager.NavigateTo($"/Order/Details/{order.Id}/{msg}");
+        }
+    }
 
 }
