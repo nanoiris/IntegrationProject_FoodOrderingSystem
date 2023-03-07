@@ -22,10 +22,10 @@ public static class MauiProgram
             });
 
         builder.Services.AddSingleton<AuthService>(service =>
-           new AuthService("http://localhost:5191")
+           new AuthService("http://ec2-18-214-61-45.compute-1.amazonaws.com:5191")
         );
         builder.Services.AddSingleton<RoleService>(service =>
-           new RoleService("http://localhost:5191")
+           new RoleService("http://ec2-18-214-61-45.compute-1.amazonaws.com:5191")
         );
         builder.Services.AddSingleton<RestCategoryService>(service =>
            new RestCategoryService("http://fsd05rnv1.eastus.cloudapp.azure.com:5064")
@@ -34,7 +34,7 @@ public static class MauiProgram
            new RestaurantService("http://fsd05rnv1.eastus.cloudapp.azure.com:5064")
         );
         builder.Services.AddSingleton<UserService>(service =>
-           new UserService("http://localhost:5191")
+           new UserService("http://ec2-18-214-61-45.compute-1.amazonaws.com:5191")
         );
         builder.Services.AddSingleton<OrderService>(service =>
            new OrderService("http://fsd05rnv1.eastus.cloudapp.azure.com:5275")
