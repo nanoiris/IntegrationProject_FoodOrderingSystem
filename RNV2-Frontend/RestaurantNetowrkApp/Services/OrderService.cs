@@ -12,6 +12,8 @@ using Microsoft.JSInterop;
 using System.Text.Json;
 using Stripe.Checkout;
 using Stripe;
+using Stripe.Issuing;
+using RestaurantDaoBase.Models;
 
 namespace RestaurantNetowrkApp.Services
 {
@@ -157,7 +159,7 @@ namespace RestaurantNetowrkApp.Services
         } 
 
 
-        public async Task<string> pay(OrderDto order, CardInfo cardInfo)
+        public async Task<string> pay(OrderDto order, CardInfo cardInfo, string userName)
         {
             string Msg = "Checkout faild";
             try
@@ -172,6 +174,7 @@ namespace RestaurantNetowrkApp.Services
                 {
                     Card = new TokenCardOptions
                     {
+                        Name = cardInfo.Name,
                         Number = cardInfo.CardNumber,
                         ExpMonth = strs[0],
                         ExpYear = strs[1],
@@ -182,25 +185,24 @@ namespace RestaurantNetowrkApp.Services
                 var serviceToken = new TokenService();
                 Token stripetoken = await serviceToken.CreateAsync(optionToken);
 
-                var customer = new Stripe.Customer
+                var optionsCustomer = new CustomerCreateOptions
                 {
-                    Name = "Jack",
-                    Address = new Address
-                    {
-                        Country = "canada",
-                        City = "Montreal",
-                        Line1 = "13 sr",
-                        PostalCode = "234455"
-                    }
+                    Description = userName,
+                    Source = stripetoken.Id
                 };
+                var customerService = new CustomerService();
+                string custId = customerService.Create(optionsCustomer).Id;
+                
+
 
                 var options = new Stripe.ChargeCreateOptions
                 {
-                    Amount = (long)(order.PayTotal *100),
+                    Amount = (long)(order.PayTotal * 100),
                     Currency = "cad",
-                    Description= description,
-                    ReceiptEmail= email,
-                    Source = stripetoken.Id,
+                    Description = description,
+                    ReceiptEmail = email,
+                    //Source = stripetoken.Id,
+                    Customer = custId
                 };
                 var service = new Stripe.ChargeService();
                 Stripe.Charge charge =await  service.CreateAsync(options);
@@ -222,6 +224,22 @@ namespace RestaurantNetowrkApp.Services
 
         }
 
+        public async Task<bool> payment(string orderId, CardInfo card)
+        {
+            PayCard payCard = new PayCard
+            {
+                CardName = card.Name,
+                CardNo = card.CardNumber,
+                Cvv = card.Cvv
+            };
+            var response = await http.PutAsJsonAsync($"api/Cart/Payment/{orderId}", payCard);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<bool> changeOrderStatus(string orderId, int status)
         {
             var requestBody = new
@@ -237,6 +255,14 @@ namespace RestaurantNetowrkApp.Services
             return false;
         }
 
-
+        public async Task<bool> setOrderDelivery(string orderID)
+        {
+            var response = await http.PutAsync($"api/Order/Delivery/{orderID}/true",null);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
