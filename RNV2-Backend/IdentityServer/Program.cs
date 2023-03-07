@@ -85,10 +85,15 @@ namespace IdentityServer
 
             builder.Services.AddScoped<IUserService,UserService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
+            var blobConn = builder.Configuration["BlobStorage:ConnectionString"];
+            var blobContainer = builder.Configuration["BlobStorage:ContainerName"];
+            builder.Services.AddScoped<IFileService, BlobStorageService>(
+                x => new BlobStorageService(blobConn, blobContainer));
+            /*
             builder.Services.AddScoped<IFileService, LocalFileService>(
                 x => new LocalFileService(builder.Configuration["LogoRootPath"]));
+            */
             builder.Services.AddScoped<IRoleService, RoleService>();
-
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
