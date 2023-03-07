@@ -2,6 +2,10 @@ namespace RmsApp.Services
 {
     public static class Constants
     {
+        public const string imgLocal = "/img";
+        public const string imgAzureBlob = "https://pxtoday.blob.core.windows.net/pxtoday";
+
+        public const string imgUrl = imgLocal;
         // my local Db below
         public const string RestaurantId = "dffa781cbd6b4fafbb4f5e5b1cd05386";
 
@@ -24,6 +28,8 @@ namespace RmsApp.Services
         // public const string OrderUri = "http://ec2-18-214-61-45.compute-1.amazonaws.com:5275/";
         // public const string DeliveryUri = "http://ec2-18-214-61-45.compute-1.amazonaws.com:5064/";
         // public const string RatingUri = "http://ec2-18-214-61-45.compute-1.amazonaws.com:5064/";
+
+
     }
 
 }

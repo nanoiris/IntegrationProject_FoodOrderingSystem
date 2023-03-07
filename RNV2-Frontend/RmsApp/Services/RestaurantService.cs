@@ -83,6 +83,7 @@ namespace RmsApp.Services
                 img.Headers.ContentType = new MediaTypeHeaderValue(restaurant.UploadImg.ContentType);
                 multipartContent.Add(content: img, "UploadImg", fileName: restaurant.UploadImg.Name);
                 // above are the 3 line for attach images 
+                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
                 var response = await _httpClient.PutAsync($"api/restaurant/updatedone", multipartContent);
                 Console.WriteLine("update rest, after PUT");
                 if (response.IsSuccessStatusCode)

@@ -28,7 +28,7 @@
             <input type="text" id="name" class="form-control" value="@Category.Name" @oninput="@(e => Category.Name = e.Value.ToString())" />
         </div>
         <div class="text-center">
-            <button class="btn btn-primary" @onclick="SaveCategory">Save</button>
+            <button class="btn btn-primary" @onclick:preventDefault="true" @onclick="SaveCategory">Save</button>
         </div>
         
     </form>
@@ -73,8 +73,8 @@ else
     private async Task SaveCategory()
     {
         await CategoryService.UpdateCategoryAsync(Category);
-        FlashMessageService.SuccessMessage = "Category saved successfully.";
-        FlashMessageService.DurationInSeconds = 5;
-        await JSRuntime.InvokeVoidAsync("setTimeout", "location.href='/categoryList';", 3000);
+         FlashMessageService.SetSuccessMessage("Category edit successfully!");
+        NavigationManager.NavigateTo("/category");
+        await ClearMessageAsync();
     }
 }
