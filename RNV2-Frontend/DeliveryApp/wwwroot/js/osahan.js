@@ -43,3 +43,29 @@ window.initMap = (latitude, longitude) => {
     console.log("finish")
 }
 
+//window.initMap = (latitudeRest, longitudeRest, latitudeUser, longitudeUser,) => {
+//     Create a new map centered at the specified coordinates
+//    var map = new google.maps.Map(document.getElementById('map'), {
+//        center: { lat: latitudeRest, lng: longitudeRest },
+//        zoom: 8
+//    });
+
+//     Add a marker at the specified coordinates
+//    var marker = new google.maps.Marker({
+//        position: { lat: latitudeRest, lng: longitudeRest },
+//        map: map,
+//        title: 'Location'
+//    });
+
+//    var marker = new google.maps.Marker({
+//        position: { lat: latitudeUser, lng: longitudeUser },
+//        map: map,
+//        title: 'Location'
+//    });
+
+//}
+
+window.closeModal = (closeId) => {
+    document.getElementById(closeId).click();
+}
+

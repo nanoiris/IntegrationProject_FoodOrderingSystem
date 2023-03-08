@@ -1,6 +1,7 @@
 ﻿@page "/home";
 @page "/home/{msg}"
 @using DeliveryApp.Componants
+@inject IJSRuntime JSRuntime
 
 <div class="osahan-home-page">
         @if (msg != null)
@@ -9,9 +10,8 @@
     }
     <div class="shadow p-3 homepage-osahan-header bg-white">
         <div class="title d-flex align-items-center "> 
- <img src="img/logo_web1.png" class="img-fluid" />
-            <div class="input-group border osahan-search mt-3 rounded-lg shadow-sm overflow-hidden">  
-               
+        <img src="img/logo_web1.png" class="img-fluid" />
+            <div class="input-group border osahan-search mt-3 rounded-lg shadow-sm overflow-hidden">
                 <div class="input-group-prepend">
                     <button class="border-0 btn btn-outline-secondary text-primary bg-white btn-block">
                         <i class="feather-search"></i>
