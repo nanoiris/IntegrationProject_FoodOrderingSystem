@@ -1,46 +1,70 @@
 ﻿@page "/Restaurant/ListAll"
+@page "/Restaurant/ListAll/{trending}"
+@page "/Restaurants/{searchKey}"
+@page "/Restaurants/{searchKey}/{categoryid}"
+
+
 @using RestaurantNetowrkApp.Componants
 @using Data.Dto
 @using System.Net.Http.Json;
+@using Services;
+@inject RestService restService;
 
 <div class="osahan-listAll">
     <div class="p-3 osahan-inner-header bg-white shadow-sm">
         <div class="d-flex align-items-center">
             <a href=""><i class="feather-chevron-left"></i></a>
-            <span class="ml-3 h6 mb-0">All Restaurants</span>
+            <span class="ml-3 h6 mb-0">Back</span>
             <div class="ml-auto d-flex align-items-center">
                 <a class="text-dark mx-2 fs-18 top-nav-btn-cart position-relative" data-toggle="modal"
                    data-target="#exampleModal" href="#"><i class="feather-filter"></i></a>
             </div>
         </div>
     </div>
-
-    <div class="most_popular p-3">
-        <div class="row">
-            @foreach (var rest in allRests)
-            {
-                <div class="col-6 pr-2">
-                    <RestaurantCard Rest="rest" />
-                </div>
-            }
-        </div> 
-     </div>
+    @if(restaurants != null)
+    {
+        <div class="most_popular p-3">
+            <div class="row">
+                @foreach (var rest in restaurants)
+                {
+                    <div class="col-6 pr-2">
+                        <RestaurantCard Rest="rest" />
+                    </div>
+                }
+            </div> 
+         </div> 
+    }
+    
 </div>
 
-@*<RestaurantFilter />*@
 <NavMenuFooter />
 
 @code{
-    public List<RestaurantDto> allRests { get; set; }
+    [Parameter] public string searchKey { get; set; }
+    [Parameter] public string categoryid { get; set; }
+    [Parameter] public string trending { get; set; }
+
+    private List<RestaurantDto> restaurants;
+    private List<RestCategoryDto> restCategories = new List<RestCategoryDto>();
 
     public HttpClient httpRest = new HttpClient();
 
     protected override async Task OnInitializedAsync()
     {
         httpRest.BaseAddress = new Uri(Data.Constants.RestUri);
+        restCategories = await restService.ListRestCategory();
 
-        allRests = new List<RestaurantDto>();
-
-        allRests = (await httpRest.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/list")).ToList();
+        if (searchKey == null && categoryid == null && trending == null)
+        {
+            restaurants = (await httpRest.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/list")).ToList();
+        }
+        else if (trending != null)
+        {
+            restaurants = await restService.ListRestTrending(); 
+        }
+        else
+        {
+            restaurants = await restService.Search(searchKey, categoryid);
+        }      
     }
 }

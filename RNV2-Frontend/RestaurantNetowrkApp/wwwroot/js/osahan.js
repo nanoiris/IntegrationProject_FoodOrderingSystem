@@ -28,8 +28,8 @@ window.homeSlick = () => {
 }
 window.restaurantSlick = () => {
     $('.restaurant-slider').slick({
-        centerMode: true, centerPadding: '30px', slidesToShow: 3, arrows: false,
-        responsive: [{ breakpoint: 768, settings: { arrows: false, centerMode: true, centerPadding: '40px', slidesToShow: 2 } }]
+        centerMode: true, centerPadding: '30px', slidesToShow: 4, arrows: false,
+        responsive: [{ breakpoint: 768, settings: { arrows: false, centerMode: true, centerPadding: '40px', slidesToShow: 3 } }]
     });
 }
 window.restaurantQuantity = () => {
@@ -81,3 +81,9 @@ window.previewImage = (inputElem, imgElem) => {
         imgElem.setAttribute("src", this.result);
     }
 }
+
+window.closeModal = (closeId) => {
+    document.getElementById(closeId).click();
+}
+
+
