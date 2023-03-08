@@ -26,6 +26,7 @@ namespace RestaurantDaoBase.IServices
         public Task<bool> DeleteCategory(string categoryId);
         public Task<AppResult> AddCategory(RestCategory category);
         public Task<bool> UpdateCategory(RestCategory categor);
-        
+        public Task<bool> UpdateCategoryLogo(RestCategory model);
+
     }
 }

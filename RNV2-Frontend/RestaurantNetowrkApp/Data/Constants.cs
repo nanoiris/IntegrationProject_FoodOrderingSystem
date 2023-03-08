@@ -9,7 +9,8 @@ namespace RestaurantNetowrkApp.Data
     public static class Constants
     {
         public const string LocalhostUri = "http://localhost:";
-        public const string AzureUri = "http://fsd05rnv.eastus.cloudapp.azure.com:";
+        public const string AzureUri = "http://fsd05rnv1.eastus.cloudapp.azure.com:";
+        public const string AzureRatingUri = "http://fsd05rnv.eastus.cloudapp.azure.com:";
         public const string AWSUri = "http://ec2-18-214-61-45.compute-1.amazonaws.com:";
 
         public const string baseUri = AzureUri;
@@ -18,7 +19,7 @@ namespace RestaurantNetowrkApp.Data
 
         public const string RestUri = baseUri + "5064";     
         public const string OrderUri = baseUri + "5275";
-        public const string RatingUri = baseUri + "5048";
+        public const string RatingUri = AzureRatingUri + "5048";
         public const string DeliveryUri = baseUri + "5175";
 
         public const string imgLocal = "img/rest/";

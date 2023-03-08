@@ -51,8 +51,12 @@ namespace RestaurantServer.Controllers
                     return BadRequest(new AppResult("RestCategoryLogo : The file cannot be saved", false));
                 }
             }
-
-            var result = await restService.UpdateCategory(oldOne);
+            if (oldOne.Logo == null)
+            {
+                logger.LogInformation("RestCategoryLogo : The logo file name is null");
+                return BadRequest(new AppResult("RestCategoryLogo : The logo file name is null", false));
+            }
+            var result = await restService.UpdateCategoryLogo(oldOne);
             if (result == true)
             {
                 return Ok(new AppResult(oldOne.Logo, true));
