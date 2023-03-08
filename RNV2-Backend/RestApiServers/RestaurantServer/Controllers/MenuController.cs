@@ -8,7 +8,6 @@ using System.Data;
 
 namespace RestaurantServer.Controllers
 {
-    [Authorize(Roles = "Restaurant")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class MenuController : ControllerBase
@@ -22,25 +21,26 @@ namespace RestaurantServer.Controllers
             this.service = service;
             this.fileService = fileService;
         }
-
+        [AllowAnonymous]
         [HttpGet("{restaurantId}/{categoryId}")]
         public Task<MenuCategory> List(string restaurantId, string categoryId)
         {
             return service.ListMenu(restaurantId,categoryId);
         }
-
+        [AllowAnonymous]
         [HttpGet("{categoryId}/{menuId}")]
         public Task<MenuItem?> One(string categoryId, string menuId)
         {
             return service.FindMenu(categoryId, menuId);
         }
-
+        [AllowAnonymous]
         [HttpGet("{restaurantId}")]
         public Task<List<MenuItem>?> SearchByName(string restaurantId, string name)
         {
             return service.SearchMenu(restaurantId, name);
         }
 
+        [Authorize(Roles = "Restaurant")]
         [HttpPost("{restaurantId}")]
         public async Task<IActionResult> NewOne(string restaurantId,[FromForm] MenuItem form)
         {
@@ -82,7 +82,7 @@ namespace RestaurantServer.Controllers
             }
             return BadRequest(new AppResult("Some properties are not correct", false));
         }
-
+        [Authorize(Roles = "Restaurant")]
         [HttpPut]
         public async Task<IActionResult> UpdatedOne([FromForm] MenuItem form)
         {
@@ -123,7 +123,7 @@ namespace RestaurantServer.Controllers
             }
             return BadRequest(new AppResult("Some properties are not correct", false));
         }
-
+        [Authorize(Roles = "Restaurant")]
         [HttpDelete("{categoryId}/{id}")]
         public async Task<IActionResult> DeletedOne(string categoryId,string id)
         {
