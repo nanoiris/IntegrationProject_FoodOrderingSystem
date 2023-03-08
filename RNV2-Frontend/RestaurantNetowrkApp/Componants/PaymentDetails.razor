@@ -1,5 +1,5 @@
 ﻿<div class="shadow bg-white p-3 mb-3 clearfix">
-    <p class="mb-1">SubTotal <span class="float-right text-dark">$@Subtotal</span></p>
+    <p class="mb-1">SubTotal <span class="float-right text-dark">$@String.Format("{0:0.00}",Subtotal)</span></p>
     <p class="mb-1">GST/HST <span class="float-right text-dark">$@String.Format("{0:0.00}",Subtotal * (decimal)0.1)</span></p>
     <p class="mb-1">PST/TST/QST <span class="float-right text-dark">$@String.Format("{0:0.00}",Subtotal * (decimal)0.05)</span></p>
 @*    <p class="mb-1">

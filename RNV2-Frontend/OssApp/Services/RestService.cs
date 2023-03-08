@@ -1,5 +1,5 @@
 ﻿using OssApp.Model;
-using Serilog;
+//using Serilog;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -21,7 +21,7 @@ namespace OssApp.Services
 
         public async Task<List<T>> List(string listUrl)
         {
-            Log.Debug($"Enter RestService.List : {listUrl}");
+            //Log.Debug($"Enter RestService.List : {listUrl}");
             var response = await http.GetAsync(listUrl);
             List<T> rows = null;
             if (response.IsSuccessStatusCode)
@@ -34,7 +34,7 @@ namespace OssApp.Services
                 }
                 catch (Exception ex)
                 {
-                    Log.Debug($"RestService.List : {ex.Message}");
+                   // Log.Debug($"RestService.List : {ex.Message}");
                 }
             }
             if (rows == null)
@@ -58,7 +58,7 @@ namespace OssApp.Services
                 }
                 catch (Exception ex)
                 {
-                    Log.Debug($"RestService.List : {ex.Message}");
+                    //Log.Debug($"RestService.List : {ex.Message}");
                 }
             }
             if (rows == null)
@@ -81,7 +81,7 @@ namespace OssApp.Services
                 }
                 catch (Exception ex)
                 {
-                    Log.Debug($"RestService.Find : {ex.Message}");
+                   // Log.Debug($"RestService.Find : {ex.Message}");
                 }
             }
             return row;
@@ -89,7 +89,7 @@ namespace OssApp.Services
 
         public bool DeleteOne(string url)
         {
-            Log.Debug($"RestService.DeleteOne {url}");
+            //Log.Debug($"RestService.DeleteOne {url}");
             var response = http.DeleteAsync(url).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
@@ -113,7 +113,7 @@ namespace OssApp.Services
         }
         public string UpdateOne(string url, HttpContent content)
         {
-            Log.Debug($"RestService.UpdateOne {url}");
+            //Log.Debug($"RestService.UpdateOne {url}");
             
             http.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
 
@@ -128,12 +128,12 @@ namespace OssApp.Services
                     return result.message;
                 }
             }
-            Log.Debug(response.IsSuccessStatusCode.ToString());
+            //Log.Debug(response.IsSuccessStatusCode.ToString());
             return null;
         }
         public string AddNewOne(string url, MultipartFormDataContent content)
         {
-            Log.Debug($"Enter RestService : AddNewOne : {url}");
+            //Log.Debug($"Enter RestService : AddNewOne : {url}");
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
@@ -149,7 +149,7 @@ namespace OssApp.Services
 
         public string AddNewOne(string url, HttpContent content)
         {
-            Log.Debug($"Enter RestService : AddNewOne : {url}");
+            //Log.Debug($"Enter RestService : AddNewOne : {url}");
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
@@ -163,11 +163,11 @@ namespace OssApp.Services
         }
         public bool AddNewOneAction(string url, MultipartFormDataContent content)
         {
-            Log.Debug($"Enter RestService : AddNewOne : {url}");
+            //Log.Debug($"Enter RestService : AddNewOne : {url}");
             var response = http.PostAsync(url, content).GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
-                Log.Debug(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+                //Log.Debug(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
                 var result = response.Content.ReadFromJsonAsync<AppResult>().GetAwaiter().GetResult();
                 return result.isSuccess;
             }

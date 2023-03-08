@@ -112,11 +112,15 @@
             </div>
         </div>
     </div>
-    <div class="fixed-bottom p-3">
-        <button class="btn btn-success btn-lg btn-block" type="submit" form="payCardForm">
-            PAY $1329<i class="feather-arrow-right"></i>
-        </button>
-    </div>
+    @if(order != null)
+    {
+        <div class="fixed-bottom p-3">
+            <button class="btn btn-success btn-lg btn-block" type="submit" form="payCardForm">
+                PAY $@String.Format("{0:0.00}",order.PayTotal)<i class="feather-arrow-right"></i>
+            </button>
+        </div> 
+    }
+    
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">

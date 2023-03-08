@@ -40,8 +40,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //userEmail = await sessionStorageAccessor.GetValueAsync<string>("userEmail");
-        userEmail = "u4@gmail.com";
+        userEmail = await sessionStorageAccessor.GetValueAsync<string>("userEmail");
     }
 
     private void navToProfile()

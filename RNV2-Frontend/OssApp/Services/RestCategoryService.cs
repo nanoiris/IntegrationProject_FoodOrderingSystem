@@ -1,7 +1,7 @@
 ﻿using Microsoft.Maui.Controls;
 using OssApp.Model;
 using Radzen.Blazor;
-using Serilog;
+//using Serilog;
 using System.Net.Http.Json;
 
 namespace OssApp.Services
