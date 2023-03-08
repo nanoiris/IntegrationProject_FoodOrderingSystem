@@ -5,6 +5,7 @@
 @using RestaurantDaoBase;
 @using Serilog;
 @using Services
+@using Data
 @inject AuthService authService
 @inject NavigationManager NavigationManager
 
@@ -17,7 +18,7 @@
     protected override async Task OnInitializedAsync()
     {
         //httpClient.BaseAddress = new Uri("http://localhost:5175/");
-        httpClient.BaseAddress = new Uri("http://ec2-18-214-61-45.compute-1.amazonaws.com:5175/");
+        httpClient.BaseAddress = new Uri(Constants.DelyUri);
         httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
         var response = (await httpClient.PutAsJsonAsync<bool>($"api/delivery/Complete/" + delyId, true));
         if (response.IsSuccessStatusCode)

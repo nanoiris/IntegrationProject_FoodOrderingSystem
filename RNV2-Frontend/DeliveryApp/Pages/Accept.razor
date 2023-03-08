@@ -1,5 +1,6 @@
 ﻿@page "/accept/{delyId}"
 @using Services;
+@using Data;
 @using RestaurantDaoBase.Models;
 @using System.Net.Http;
 @using System.Net.Http.Json;
@@ -18,9 +19,9 @@
     protected override async Task OnInitializedAsync()
     {       
         //httpClient.BaseAddress = new Uri("http://localhost:5175/");
-        httpClient.BaseAddress = new Uri("http://ec2-18-214-61-45.compute-1.amazonaws.com:5175/");
+        httpClient.BaseAddress = new Uri(Constants.DelyUri);
         httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
-        deliveryman = AuthService.User.Name;
+        deliveryman = AuthService.User.UserName;
         var response = (await httpClient.PutAsJsonAsync<bool>($"api/delivery/Accept/" + delyId + "/" + deliveryman,true));
         if (response.IsSuccessStatusCode == true)
         {

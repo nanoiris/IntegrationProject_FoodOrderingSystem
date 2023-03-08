@@ -17,11 +17,11 @@
     </nav>
 
 
-    <table class="table table-hover shadow-inset table-responsive-sm rounded table-striped table align-middle">
+    <table class="table table-hover shadow-inset table-responsive-sm rounded table-striped table align-middle table-sm">
         <thead class="text-danger font-weight-bold">
             <tr>
-                <th class="border-0" scope="col" id="class">Restaurant Name</th>
-                <th class="border-0" scope="col" id="class">Customer Name</th>
+                <th class="border-0" scope="col" id="class">Restaurant<br /> Name</th>
+                <th class="border-0" scope="col" id="class">Customer<br /> Name</th>
                 <th class="border-0" scope="col" id="class">Status</th>
             </tr>
         </thead>
@@ -46,11 +46,11 @@
                     <td>
                         @item.Status
                         <br>
-                        <a a href="/Order/Details/@item.Id">
+                        <a href="/Order/Details/@item.Id">
                             <i class="feather-archive"></i>Details
                         </a>
                         <br>
-                        <a a href="/Pickup/@item.Id">
+                        <a href="/Pickup/@item.Id">
                             <i class="feather-inbox"></i>PickUp
                         </a>
                     </td>
@@ -74,7 +74,7 @@
     {
         //Log.Debug("render start");
         //httpClient.BaseAddress = new Uri("http://localhost:5175/");
-        httpClient.BaseAddress = new Uri("http://ec2-18-214-61-45.compute-1.amazonaws.com:5175/");
+        httpClient.BaseAddress = new Uri("http://fsd05rnv1.eastus.cloudapp.azure.com:5175/");
         httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
         restDelivery = new List<Delivery>();
         deliveryman = AuthService.User.UserName;

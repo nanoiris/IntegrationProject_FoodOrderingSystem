@@ -1,14 +1,12 @@
 ﻿@using Data.Dto;
-@using Data;
-@using Services;
-@using System.Net.Http;
-@using System.Net.Http.Json;
-@inject AuthService authService
+@inject NavigationManager navigationManager
+@inject IJSRuntime JSRuntime
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+
+<div class="modal @modalClass" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
-        <EditForm Model="model" class="modal-content">
+        <EditForm Model="model" class="modal-content" OnValidSubmit="showRestaurants">
             <div class="modal-header align-items-center">
                 <h5 class="modal-title" id="exampleModalLabel">Filter</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -18,28 +16,28 @@
             <div class="modal-body p-0">
                 <div class="osahan-filter">
                     <div class="filter">
-                        <div class="filters-card border-bottom">                          
+                        <div class="filters-card border-bottom">
                             <div class="filters-card-body pb-3 card-shop-filters">
-                                <div class="filters-search p-3">
+                                @*<div class="filters-search p-3">
                                     <div class="form-group mb-2 position-relative">
                                         <i class="feather-search"></i>
                                         <input type="text" class="form-control" @bind-value="model.searchKey" placeholder="Start typing to search...">
                                     </div>
                                 </div>
-                                @foreach (var rest in restaurants)
+                                @foreach (var restCategory in restCategories)
                                 {
                                     <div class="custom-control border-bottom px-0 custom-checkbox">
                                         <input type="radio"
                                            name="CategoryKey"
                                            class="custom-control-input"
-                                           id="@rest.Name"
-                                           value="@rest.Id"
-                                           checked="@(model.restid == rest.Id)"
-                                           @onchange="() => model.restid = rest.Id" />
-                                        <label class="custom-control-label py-3 w-100 px-3" for="@rest.Name">@rest.Name</label>
+                                           id="@restCategory.Name"
+                                           value="@restCategory.Id"
+                                           checked="@(model.categoryid == restCategory.Id)"
+                                           @onchange="() => model.categoryid = restCategory.Id" />
+                                        <label class="custom-control-label py-3 w-100 px-3" for="@restCategory.Name">@restCategory.Name</label>
                                     </div>
                                 }
-
+*@
                             </div>
                         </div>
                     </div>
@@ -47,11 +45,10 @@
             </div>
             <div class="modal-footer p-0 border-0 p-3">
                 <div class="col-6 m-0 pl-0 pr-1">
-                    <button type="button" class="btn border btn-lg btn-block" data-dismiss="modal">Clear</button>
+                    <button type="button" id="btnClose" class="btn border btn-lg btn-block" data-dismiss="modal">Clear</button>
                 </div>
                 <div class="col-6 m-0 pr-0 pl-1">
-                    <button type="button" class="btn btn-primary btn-lg btn-block"
-                            data-dismiss="modal">
+                       <button type="submit" class="btn btn-primary btn-lg btn-block">
                         Apply
                     </button>
                 </div>
@@ -61,26 +58,28 @@
 </div>
 @code {
     [Parameter]
-    public List<RestaurantDto> restaurants { get; set; }
+    public List<RestaurantDto> restCategories { get; set; }
+    private string modalClass = "fade";
 
     private class searchModel
     {
         public string searchKey { get; set; }
-        public string restid { get; set; }
+        public string categoryid { get; set; }
     }
 
     private searchModel model = new searchModel();
-    private HttpClient httpClient = new HttpClient();
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    httpClient.BaseAddress = new Uri(Constants.RestUri);
+    private async Task showRestaurants()
+    {
+        await JSRuntime.InvokeVoidAsync("closeModal", "btnClose");
+        //if (model.categoryid == null)
+        //{
+        //    navigationManager.NavigateTo($"/Restaurants/{model.searchKey}");
+        //}
+        //else
+        //{
+        //    navigationManager.NavigateTo($"/Restaurants/{model.searchKey}/{model.categoryid}");
 
-    //    if (httpClient.DefaultRequestHeaders.Authorization == null)
-    //    {
-    //        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
-    //    }
-    //    restaurants = (await httpClient.GetFromJsonAsync<List<RestaurantDto>>($"api/restaurant/list")).ToList();
-    //}
+        //}
+    }
 }
-

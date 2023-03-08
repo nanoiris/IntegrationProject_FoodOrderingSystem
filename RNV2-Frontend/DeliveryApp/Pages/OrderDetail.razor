@@ -7,6 +7,7 @@
 @using RestaurantDaoBase;
 @using Serilog;
 @using Services
+@using Data
 @inject AuthService authService
 
 <div class="OrderDetails pb-5">
@@ -20,17 +21,20 @@
     {
         <div class="py-3 osahan-profile">
             <h6><i class="feather-award bg-warning text-white p-2 rounded-circle mr-2"></i>Restaurant Info</h6>
-            <div class="bg-white shadow mt-3 profile-details">
-                <div class="left mx-3 py-2 border-bottom">
+            <div class="bg-white shadow mt-3 profile-details">               
+                <div class=" left mx-3 py-2 border-bottom">
                     <h6 class="font-weight-bold mb-1 text-dark">Name</h6>
                     <p class="small text-muted m-0">@delivery.Restaurant.Name</p>
-                </div>
+                </div> 
                 <div class="left mx-3 py-2 border-bottom">
                     <h6 class="font-weight-bold mb-1 text-dark">Address</h6>
                     <p class="small text-muted m-0">@delivery.Restaurant.Address.Street,@delivery.Restaurant.Address.City</p>
                     <p class="small text-muted m-0">@delivery.Restaurant.Address.State,@delivery.Restaurant.Address.Country,@delivery.Restaurant.Address.PostalCode</p>
                 </div>
             </div>
+        </div>
+        <div class="py-3 osahan-profile">
+            <GoogleMap postcode="@delivery.Restaurant.Address.PostalCode" />
         </div>
     }
     @if (delivery.Destination != null)
@@ -49,10 +53,17 @@
                 </div>
             </div>
         </div>
-        <div class="py-3 osahan-profile">
+@*        <div class="py-3 osahan-profile">
             <GoogleMap postcode="@delivery.Destination.PostalCode" />
-        </div>
+        </div>*@
     }
+@*    @if (delivery.Destination != null && delivery.Restaurant != null)
+    {
+        <div class="py-3 osahan-profile">
+            <GoogleMap postcodeRest="@delivery.Restaurant.Address.PostalCode" postcodeUser="@delivery.Destination.PostalCode"  />
+             <GoogleMap postcodeRest="@delivery.Restaurant.Address.PostalCode" />
+        </div>
+    }*@
     <div class="py-3 osahan-profile">
         <h6><i class="feather-gift bg-success text-white p-2 rounded-circle mr-2"></i>Delivery Status</h6>
         <div class="track mx-2">
@@ -144,35 +155,52 @@
             </div>
         </div>
     }
-    <div class="card-header bg-white">
-        <div class="row">
-            <div class="col-6 my-auto">
-                <p class="text-muted"> Order No. <span class="font-weight-bold text-dark"># 123</span></p>
-                <p class="text-muted"> Place On <span class="font-weight-bold text-dark"> 12,Feb 2023</span> </p>
+    @if (order != null)
+    {
+        <div class="py-3 osahan-profile">
+            <h6><i class="feather-compass bg-info text-white p-2 rounded-circle mr-2"></i>Order Info</h6>
+                <div class="row">
+                    <div class="col-6 my-auto">   
+                        <p class="my-2 h4">@order.RestaurantName</p>
+                        <p class="text-muted"> Place On: </p>
+                        <p class="text-muted"> <span class="font-weight-bold text-dark"> @order.CreateTime.ToString("dd MMMM, yyyy")</span> </p>
+                    </div>
+                    <div class="col-6 text-center  my-auto pl-0 pt-sm-4">
+                        <img class="img-fluid my-auto align-items-center mb-0 pt-3" src="@(Data.Constants.imgUrl+ restaurant.Logo)" width="115"
+                         height="115">
+                        <p></p>
+
+                    </div>
+                </div>
             </div>
-            <div class="col-5 text-center  my-auto pl-0 pt-sm-4">
-                <img class="img-fluid my-auto align-items-center mb-0 pt-3" src="img/trending1.png" width="115"
-                     height="115">
-                <p></p>
-                <p class="mb-4 pt-0 Glasses">Pizza Club</p>
+    }
+
+    <div class="shadow bg-white p-3 mb-3 clearfix">
+        @if (order != null)
+        {
+            @foreach (var orderItem in order.ItemList)
+            {
+                        <div class="row mb-1">
+                            <p class="col-8 ">@orderItem.Item.Name</p>
+                            <p class="col-1">@orderItem.Qty</p>
+                            <p class="col-3 text-right text-dark">$ @orderItem.Item.Price</p>
+                        </div>
+            }
+        }       
+    </div>
+    @if (order != null)
+    {
+            <div class="shadow bg-white p-3 mb-3 clearfix">
+                <p class="mb-1">SubTotal <span class="float-right text-dark">$@order.SubTotal</span></p>
+                <p class="mb-1">GST/HST <span class="float-right text-dark">$@String.Format("{0:0.00}", (order.SubTotal * (decimal)0.1))</span></p>
+                <p class="mb-1">PST/TST/QST <span class="float-right text-dark">$@String.Format("{0:0.00}", (order.SubTotal * (decimal)0.05))</span></p>
+                <p class="mb-1">
+                    Delivery Fee<span class="text-info ml-1"><i class="icofont-info-circle"></i></span><span class="float-right text-dark">$10</span>
+                </p>
+                <hr>
+                <h6 class="font-weight-bold mb-0">Total <span class="float-right">$@String.Format("{0:0.00}",order.PayTotal)</span></h6>
             </div>
-        </div>
-    </div>
-    <div class="shadow bg-white p-3 mb-3 clearfix">
-        <p class="mb-1">6' Cheese <span class="float-right text-dark">$15.90</span></p>
-        <p class="mb-1">Frech Fries <span class="float-right text-dark">$7.90</span></p>
-        <p class="mb-1">Vanila Ice Cream <span class="float-right text-dark">$3.99</span></p>
-    </div>
-    <div class="shadow bg-white p-3 mb-3 clearfix">
-        <p class="mb-1">SubTotal <span class="float-right text-dark">$3140</span></p>
-        <p class="mb-1">GST/HST <span class="float-right text-dark">$314</span></p>
-        <p class="mb-1">PST/TST/QST <span class="float-right text-dark">$157</span></p>
-        <p class="mb-1">
-            Delivery Fee<span class="text-info ml-1"><i class="icofont-info-circle"></i></span><span class="float-right text-dark">$10</span>
-        </p>
-        <hr>
-        <h6 class="font-weight-bold mb-0">Total <span class="float-right">$1329</span></h6>
-    </div>
+    }
 </div>
 
 <NavMenuFooter />
@@ -181,14 +209,27 @@
     public string delyId { get; set; }
 
     private Delivery delivery { get; set; }
-    public HttpClient httpClient = new HttpClient();
+    private Order order { get; set; }
+    private Restaurant restaurant { get; set; }
+    public HttpClient httpClientd = new HttpClient();
+    public HttpClient httpCliento = new HttpClient();
+    public HttpClient httpClientr = new HttpClient();
     protected override async Task OnInitializedAsync()
     {
         //httpClient.BaseAddress = new Uri("http://localhost:5175/");
-        httpClient.BaseAddress = new Uri("http://ec2-18-214-61-45.compute-1.amazonaws.com:5175/");
-        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+        httpClientd.BaseAddress = new Uri(Constants.DelyUri);
+        httpClientd.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
         delivery = new Delivery();
-        delivery = await httpClient.GetFromJsonAsync<Delivery>($"api/delivery/one/" + delyId);
+
+        delivery = await httpClientd.GetFromJsonAsync<Delivery>($"api/delivery/one/" + delyId);
+
+        httpCliento.BaseAddress = new Uri(Constants.OrderUri);
+        httpCliento.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+        order = await httpCliento.GetFromJsonAsync<Order>($"api/order/one/"+delivery.OrderId);
+
+        httpClientr.BaseAddress = new Uri(Constants.RestUri);
+        httpClientr.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+        restaurant = await httpClientr.GetFromJsonAsync<Restaurant>($"/api/restaurant/one/" + delivery.Restaurant.Id);
     }
 }
 

@@ -89,7 +89,7 @@
         multipartContent.Add(new StringContent(user.State), "State");
         multipartContent.Add(new StringContent(user.Country), "Country");
         multipartContent.Add(new StringContent(user.PostCode), "PostCode");
-        multipartContent.Add(new StringContent("DeliveryMan"), "Role");
+        multipartContent.Add(new StringContent("Delivery"), "Role");
 
         var img = new StreamContent(user.UploadImg?.OpenReadStream());
         Log.Debug(user.UploadImg.Name);
@@ -97,7 +97,7 @@
         img.Headers.ContentType = new MediaTypeHeaderValue(user.UploadImg.ContentType);
         multipartContent.Add(content: img, "UploadImg", fileName: user.UploadImg.Name);
 
-        HttpResponseMessage response = await httpClient.PostAsync("http://localhost:5191/api/auth/register", multipartContent);
+        HttpResponseMessage response = await httpClient.PostAsync("http://ec2-18-214-61-45.compute-1.amazonaws.com:5191/api/auth/register", multipartContent);
 
         if (response.IsSuccessStatusCode)
         {
