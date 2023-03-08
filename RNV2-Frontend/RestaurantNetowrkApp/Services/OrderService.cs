@@ -31,12 +31,11 @@ namespace RestaurantNetowrkApp.Services
             this.server = server;
             http = new HttpClient();
             http.BaseAddress = new Uri(server);
-            //http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
+            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
         }
 
         public async Task<bool> createCart(CartModel cart)
         {
-            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {AuthService.User.Token}");
             var response = await http.PostAsJsonAsync("api/cart/newone", cart);
             if (response.IsSuccessStatusCode)
             {
@@ -48,7 +47,6 @@ namespace RestaurantNetowrkApp.Services
 
         public async Task<OrderDto> getCart(string userEmail, string restId)
         {
-
             var requestBody =
                 new
                 {

@@ -13,9 +13,9 @@
 
         }
     }
-    @if (blackStarts != null)
+    @if (blackStars != null)
     {
-        @foreach(int j in blackStarts)
+        @foreach(int j in blackStars)
         {
                 <i class="feather-star text-muted ml-1" @onclick="() =>rate(target, targetId, username, j)"></i>
         }
@@ -31,11 +31,11 @@
     [Parameter] public OrderDto order { get; set; }
     private int score = 0;
     private int[] yellowStars;
-    private int[] blackStarts;
+    private int[] blackStars;
 
     protected override async Task OnInitializedAsync()
     {
-        blackStarts = new int[]{1,2,3,4,5};
+        blackStars = new int[]{1,2,3,4,5};
     }
 
     private async Task rate(string target, string targetId, string username, int value)
@@ -49,8 +49,12 @@
         {
             result = await ratingService.rateMenuItem(targetId, username, value, order.RestaurantId);
         }
+        else if(target == "delivery")
+        {
+            result = true;
+        }
 
-        if (result)
+        if (result) 
         {
             score = value;
             yellowStars = new int[score];
@@ -60,15 +64,15 @@
             }
             if (score < 5)
             {
-                blackStarts = new int[5 - score];
+                blackStars = new int[5 - score];
                 for (int i = score; i < 5; i++)
                 {
-                    blackStarts[i-score] = i + 1;
+                    blackStars[i-score] = i + 1;
                 }
             }
             else
             {
-                blackStarts = null;
+                blackStars = null;
             }
             StateHasChanged();
         }

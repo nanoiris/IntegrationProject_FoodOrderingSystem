@@ -1,4 +1,6 @@
 ﻿@using Data.Dto
+@inject Data.SessionStorageAccessor SessionStorageAccessor;
+@inject NavigationManager NavigationManager;
 
 @if (Rest != null)
 {
@@ -9,14 +11,14 @@
                 <i class="feather-star"></i> 
             </span>
         </div>
-        <a href="/Restaurant/@Rest.Id">
+        <a @onclick="()=>goToRest(Rest.Id)">
                 <img src="@(Data.Constants.imgUrl+Rest.Logo)" class="img-fluid item-img w-100">
         </a>
     </div>
     <div class="p-3 position-relative">
         <div class="list-card-body">
             <h6 class="mb-1">
-                <a href="/Restaurant/@Rest.Id" class="text-black">
+                    <a @onclick="()=>goToRest(Rest.Id)" class="text-black">
                     @Rest.Name
                 </a>
             </h6>
@@ -33,4 +35,18 @@
 @code {
     [Parameter]
     public RestaurantDto Rest { get; set; }
+
+    private async Task goToRest(string restId)
+    {
+        string userEmail = await SessionStorageAccessor.GetValueAsync<string>("userEmail");
+        if (userEmail == null)
+        {
+            string msg = "Please login to make an order";
+            NavigationManager.NavigateTo($"/Account/Login/{msg}");
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"/Restaurant/{Rest.Id}");
+        }
+    }
 }
