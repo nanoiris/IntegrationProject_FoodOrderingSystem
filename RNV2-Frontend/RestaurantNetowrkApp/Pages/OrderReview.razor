@@ -42,7 +42,7 @@
                             <input type="text" name="quantity" value="@orderItem.Qty" title="Qty" class="qty" size="4" id=@orderItem.Id >
                             <input type="button" value="+" class="plus" @onclick="() => increase(orderItem.Id)">
                         </div>
-                        <p class="text-gray mb-0 float-right ml-2 text-muted small">$@(orderItem.Qty * orderItem.Item.Price)</p>
+                        <p class="text-gray mb-0 float-right ml-2 text-muted small">$@String.Format("{0:0.00}",orderItem.Qty * orderItem.Item.Price) </p>
                     </div>
                 </div>
             }
@@ -61,7 +61,7 @@
                 </div>
                 <div class="ml-3 text-left">
                     <p class="mb-0 small text-white-50">@order.ItemList.Count() item</p>
-                    <p class="mb-0 font-weight-bold text-white">$@order.PayTotal</p>
+                    <p class="mb-0 font-weight-bold text-white">$@String.Format("{0:0.00}",order.PayTotal)</p>
                 </div>
                 <div class="ml-auto">
                     <p class="mb-0 text-white">PAY <i class="feather-chevron-right pl-2" aria-hidden="true"></i></p>

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using MenuItem = RestaurantDaoBase.Models.MenuItem;
 using Serilog;
 using RestaurantNetowrkApp.Data.Dto;
+using System.Text.Json;
 
 namespace RestaurantNetowrkApp.Services
 {
@@ -63,15 +64,15 @@ namespace RestaurantNetowrkApp.Services
 
         }
 
-        public async Task<List<RestCategory>> ListRestCategory()
+        public async Task<List<RestCategoryDto>> ListRestCategory()
         {
-            List<RestCategory> restCategories= new List<RestCategory>();
+            List<RestCategoryDto> restCategories= new List<RestCategoryDto>();
             var response = await http.GetAsync($"api/restcategory/list");
             if (response.IsSuccessStatusCode)
             {
                 try
                 {
-                    restCategories = response.Content.ReadFromJsonAsync<List<RestCategory>>()
+                    restCategories = response.Content.ReadFromJsonAsync<List<RestCategoryDto>>()
                        .GetAwaiter().GetResult(); 
                 }
                 catch (Exception ex)
@@ -81,6 +82,26 @@ namespace RestaurantNetowrkApp.Services
             }
             return restCategories;
         }
+
+        public async Task<List<RestaurantDto>> ListRestTrending()
+        {
+            List<RestaurantDto> restaurants = new List<RestaurantDto>();
+            var response = await http.GetAsync($"api/restaurant/listweeklytrends");
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    restaurants = response.Content.ReadFromJsonAsync<List<RestaurantDto>>()
+                       .GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug($"RestService.get restaurant trending : {ex.Message}");
+                }
+            }
+            return restaurants;
+        }
+
 
         public async Task<List<MenuCategoryDto>> ListMenuCategory(string id)
         {
@@ -120,19 +141,33 @@ namespace RestaurantNetowrkApp.Services
             return menuItems;
         }
 
-        public Task<List<Restaurant>> ListWeeklyTrends()
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<List<Restaurant>> ListWithLimit(int limit)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Restaurant>> Search(string searchKey, string categoryName)
+        public async Task<List<RestaurantDto>> Search(string searchKey, string categoryid)
         {
-            throw new NotImplementedException();
+            var requestBody = JsonSerializer.Serialize(
+                new
+                {
+                    searchKey = searchKey,
+                    categoryid = categoryid
+                }
+            );
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(Data.Constants.RestUri + "/api/Restaurant/Search"),
+                Content = new StringContent(requestBody, Encoding.UTF8, "application/json"),
+            };
+            var response = await http.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            return JsonSerializer.Deserialize<List<RestaurantDto>>(responseBody);
+
         }
     }
 }
