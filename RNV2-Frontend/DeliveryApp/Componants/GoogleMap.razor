@@ -13,16 +13,16 @@
 
 @code {
     [Parameter]
-    public string Postcode { get; set; }
+    public string PostcodeRest { get; set; }
 
-    //[Parameter]
-    //public string PostcodeUser { get; set; }
+    [Parameter]
+    public string PostcodeUser { get; set; }
 
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
+    public double LatitudeRest { get; set; }
+    public double LongitudeRest { get; set; }
 
-    //public double LatitudeUser { get; set; }
-    //public double LongitudeUser { get; set; }
+    public double LatitudeUser { get; set; }
+    public double LongitudeUser { get; set; }
 
     //private ElementReference MapElement { get; set; }
     private ElementReference mapDiv;
@@ -32,7 +32,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var address = $"{Postcode}, CA";
+        var address = $"{PostcodeRest}, CA";
         var requestUri = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key=AIzaSyAAvTxW9M4D-W80QH9g0mjnGL1dI_TAJhM";
         var response = await httpClient.GetAsync(requestUri);
         var content = await response.Content.ReadAsStringAsync();
@@ -43,30 +43,30 @@
             var location = result.Results.FirstOrDefault()?.Geometry.Location;
             if (location != null)
             {
-                Latitude = location.Lat;
-                Longitude = location.Lng;
+                LatitudeRest = location.Lat;
+                LongitudeRest = location.Lng;
             }
         }
 
-        //var address1 = $"{PostcodeUser}, CA";
-        //var requestUri1 = $"https://maps.googleapis.com/maps/api/geocode/json?address={address1}&key=AIzaSyAAvTxW9M4D-W80QH9g0mjnGL1dI_TAJhM";
-        //var response1 = await httpClient.GetAsync(requestUri1);
-        //var content1 = await response.Content.ReadAsStringAsync();
-        //var result1 = JsonConvert.DeserializeObject<GoogleMapsApiResult>(content1);
+        var address1 = $"{PostcodeUser}, CA";
+        var requestUri1 = $"https://maps.googleapis.com/maps/api/geocode/json?address={address1}&key=AIzaSyAAvTxW9M4D-W80QH9g0mjnGL1dI_TAJhM";
+        var response1 = await httpClient.GetAsync(requestUri1);
+        var content1 = await response1.Content.ReadAsStringAsync();
+        var result1 = JsonConvert.DeserializeObject<GoogleMapsApiResult>(content1);
 
-        //if (result1.Status == "OK")
-        //{
-        //    var location1 = result1.Results.FirstOrDefault()?.Geometry.Location;
-        //    if (location1 != null)
-        //    {
-        //        LatitudeUser = location1.Lat;
-        //        LongitudeUser = location1.Lng;
-        //    }
-        //}
+        if (result1.Status == "OK")
+        {
+            var location1 = result1.Results.FirstOrDefault()?.Geometry.Location;
+            if (location1 != null)
+            {
+                LatitudeUser = location1.Lat;
+                LongitudeUser = location1.Lng;
+            }
+        }
 
         //await JSRuntime.InvokeAsync<object>("initMap", Latitude, Longitude); 
-        //await JSRuntime.InvokeVoidAsync("initMap", LatitudeRest, LongitudeRest, LatitudeUser, LongitudeUser);
-        await JSRuntime.InvokeVoidAsync("initMap", Latitude, Longitude);
+        await JSRuntime.InvokeVoidAsync("initMap", LatitudeRest, LongitudeRest, LatitudeUser, LongitudeUser);
+        //await JSRuntime.InvokeVoidAsync("initMap", Latitude, Longitude);
     }
     public class GoogleMapsApiResult
     {

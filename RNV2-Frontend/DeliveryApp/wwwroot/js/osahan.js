@@ -25,45 +25,47 @@ window.previewImage = (inputElem, imgElem) => {
 //    });
 //}
 
-window.initMap = (latitude, longitude) => {
-    console.log("latitude" + latitude);
-    console.log("longtitude" + longitude);
-    // Create a new map centered at the specified coordinates
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: latitude, lng: longitude },
-        zoom: 8
-    });
-    console.log("into");
-    // Add a marker at the specified coordinates
-    var marker = new google.maps.Marker({
-        position: { lat: latitude, lng: longitude },
-        map: map,
-        title: 'Location'
-    });
-    console.log("finish")
-}
-
-//window.initMap = (latitudeRest, longitudeRest, latitudeUser, longitudeUser,) => {
-//     Create a new map centered at the specified coordinates
+//window.initMap = (latitude, longitude) => {
+//    console.log("latitude" + latitude);
+//    console.log("longtitude" + longitude);
+//    // Create a new map centered at the specified coordinates
 //    var map = new google.maps.Map(document.getElementById('map'), {
-//        center: { lat: latitudeRest, lng: longitudeRest },
+//        center: { lat: latitude, lng: longitude },
 //        zoom: 8
 //    });
-
-//     Add a marker at the specified coordinates
+//    console.log("into");
+//    // Add a marker at the specified coordinates
 //    var marker = new google.maps.Marker({
-//        position: { lat: latitudeRest, lng: longitudeRest },
+//        position: { lat: latitude, lng: longitude },
 //        map: map,
 //        title: 'Location'
 //    });
-
-//    var marker = new google.maps.Marker({
-//        position: { lat: latitudeUser, lng: longitudeUser },
-//        map: map,
-//        title: 'Location'
-//    });
-
+//    console.log("finish")
 //}
+
+window.initMap = (latitudeRest, longitudeRest, latitudeUser, longitudeUser,) => {
+    // Create a new map centered at the specified coordinates
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: latitudeRest, lng: longitudeRest },
+        zoom: 8
+    });
+
+    // Add a marker at the specified coordinates
+    var marker = new google.maps.Marker({
+        position: { lat: latitudeRest, lng: longitudeRest },
+        map: map,
+        title: 'Restaurant'
+    });
+    console.log("latitude" + latitudeRest);
+    console.log("longtitude" + longitudeRest);
+    var marker1 = new google.maps.Marker({
+        position: { lat: latitudeUser, lng: longitudeUser },
+        map: map,
+        title: 'Customer'
+    });
+    console.log("latitude" + latitudeUser);
+    console.log("longtitude" + longitudeUser);
+}
 
 window.closeModal = (closeId) => {
     document.getElementById(closeId).click();
