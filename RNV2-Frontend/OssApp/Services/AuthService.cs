@@ -1,6 +1,6 @@
 ﻿using OssApp.Model;
 using System.Net.Http.Json;
-using Serilog;
+//using Serilog;
 
 namespace OssApp.Services
 {
@@ -31,10 +31,10 @@ namespace OssApp.Services
             var response = await http.PostAsJsonAsync(loginUrl, new { UserName = username,Password = password });
             if (response.IsSuccessStatusCode)
             {
-                Log.Debug("Login succefully");
+                //Log.Debug("Login succefully");
                 try 
                 {
-                    Log.Debug(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+                    //Log.Debug(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
                     User = await response.Content.ReadFromJsonAsync<LoginRespModel>();
                 }
                 catch(Exception ex)
@@ -49,7 +49,7 @@ namespace OssApp.Services
                     User.Logo = Utils.BuildLogoPath(User.Logo);
                 return true;
             }
-            Log.Debug("Login failed,login again");
+            //Log.Debug("Login failed,login again");
             return false;
         }
         public void Logout()

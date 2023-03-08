@@ -1,6 +1,6 @@
 ﻿using OssApp.Model;
 using System.Net.Http.Json;
-using Serilog;
+//using Serilog;
 
 namespace OssApp.Services
 {
@@ -84,7 +84,7 @@ namespace OssApp.Services
 
         public async Task<List<AppUserModel>> ListAvaliableDeliveryMan()
         {
-            Log.Debug("ListAvaliableDeliveryMan");
+            //Log.Debug("ListAvaliableDeliveryMan");
             var result = await base.List($"{BaseUrl}/AvaliableDeliveryManList");
             result.ForEach(row => {
                 if (row.Logo != null)

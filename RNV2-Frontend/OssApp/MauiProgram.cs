@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Serilog.Events;
-using Serilog;
+//using Serilog.Events;
+//using Serilog;
 using Radzen;
 using OssApp.Services;
 
@@ -12,7 +12,7 @@ public static class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
 
-        SetupSerilog();
+        //SetupSerilog();
 
         builder
             .UseMauiApp<App>()
@@ -89,10 +89,11 @@ public static class MauiProgram
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
 #endif
-        builder.Logging.AddSerilog(dispose: true);
+        //builder.Logging.AddSerilog(dispose: true);
 
         return builder.Build();
     }
+    /*
     private static void SetupSerilog()
     {
         var flushInterval = new TimeSpan(0, 0, 1);
@@ -105,4 +106,5 @@ public static class MauiProgram
         .WriteTo.File(file, flushToDiskInterval: flushInterval, encoding: System.Text.Encoding.UTF8, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 22)
         .CreateLogger();
     }
+    */
 }
