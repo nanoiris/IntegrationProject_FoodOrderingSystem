@@ -27,14 +27,14 @@
     {
         <div class="card-header bg-white">
             <p class="text-muted"># @order.Id</p>
+            <p class="my-2 h4">@order.RestaurantName</p>
             <div class="row">
-                <div class="col-6 my-auto">   
-                    <p class="my-2 h4">@order.RestaurantName</p>
+                <div class="col-8 my-auto">                    
                     <p class="text-muted"> Place On: </p>
                     <p class="text-muted"> <span class="font-weight-bold text-dark"> @order.CreateTime.ToString("dd MMMM, yyyy")</span> </p>
                 </div>
-                <div class="col-6 text-center  my-auto pl-0 pt-sm-4">
-                    <img class="img-fluid my-auto align-items-center mb-0 pt-3" src="@(Data.Constants.imgUrl+ rest.Logo)" width="115"
+                <div class="col-4 text-center  my-auto pl-0 pt-sm-3">
+                    <img class="img-fluid my-auto align-items-center mb-0 pt-3 w-75" src="@(Data.Constants.imgUrl+ rest.Logo)" width="115"
                          height="115">
                     <p></p>
                 

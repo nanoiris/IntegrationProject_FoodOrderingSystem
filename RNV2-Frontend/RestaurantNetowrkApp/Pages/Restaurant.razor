@@ -315,6 +315,8 @@
 
     private void goOrderReview()
     {
-        NavigationManager.NavigateTo($"/Order/Review/{orderCart.Id}");
+        string orderId = orderCart.Id;
+        orderCart = null;
+        NavigationManager.NavigateTo($"/Order/Review/{orderId}");
     }
 }
