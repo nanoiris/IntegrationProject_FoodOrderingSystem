@@ -20,7 +20,7 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             });
-
+        /*
         builder.Services.AddSingleton<AuthService>(service =>
            new AuthService("http://ec2-18-214-61-45.compute-1.amazonaws.com:5191")
         );
@@ -41,6 +41,29 @@ public static class MauiProgram
         );
         builder.Services.AddSingleton<DeliveryService>(service =>
            new DeliveryService("http://fsd05rnv1.eastus.cloudapp.azure.com:5175")
+        );
+        */
+
+        builder.Services.AddSingleton<AuthService>(service =>
+           new AuthService("http://localhost:5191")
+        );
+        builder.Services.AddSingleton<RoleService>(service =>
+           new RoleService("http://localhost:5191")
+        );
+        builder.Services.AddSingleton<RestCategoryService>(service =>
+           new RestCategoryService("http://localhost:5064")
+        );
+        builder.Services.AddSingleton<RestaurantService>(service =>
+           new RestaurantService("http://localhost:5064")
+        );
+        builder.Services.AddSingleton<UserService>(service =>
+           new UserService("http://localhost:5191")
+        );
+        builder.Services.AddSingleton<OrderService>(service =>
+           new OrderService("http://localhost:5275")
+        );
+        builder.Services.AddSingleton<DeliveryService>(service =>
+           new DeliveryService("http://localhost:5175")
         );
 
         builder.Services.AddScoped<DialogService>();
@@ -73,7 +96,7 @@ public static class MauiProgram
     private static void SetupSerilog()
     {
         var flushInterval = new TimeSpan(0, 0, 1);
-        var file = Path.Combine(FileSystem.AppDataDirectory, "c:\\oss.log");
+        var file = Path.Combine(FileSystem.AppDataDirectory, "d:\\tmp\\oss.log");
 
         Log.Logger = new LoggerConfiguration()
         .MinimumLevel.Verbose()

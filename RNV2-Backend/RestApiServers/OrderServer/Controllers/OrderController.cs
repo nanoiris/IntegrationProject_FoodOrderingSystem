@@ -6,6 +6,7 @@ using RestaurantDaoBase.Models;
 
 namespace OrderServer.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class OrderController : ControllerBase

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantDaoBase.Enums;
 using RestaurantDaoBase.IServices;
@@ -6,6 +7,7 @@ using RestaurantDaoBase.Models;
 
 namespace DeliveryServer.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class DeliveryController : ControllerBase

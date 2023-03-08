@@ -44,8 +44,7 @@ namespace RestaurantServer.Controllers
         {
             return service.Search(model.SearchKey,model.Categoryid);
         }
-        [AllowAnonymous]
-        //[Authorize(Roles = "Operator,Restaurant")]
+        [Authorize(Roles = "Operator,Restaurant")]
         [HttpPost]
         public async Task<IActionResult> NewOne([FromForm] RestaurantForm form)
         {
@@ -96,8 +95,7 @@ namespace RestaurantServer.Controllers
         {
             return service.FindRestaurant(id);
         }
-        //[Authorize(Roles = "Operator,Restaurant")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Operator,Restaurant")]
         [HttpPut]
         public async Task<IActionResult> UpdatedOne([FromForm] RestaurantForm form)
         {
@@ -141,8 +139,7 @@ namespace RestaurantServer.Controllers
             return BadRequest(new AppResult("Some properties are not correct", false));
         }
 
-        //[Authorize(Roles = "Operator")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Operator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletedOne(string id)
         {

@@ -34,7 +34,6 @@ namespace IdentityServer.Controllers
             return Ok(result);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult AddOne([FromForm] AddRoleViewModel model)
         {
