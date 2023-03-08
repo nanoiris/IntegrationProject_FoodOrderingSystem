@@ -20,7 +20,6 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             });
-        /*
         builder.Services.AddSingleton<AuthService>(service =>
            new AuthService("http://ec2-18-214-61-45.compute-1.amazonaws.com:5191")
         );
@@ -42,8 +41,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<DeliveryService>(service =>
            new DeliveryService("http://fsd05rnv1.eastus.cloudapp.azure.com:5175")
         );
-        */
-
+        
+        /*
         builder.Services.AddSingleton<AuthService>(service =>
            new AuthService("http://localhost:5191")
         );
@@ -65,6 +64,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<DeliveryService>(service =>
            new DeliveryService("http://localhost:5175")
         );
+        */
 
         builder.Services.AddScoped<DialogService>();
         builder.Services.AddScoped<NotificationService>();

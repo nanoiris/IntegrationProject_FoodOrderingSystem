@@ -73,5 +73,21 @@ namespace RestaurantDao.Services
                 return false;
             }
         }
+
+        public async Task<bool> UpdateCategoryLogo(RestCategory model)
+        {
+            using (var ctx = new RestaurantContext())
+            {
+                var row = await ctx.RestCategories.FindAsync(model.Id);
+                Console.WriteLine("UpdateCategoryLogo 1");
+                if (row == null)
+                    return false;
+                Console.WriteLine("UpdateCategoryLogo 2");
+                row.Logo = model.Logo;
+                var result = await ctx.SaveChangesAsync();
+                Console.WriteLine($"UpdateCategoryLogo 3 ={result}");
+                return result == 1 ? true : false;
+            }
+        }
     }
 }
