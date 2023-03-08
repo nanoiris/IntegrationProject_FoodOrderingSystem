@@ -8,8 +8,7 @@ using System.Data;
 
 namespace IdentityServer.Controllers
 {
-    //[Authorize(Roles = "Operator")]
-    [AllowAnonymous]
+    [Authorize(Roles = "Operator")]
     [Route("api/[controller]/[Action]")]
     [ApiController]
     public class OssUserController : Controller

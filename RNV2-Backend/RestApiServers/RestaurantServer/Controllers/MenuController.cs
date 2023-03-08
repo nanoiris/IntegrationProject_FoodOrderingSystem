@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantDaoBase.IServices;
 using RestaurantDaoBase.Models;
 using RestaurantServer.Services;
+using System.Data;
 
 namespace RestaurantServer.Controllers
 {
+    [Authorize(Roles = "Restaurant")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class MenuController : ControllerBase

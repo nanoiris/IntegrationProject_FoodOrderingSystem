@@ -4,7 +4,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://fsd05rnv.eastus.cloudapp.azure.com/:49222",
+      "applicationUrl": "http://fsd05rnv.eastus.cloudapp.azure.com:49222",
       "sslPort": 44321
     }
   },
@@ -14,7 +14,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://fsd05rnv.eastus.cloudapp.azure.com/:5048",
+      "applicationUrl": "http://fsd05rnv.eastus.cloudapp.azure.com:5048",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -24,7 +24,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://fsd05rnv.eastus.cloudapp.azure.com/:7293;http://fsd05rnv.eastus.cloudapp.azure.com/:5048",
+      "applicationUrl": "http://fsd05rnv.eastus.cloudapp.azure.com:7293;http://fsd05rnv.eastus.cloudapp.azure.com:5048",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
