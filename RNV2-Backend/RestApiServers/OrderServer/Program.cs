@@ -35,7 +35,7 @@ namespace OrderServer
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            /*
+            
             builder.Services.AddAuthorization().AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -60,8 +60,7 @@ namespace OrderServer
                     RequireExpirationTime = true,
                 };
             });
-            */
-
+            
             builder.Services.AddScoped<IOrderService, OrderService>(x =>
               new OrderService(x.GetRequiredService<ILogger<OrderService>>()));
 

@@ -1,6 +1,9 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using RestaurantDao.Services;
 using RestaurantDaoBase.IServices;
+using System.Text;
 
 namespace DeliveryServer
 {
@@ -33,7 +36,7 @@ namespace DeliveryServer
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            /*
+            
             builder.Services.AddAuthorization().AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,8 +61,7 @@ namespace DeliveryServer
                     RequireExpirationTime = true,
                 };
             });
-            */
-
+            
             builder.Services.AddScoped<IDeliveryService, DeliveryService>(x =>
               new DeliveryService(x.GetRequiredService<ILogger<DeliveryService>>()));
 
